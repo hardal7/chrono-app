@@ -1,4 +1,4 @@
-package com.example.study_app
+package com.example.chrono
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,4 +1,4 @@
-# study_app
+# chrono
 
 A new Flutter project.
 

@@ -1,6 +1,6 @@
 {
-    "name": "study_app",
-    "short_name": "study_app",
+    "name": "chrono",
+    "short_name": "chrono",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

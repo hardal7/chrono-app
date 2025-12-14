@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:study_app/features/user/boarding.dart';
+import 'package:chrono/features/user/boarding.dart';
 
 void main() {
-  runApp(const StudyApp());
+  runApp(const Chrono());
 }
 
-class StudyApp extends StatelessWidget {
-  const StudyApp({super.key});
+class Chrono extends StatelessWidget {
+  const Chrono({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Study App',
+      title: 'Chrono',
       debugShowCheckedModeBanner: false,
       home: BoardingPage(),
     );
