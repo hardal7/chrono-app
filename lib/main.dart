@@ -1,5 +1,5 @@
+import 'presentation/pages/boarding.dart';
 import 'package:flutter/material.dart';
-import 'package:chrono/features/user/boarding.dart';
 
 void main() {
   runApp(const Chrono());

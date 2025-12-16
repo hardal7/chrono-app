@@ -1,6 +1,6 @@
-import 'package:chrono/features/user/login.dart';
-import 'package:chrono/features/user/widgets.dart';
-import 'package:chrono/style.dart';
+import 'login.dart';
+import '../style.dart';
+import '../widgets/auth.dart';
 import 'package:flutter/material.dart';
 
 class RegisterPage extends StatelessWidget {
@@ -15,7 +15,7 @@ class RegisterPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           spacing: 10.0,
-          children: [
+          children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(bottom: 40.0),
               child: const Text(
@@ -38,7 +38,7 @@ class RegisterPage extends StatelessWidget {
             ),
             Row(
               spacing: 10.0,
-              children: [
+              children: <Widget>[
                 ThirdPartyAuthButton(feature: 'Google'),
                 ThirdPartyAuthButton(feature: 'Apple'),
               ],
@@ -47,7 +47,9 @@ class RegisterPage extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => LoginPage()),
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => LoginPage(),
+                  ),
                 );
               },
               child: RichText(

@@ -1,39 +1,43 @@
-import 'package:chrono/features/user/auth.dart';
-import 'package:chrono/features/user/home.dart';
-import 'package:chrono/features/user/login.dart';
-import 'package:chrono/features/user/register.dart';
-import 'package:chrono/features/user/resetPassword.dart';
-import 'package:chrono/style.dart';
+import '../../handler/auth.dart';
+import '../pages/home.dart';
+import '../pages/login.dart';
+import '../pages/register.dart';
+import '../pages/resetPassword.dart';
+import '../style.dart';
 import 'package:flutter/material.dart';
 
 class AuthButton extends StatelessWidget {
-  final String title;
-  final String route;
-  final bool inverted;
-
   const AuthButton({
     super.key,
     required this.title,
     required this.route,
     this.inverted = false,
   });
+  final String title;
+  final String route;
+  final bool inverted;
 
   @override
   Widget build(BuildContext context) {
     return InkResponse(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => route == 'Register'
-                ? RegisterPage()
-                : route == 'Login'
-                ? LoginPage()
-                : route == 'Home'
-                ? HomePage()
-                : PasswordResetPage(),
-          ),
-        );
+        bool success = route == 'Home' ? auth() : true;
+        if (success) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => route == 'Register'
+                  ? RegisterPage()
+                  : route == 'Login'
+                  ? LoginPage()
+                  : route == 'Home'
+                  ? HomePage()
+                  : PasswordResetPage(),
+            ),
+          );
+        } else {
+          // TODO: Display wrong password error
+        }
       },
       child: Container(
         decoration: BoxDecoration(
@@ -60,15 +64,22 @@ class AuthButton extends StatelessWidget {
 }
 
 class ThirdPartyAuthButton extends StatelessWidget {
-  final String feature;
-
   const ThirdPartyAuthButton({super.key, required this.feature});
+  final String feature;
 
   @override
   Widget build(BuildContext context) {
     return InkResponse(
       onTap: () {
-        feature == 'Google' ? googleAuth() : appleAuth();
+        bool success = (feature == 'Google' ? googleAuth() : appleAuth());
+        if (success) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (BuildContext context) => HomePage()),
+          );
+        } else {
+          // TODO: Display Oauth error
+        }
       },
       child: Container(
         decoration: BoxDecoration(
@@ -94,14 +105,13 @@ class ThirdPartyAuthButton extends StatelessWidget {
 }
 
 class InputField extends StatelessWidget {
-  final String fieldName;
-
   const InputField({super.key, required this.fieldName});
+  final String fieldName;
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: [
+      children: <Widget>[
         Container(
           width: 350.0,
           height: 50.0,

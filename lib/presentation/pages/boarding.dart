@@ -1,6 +1,6 @@
-import 'package:chrono/features/user/widgets.dart';
+import '../style.dart';
+import '../widgets/auth.dart';
 import 'package:flutter/material.dart';
-import 'package:chrono/style.dart';
 
 class BoardingPage extends StatelessWidget {
   const BoardingPage({super.key});
@@ -10,13 +10,13 @@ class BoardingPage extends StatelessWidget {
     return Material(
       color: backgroundColor,
       child: Column(
-        children: [
+        children: <Widget>[
           Padding(
             padding: const EdgeInsets.only(top: 75.0),
             child: Row(
               spacing: 15.0,
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
+              children: <Widget>[
                 ImageIcon(AssetImage('assets/icon/logo.png'), size: 24),
                 Text(
                   'Chrono',
@@ -57,7 +57,7 @@ class BoardingPage extends StatelessWidget {
             padding: const EdgeInsets.all(10.0),
             child: Column(
               spacing: 15.0,
-              children: [
+              children: <Widget>[
                 AuthButton(title: 'Login', route: 'Login'),
                 AuthButton(title: 'Sign Up', route: 'Register', inverted: true),
               ],

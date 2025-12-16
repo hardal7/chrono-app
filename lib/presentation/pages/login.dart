@@ -1,7 +1,7 @@
-import 'package:chrono/features/user/register.dart';
-import 'package:chrono/features/user/resetPassword.dart';
-import 'package:chrono/features/user/widgets.dart';
-import 'package:chrono/style.dart';
+import 'register.dart';
+import 'resetPassword.dart';
+import '../style.dart';
+import '../widgets/auth.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatelessWidget {
@@ -16,7 +16,7 @@ class LoginPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           spacing: 10.0,
-          children: [
+          children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(bottom: 40.0),
               child: const Text(
@@ -31,7 +31,9 @@ class LoginPage extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => PasswordResetPage()),
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => PasswordResetPage(),
+                  ),
                 );
               },
               child: Text(
@@ -51,7 +53,7 @@ class LoginPage extends StatelessWidget {
             ),
             Row(
               spacing: 10.0,
-              children: [
+              children: <Widget>[
                 ThirdPartyAuthButton(feature: 'Google'),
                 ThirdPartyAuthButton(feature: 'Apple'),
               ],
@@ -60,7 +62,9 @@ class LoginPage extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => RegisterPage()),
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => RegisterPage(),
+                  ),
                 );
               },
               child: RichText(
