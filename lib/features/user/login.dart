@@ -1,34 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:chrono/features/user/boarding.dart';
 import 'package:chrono/features/user/register.dart';
 import 'package:chrono/features/user/resetPassword.dart';
+import 'package:chrono/features/user/widgets.dart';
 import 'package:chrono/style.dart';
-
-class InputField extends StatelessWidget {
-  final String fieldName;
-
-  const InputField({super.key, required this.fieldName});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            border: BoxBorder.all(color: foregroundColor),
-          ),
-          child: TextFormField(
-            style: bodySmall,
-            decoration: InputDecoration(
-              hintText: fieldName,
-              hintStyle: bodySmall,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
+import 'package:flutter/material.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -38,18 +12,20 @@ class LoginPage extends StatelessWidget {
     return Material(
       color: backgroundColor,
       child: Padding(
-        padding: EdgeInsetsGeometry.only(left: 50.0, right: 50.0, bottom: 15.0),
+        padding: EdgeInsetsGeometry.only(left: 25.0, right: 25.0, top: 75.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           spacing: 10.0,
           children: [
-            const Text(
-              'Sign in to your account',
-              style: TextStyle(color: Colors.white, fontSize: 24),
-              textAlign: TextAlign.center,
+            Padding(
+              padding: const EdgeInsets.only(bottom: 40.0),
+              child: const Text(
+                'Login to your account',
+                style: TextStyle(color: Colors.white60, fontSize: 24),
+                textAlign: TextAlign.center,
+              ),
             ),
             InputField(fieldName: 'Email'),
-            InputField(fieldName: 'Username'),
             InputField(fieldName: 'Password'),
             InkResponse(
               onTap: () {
@@ -58,18 +34,27 @@ class LoginPage extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => PasswordResetPage()),
                 );
               },
-
               child: Text(
                 'Forgot password?',
                 style: labelSmall,
                 textAlign: TextAlign.right,
               ),
             ),
-            AuthButton(feature: 'Login'),
+            Padding(
+              padding: const EdgeInsets.only(top: 20.0),
+              child: AuthButton(title: 'Login', route: 'Home'),
+            ),
             Text(
               'Or login with',
               style: bodySmall,
               textAlign: TextAlign.center,
+            ),
+            Row(
+              spacing: 10.0,
+              children: [
+                ThirdPartyAuthButton(feature: 'Google'),
+                ThirdPartyAuthButton(feature: 'Apple'),
+              ],
             ),
             InkResponse(
               onTap: () {
@@ -86,7 +71,7 @@ class LoginPage extends StatelessWidget {
                       text: 'Don\'t have an account? ',
                       style: bodySmall,
                     ),
-                    TextSpan(text: 'Create an account', style: labelSmall),
+                    TextSpan(text: 'Register an account', style: labelSmall),
                   ],
                 ),
               ),

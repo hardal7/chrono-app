@@ -1,56 +1,6 @@
+import 'package:chrono/features/user/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:study_app/features/user/login.dart';
-import 'package:study_app/features/user/register.dart';
-
-const Color backgroundColor = Color(0xFF151515);
-const Color foregroundColor = Color(0xFF5946B2);
-
-const subtitleStyle = TextStyle(
-  fontSize: 14,
-  fontWeight: FontWeight.w500,
-  color: Colors.white60,
-);
-
-class AuthButton extends StatelessWidget {
-  final String feature;
-
-  const AuthButton({super.key, required this.feature});
-
-  @override
-  Widget build(BuildContext context) {
-    return InkResponse(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) =>
-                (feature == 'Login' ? LoginPage() : RegisterPage()),
-          ),
-        );
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          color: feature == 'Login' ? foregroundColor : backgroundColor,
-          border: BoxBorder.all(color: foregroundColor, width: 2.5),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        height: 50,
-        width: 300,
-        child: Center(
-          child: Text(
-            feature,
-            style: TextStyle(
-              color: feature == 'Login' ? backgroundColor : foregroundColor,
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ),
-      ),
-    );
-  }
-}
+import 'package:chrono/style.dart';
 
 class BoardingPage extends StatelessWidget {
   const BoardingPage({super.key});
@@ -62,11 +12,29 @@ class BoardingPage extends StatelessWidget {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 540.0),
+            padding: const EdgeInsets.only(top: 75.0),
+            child: Row(
+              spacing: 15.0,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ImageIcon(AssetImage('assets/icon/logo.png'), size: 24),
+                Text(
+                  'Chrono',
+                  style: TextStyle(
+                    fontSize: 40,
+                    fontWeight: FontWeight.w500,
+                    color: foregroundColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 400.0),
             child: Text(
               'Welcome to Chrono',
               style: TextStyle(
-                fontSize: 32,
+                fontSize: 30,
                 fontWeight: FontWeight.w500,
                 color: foregroundColor,
               ),
@@ -80,8 +48,8 @@ class BoardingPage extends StatelessWidget {
               bottom: 20.0,
             ),
             child: Text(
-              'Track your study sessions. Watch your progress add up.',
-              style: subtitleStyle,
+              'Start tracking your study habits for a more mindful studying experience.',
+              style: bodySmall,
               textAlign: TextAlign.center,
             ),
           ),
@@ -90,8 +58,8 @@ class BoardingPage extends StatelessWidget {
             child: Column(
               spacing: 15.0,
               children: [
-                AuthButton(feature: 'Login'),
-                AuthButton(feature: 'Sign Up'),
+                AuthButton(title: 'Login', route: 'Login'),
+                AuthButton(title: 'Sign Up', route: 'Register', inverted: true),
               ],
             ),
           ),
@@ -100,7 +68,7 @@ class BoardingPage extends StatelessWidget {
             child: RichText(
               textAlign: TextAlign.center,
               text: TextSpan(
-                style: subtitleStyle,
+                style: bodySmall,
                 children: <TextSpan>[
                   TextSpan(text: 'By continuing you agree to the '),
                   TextSpan(
