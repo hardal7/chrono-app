@@ -44,10 +44,9 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
         backgroundColor: backgroundColor,
-        labelTextStyle: WidgetStatePropertyAll(
-          TextStyle(color: foregroundColor),
-        ),
-        indicatorColor: foregroundColor.withValues(alpha: 0.3),
+        labelTextStyle: WidgetStatePropertyAll(bodySmall),
+        indicatorColor: foregroundColor,
+        animationDuration: const Duration(seconds: 1),
       ),
       body: Material(
         color: backgroundColor,

@@ -43,8 +43,8 @@ class RegisterPage extends StatelessWidget {
                 ThirdPartyAuthButton(feature: 'Apple'),
               ],
             ),
-            InkResponse(
-              onTap: () {
+            TextButton(
+              onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(

@@ -17,7 +17,7 @@ class BoardingPage extends StatelessWidget {
               spacing: 15.0,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                ImageIcon(AssetImage('assets/icon/logo.png'), size: 24),
+                Icon(Icons.access_time, size: 40, color: foregroundColor),
                 Text(
                   'Chrono',
                   style: TextStyle(
@@ -56,7 +56,7 @@ class BoardingPage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: Column(
-              spacing: 15.0,
+              spacing: 5.0,
               children: <Widget>[
                 AuthButton(title: 'Login', route: 'Login'),
                 AuthButton(title: 'Sign Up', route: 'Register', inverted: true),

@@ -19,8 +19,8 @@ class AuthButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkResponse(
-      onTap: () {
+    return TextButton(
+      onPressed: () {
         bool success = route == 'Home' ? auth() : true;
         if (success) {
           Navigator.push(
@@ -69,8 +69,8 @@ class ThirdPartyAuthButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkResponse(
-      onTap: () {
+    return TextButton(
+      onPressed: () {
         bool success = (feature == 'Google' ? googleAuth() : appleAuth());
         if (success) {
           Navigator.push(
@@ -87,7 +87,7 @@ class ThirdPartyAuthButton extends StatelessWidget {
           border: BoxBorder.all(color: foregroundColor, width: 2.5),
           borderRadius: BorderRadius.circular(10),
         ),
-        width: 175,
+        width: 150,
         height: 75,
         child: Center(
           child: ImageIcon(
@@ -97,6 +97,7 @@ class ThirdPartyAuthButton extends StatelessWidget {
                   : 'assets/icon/apple.png',
             ),
             size: 24,
+            color: Colors.white60,
           ),
         ),
       ),

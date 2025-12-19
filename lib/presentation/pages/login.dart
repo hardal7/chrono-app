@@ -27,23 +27,22 @@ class LoginPage extends StatelessWidget {
             ),
             InputField(fieldName: 'Email'),
             InputField(fieldName: 'Password'),
-            InkResponse(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => PasswordResetPage(),
-                  ),
-                );
-              },
-              child: Text(
-                'Forgot password?',
-                style: labelSmall,
-                textAlign: TextAlign.right,
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => PasswordResetPage(),
+                    ),
+                  );
+                },
+                child: Text('Forgot password?', style: labelSmall),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 20.0),
+              padding: const EdgeInsets.only(top: 5.0),
               child: AuthButton(title: 'Login', route: 'Home'),
             ),
             Text(
@@ -52,14 +51,13 @@ class LoginPage extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             Row(
-              spacing: 10.0,
               children: <Widget>[
                 ThirdPartyAuthButton(feature: 'Google'),
                 ThirdPartyAuthButton(feature: 'Apple'),
               ],
             ),
-            InkResponse(
-              onTap: () {
+            TextButton(
+              onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(

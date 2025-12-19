@@ -4,7 +4,6 @@ linter:
   rules:
     prefer_const_declarations: true
     sort_constructors_first: true
-    always_specify_types: true
     always_declare_return_types: true
     no_literal_bool_comparisons: true
     avoid_print: true
