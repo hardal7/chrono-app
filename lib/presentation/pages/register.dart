@@ -45,11 +45,12 @@ class RegisterPage extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                Navigator.push(
+                Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
                     builder: (BuildContext context) => LoginPage(),
                   ),
+                  (route) => false,
                 );
               },
               child: RichText(

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../style.dart';
+import 'login.dart';
+import 'tracker.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -10,7 +12,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int currentPageIndex = 0;
+  int _currentPageIndex = 0;
+  List<StatelessWidget> navigationPages = [
+    TrackerPage(),
+    LoginPage(),
+    LoginPage(),
+    LoginPage(),
+    LoginPage(),
+  ];
   NavigationDestinationLabelBehavior labelBehavior =
       NavigationDestinationLabelBehavior.alwaysShow;
 
@@ -19,40 +28,41 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       bottomNavigationBar: NavigationBar(
         labelBehavior: labelBehavior,
-        selectedIndex: currentPageIndex,
+        selectedIndex: _currentPageIndex,
         onDestinationSelected: (int index) {
           setState(() {
-            currentPageIndex = index;
+            _currentPageIndex = index;
           });
         },
         destinations: const <Widget>[
           NavigationDestination(
-            icon: Icon(Icons.group, color: foregroundColor),
+            icon: Icon(Icons.timer, color: accentColor),
+            label: 'Tracker',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.group, color: accentColor),
             label: 'Sessions',
           ),
           NavigationDestination(
-            icon: Icon(Icons.leaderboard, color: foregroundColor),
-            label: 'Global',
+            icon: Icon(Icons.leaderboard, color: accentColor),
+            label: 'Users',
           ),
           NavigationDestination(
-            icon: Icon(Icons.person, color: foregroundColor),
+            icon: Icon(Icons.person, color: accentColor),
             label: 'Profile',
           ),
           NavigationDestination(
-            icon: Icon(Icons.settings, color: foregroundColor),
+            icon: Icon(Icons.settings, color: accentColor),
             label: 'Settings',
           ),
         ],
         backgroundColor: backgroundColor,
         labelTextStyle: WidgetStatePropertyAll(
-          TextStyle(color: foregroundColor),
+          TextStyle(color: accentColor),
         ),
-        indicatorColor: foregroundColor.withValues(alpha: 0.3),
+        indicatorColor: accentColor.withValues(alpha: 0.3),
       ),
-      body: Material(
-        color: backgroundColor,
-        child: Center(child: Text('Home', style: labelSmall)),
-      ),
+      body: navigationPages[_currentPageIndex],
     );
   }
 }

@@ -17,13 +17,13 @@ class BoardingPage extends StatelessWidget {
               spacing: 15.0,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Icon(Icons.access_time, size: 40, color: foregroundColor),
+                Icon(Icons.access_time, size: 40, color: accentColor),
                 Text(
                   'Chrono',
                   style: TextStyle(
                     fontSize: 40,
                     fontWeight: FontWeight.w500,
-                    color: foregroundColor,
+                    color: accentColor,
                   ),
                 ),
               ],
@@ -36,7 +36,7 @@ class BoardingPage extends StatelessWidget {
               style: TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.w500,
-                color: foregroundColor,
+                color: accentColor,
               ),
               textAlign: TextAlign.center,
             ),
@@ -75,7 +75,7 @@ class BoardingPage extends StatelessWidget {
                     text: 'Privacy Policy',
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: foregroundColor,
+                      color: accentColor,
                     ),
                   ),
                   TextSpan(text: ' and '),
@@ -83,7 +83,7 @@ class BoardingPage extends StatelessWidget {
                     text: 'User Terms',
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: foregroundColor,
+                      color: accentColor,
                     ),
                   ),
                 ],

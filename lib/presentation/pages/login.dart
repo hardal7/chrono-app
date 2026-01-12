@@ -31,11 +31,12 @@ class LoginPage extends StatelessWidget {
               alignment: Alignment.centerRight,
               child: TextButton(
                 onPressed: () {
-                  Navigator.push(
+                  Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
                       builder: (BuildContext context) => PasswordResetPage(),
                     ),
+                    (route) => false,
                   );
                 },
                 child: Text('Forgot password?', style: labelSmall),
@@ -58,11 +59,12 @@ class LoginPage extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                Navigator.push(
+                Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
                     builder: (BuildContext context) => RegisterPage(),
                   ),
+                  (route) => false,
                 );
               },
               child: RichText(

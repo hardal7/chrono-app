@@ -41,8 +41,8 @@ class AuthButton extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: inverted ? backgroundColor : foregroundColor,
-          border: BoxBorder.all(color: foregroundColor, width: 2.5),
+          color: inverted ? backgroundColor : accentColor,
+          border: BoxBorder.all(color: accentColor, width: 2.5),
           borderRadius: BorderRadius.circular(10),
         ),
         width: 350,
@@ -51,7 +51,7 @@ class AuthButton extends StatelessWidget {
           child: Text(
             title,
             style: TextStyle(
-              color: inverted ? foregroundColor : backgroundColor,
+              color: inverted ? accentColor : backgroundColor,
               fontSize: 20,
               fontWeight: FontWeight.w600,
             ),
@@ -73,9 +73,10 @@ class ThirdPartyAuthButton extends StatelessWidget {
       onPressed: () {
         bool success = (feature == 'Google' ? googleAuth() : appleAuth());
         if (success) {
-          Navigator.push(
+          Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (BuildContext context) => HomePage()),
+            (route) => false,
           );
         } else {
           // TODO: Display Oauth error
@@ -84,7 +85,7 @@ class ThirdPartyAuthButton extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: backgroundColor,
-          border: BoxBorder.all(color: foregroundColor, width: 2.5),
+          border: BoxBorder.all(color: accentColor, width: 2.5),
           borderRadius: BorderRadius.circular(10),
         ),
         width: 150,
@@ -117,7 +118,7 @@ class InputField extends StatelessWidget {
           width: 350.0,
           height: 50.0,
           decoration: BoxDecoration(
-            border: BoxBorder.all(color: foregroundColor),
+            border: BoxBorder.all(color: accentColor),
             borderRadius: BorderRadius.all(Radius.circular(10.0)),
           ),
           child: TextFormField(
@@ -126,10 +127,10 @@ class InputField extends StatelessWidget {
               hintText: fieldName,
               hintStyle: bodySmall,
               enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: foregroundColor),
+                borderSide: BorderSide(color: accentColor),
               ),
               focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: foregroundColor),
+                borderSide: BorderSide(color: accentColor),
               ),
             ),
           ),
