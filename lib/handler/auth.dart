@@ -1,4 +1,3 @@
-// TODO
 bool auth() {
   return true;
 }

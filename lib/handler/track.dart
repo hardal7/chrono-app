@@ -1,0 +1,3 @@
+bool startTracker() {
+  return true;
+}
