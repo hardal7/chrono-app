@@ -12,7 +12,7 @@ class BoardingPage extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.only(top: 75.0),
+            padding: EdgeInsets.only(top: screenHeight / 20),
             child: Row(
               spacing: 15.0,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -30,7 +30,7 @@ class BoardingPage extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 400.0),
+            padding: EdgeInsets.only(top: screenHeight / 2.5),
             child: Text(
               'Welcome to Chrono',
               style: TextStyle(
@@ -42,10 +42,10 @@ class BoardingPage extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(
-              left: 50.0,
-              right: 50.0,
-              bottom: 20.0,
+            padding: EdgeInsets.only(
+              left: screenWidth / 10,
+              right: screenWidth / 10,
+              bottom: screenHeight / 25,
             ),
             child: Text(
               'Start tracking your study habits for a more mindful studying experience.',
@@ -54,9 +54,9 @@ class BoardingPage extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(10.0),
+            padding: const EdgeInsets.all(15.0),
             child: Column(
-              spacing: 5.0,
+              spacing: 10.0,
               children: <Widget>[
                 AuthButton(title: 'Login', route: 'Login'),
                 AuthButton(title: 'Sign Up', route: 'Register', inverted: true),
@@ -64,7 +64,10 @@ class BoardingPage extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 50.0, right: 50.0),
+            padding: EdgeInsets.only(
+              left: screenWidth / 10,
+              right: screenWidth / 10,
+            ),
             child: RichText(
               textAlign: TextAlign.center,
               text: TextSpan(

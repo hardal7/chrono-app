@@ -30,7 +30,7 @@ class TrackerPage extends StatelessWidget {
         children: [
           SettingsButton(settingsPage: TrackerSettingsPage()),
           Padding(
-            padding: const EdgeInsets.only(top: 50.0),
+            padding: const EdgeInsets.only(top: 10.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               spacing: 5.0,
@@ -44,7 +44,7 @@ class TrackerPage extends StatelessWidget {
                       color: Colors.red,
                     ),
                     Positioned(
-                      top: 8.0,
+                      top: 10.0,
                       child: Text(
                         '3',
                         style: TextStyle(
@@ -102,7 +102,7 @@ class TrackerPage extends StatelessWidget {
             ],
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 75.0),
+            padding: EdgeInsets.only(top: screenHeight / 25),
             child: Text(
               '45:00',
               style: TextStyle(
@@ -114,7 +114,7 @@ class TrackerPage extends StatelessWidget {
           ),
           Text('Count 1', style: greyMedium),
           Padding(
-            padding: const EdgeInsets.only(top: 125.0),
+            padding: EdgeInsets.only(top: screenHeight / 8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               spacing: 5.0,

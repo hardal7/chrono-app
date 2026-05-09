@@ -11,13 +11,17 @@ class RegisterPage extends StatelessWidget {
     return Material(
       color: backgroundColor,
       child: Padding(
-        padding: EdgeInsetsGeometry.only(left: 25.0, right: 25.0, top: 75.0),
+        padding: EdgeInsetsGeometry.only(
+          left: screenWidth / 10,
+          right: screenWidth / 10,
+          top: screenHeight / 8,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           spacing: 10.0,
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.only(bottom: 40.0),
+              padding: EdgeInsets.only(bottom: screenHeight / 15),
               child: const Text(
                 'Register an account',
                 style: TextStyle(color: Colors.white60, fontSize: 24),
@@ -28,7 +32,7 @@ class RegisterPage extends StatelessWidget {
             InputField(fieldName: 'Username'),
             InputField(fieldName: 'Password'),
             Padding(
-              padding: const EdgeInsets.only(top: 20.0),
+              padding: const EdgeInsets.only(top: 5.0),
               child: AuthButton(title: 'Register', route: 'Home'),
             ),
             Text(
@@ -37,7 +41,7 @@ class RegisterPage extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             Row(
-              spacing: 10.0,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 ThirdPartyAuthButton(feature: 'Google'),
                 ThirdPartyAuthButton(feature: 'Apple'),

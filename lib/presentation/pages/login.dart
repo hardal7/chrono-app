@@ -12,13 +12,17 @@ class LoginPage extends StatelessWidget {
     return Material(
       color: backgroundColor,
       child: Padding(
-        padding: EdgeInsetsGeometry.only(left: 25.0, right: 25.0, top: 75.0),
+        padding: EdgeInsetsGeometry.only(
+          left: screenWidth / 10,
+          right: screenWidth / 10,
+          top: screenHeight / 8,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           spacing: 10.0,
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.only(bottom: 40.0),
+              padding: EdgeInsets.only(bottom: screenHeight / 15),
               child: const Text(
                 'Login to your account',
                 style: TextStyle(color: Colors.white60, fontSize: 24),
@@ -28,7 +32,7 @@ class LoginPage extends StatelessWidget {
             InputField(fieldName: 'Email'),
             InputField(fieldName: 'Password'),
             Align(
-              alignment: Alignment.centerRight,
+              alignment: Alignment.center,
               child: TextButton(
                 onPressed: () {
                   Navigator.pushAndRemoveUntil(
@@ -52,6 +56,7 @@ class LoginPage extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 ThirdPartyAuthButton(feature: 'Google'),
                 ThirdPartyAuthButton(feature: 'Apple'),
