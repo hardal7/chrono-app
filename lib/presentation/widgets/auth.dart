@@ -12,16 +12,20 @@ class AuthButton extends StatelessWidget {
     required this.title,
     required this.route,
     this.inverted = false,
+    this.onPressed,
   });
   final String title;
   final String route;
   final bool inverted;
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: () {
-        bool success = route == 'Home' ? auth() : true;
+        onPressed?.call();
+        // TODO: implement server response
+        bool success = true;
         if (success) {
           Navigator.push(
             context,
@@ -39,23 +43,30 @@ class AuthButton extends StatelessWidget {
           // TODO: Display wrong password error
         }
       },
-      child: Container(
-        decoration: BoxDecoration(
-          color: inverted ? backgroundColor : accentColor,
-          border: BoxBorder.all(color: accentColor, width: 2.5),
-          borderRadius: BorderRadius.circular(10),
+      child: Padding(
+        padding: EdgeInsets.only(
+          left: screenWidth / 50,
+          right: screenWidth / 50,
         ),
-        width: screenWidth / 1.2,
-        height: screenHeight / 10,
-        child: Center(
-          child: Text(
-            title,
-            style: TextStyle(
-              color: inverted ? accentColor : backgroundColor,
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
+
+        child: Container(
+          decoration: BoxDecoration(
+            color: inverted ? backgroundColor : accentColor,
+            border: BoxBorder.all(color: accentColor, width: 2.5),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          width: screenWidth,
+          height: screenHeight / 12,
+          child: Center(
+            child: Text(
+              title,
+              style: TextStyle(
+                color: inverted ? accentColor : backgroundColor,
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+              ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
           ),
         ),
       ),
@@ -88,7 +99,7 @@ class ThirdPartyAuthButton extends StatelessWidget {
           border: BoxBorder.all(color: accentColor, width: 2.5),
           borderRadius: BorderRadius.circular(10),
         ),
-        width: screenWidth / 4,
+        width: screenWidth / 3,
         height: screenHeight / 10,
         child: Center(
           child: ImageIcon(
@@ -107,30 +118,42 @@ class ThirdPartyAuthButton extends StatelessWidget {
 }
 
 class InputField extends StatelessWidget {
-  const InputField({super.key, required this.fieldName});
+  const InputField({
+    super.key,
+    required this.fieldName,
+    required this.controller,
+  });
   final String fieldName;
+  final TextEditingController controller;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        Container(
-          width: screenWidth / 1.2,
-          height: screenHeight / 15,
-          decoration: BoxDecoration(
-            border: BoxBorder.all(color: accentColor),
-            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+        Padding(
+          padding: EdgeInsets.only(
+            left: screenWidth / 20,
+            right: screenWidth / 20,
           ),
-          child: TextFormField(
-            style: bodySmall,
-            decoration: InputDecoration(
-              hintText: fieldName,
-              hintStyle: bodySmall,
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: accentColor),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: accentColor),
+          child: Container(
+            width: screenWidth,
+            height: screenHeight / 15,
+            decoration: BoxDecoration(
+              border: BoxBorder.all(color: accentColor),
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            ),
+            child: TextFormField(
+              controller: controller,
+              style: bodySmall,
+              decoration: InputDecoration(
+                hintText: fieldName,
+                hintStyle: bodySmall,
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: accentColor),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: accentColor),
+                ),
               ),
             ),
           ),

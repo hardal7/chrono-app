@@ -43,9 +43,8 @@ class BoardingPage extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.only(
-              left: screenWidth / 10,
-              right: screenWidth / 10,
-              bottom: screenHeight / 25,
+              left: screenWidth / 30,
+              right: screenWidth / 30,
             ),
             child: Text(
               'Start tracking your study habits for a more mindful studying experience.',
@@ -65,8 +64,9 @@ class BoardingPage extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.only(
-              left: screenWidth / 10,
-              right: screenWidth / 10,
+              left: screenWidth / 20,
+              right: screenWidth / 20,
+              top: screenWidth / 5,
             ),
             child: RichText(
               textAlign: TextAlign.center,

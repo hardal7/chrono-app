@@ -39,7 +39,7 @@ class _TrackerPageState extends State<TrackerPage> {
     stopwatch = Stopwatch();
     duration = Duration();
 
-    timer = Timer.periodic(Duration(milliseconds: 500), (timer) {
+    timer = Timer.periodic(Duration(milliseconds: 30), (timer) {
       setState(() {});
     });
   }

@@ -4,7 +4,11 @@ import '../widgets/auth.dart';
 import 'package:flutter/material.dart';
 
 class RegisterPage extends StatelessWidget {
-  const RegisterPage({super.key});
+  RegisterPage({super.key});
+
+  final emailController = TextEditingController();
+  final usernameController = TextEditingController();
+  final passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -12,9 +16,8 @@ class RegisterPage extends StatelessWidget {
       color: backgroundColor,
       child: Padding(
         padding: EdgeInsetsGeometry.only(
-          left: screenWidth / 10,
-          right: screenWidth / 10,
-          top: screenHeight / 8,
+          top: screenHeight / 20,
+          bottom: screenHeight / 15,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -28,9 +31,9 @@ class RegisterPage extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             ),
-            InputField(fieldName: 'Email'),
-            InputField(fieldName: 'Username'),
-            InputField(fieldName: 'Password'),
+            InputField(fieldName: 'Email', controller: emailController),
+            InputField(fieldName: 'Username', controller: usernameController),
+            InputField(fieldName: 'Password', controller: passwordController),
             Padding(
               padding: const EdgeInsets.only(top: 5.0),
               child: AuthButton(title: 'Register', route: 'Home'),
