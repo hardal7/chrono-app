@@ -45,8 +45,8 @@ class AuthButton extends StatelessWidget {
           border: BoxBorder.all(color: accentColor, width: 2.5),
           borderRadius: BorderRadius.circular(10),
         ),
-        width: screenWidth / 1,
-        height: screenWidth / 7,
+        width: screenWidth / 1.2,
+        height: screenHeight / 10,
         child: Center(
           child: Text(
             title,

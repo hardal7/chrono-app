@@ -1,7 +1,10 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 import 'presentation/pages/boarding.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+Future<void> main() async {
+  await dotenv.load();
   runApp(const Chrono());
 }
 

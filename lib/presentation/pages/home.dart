@@ -13,7 +13,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentPageIndex = 0;
-  List<StatelessWidget> navigationPages = [
+  List<Widget> navigationPages = [
     TrackerPage(),
     LoginPage(),
     LoginPage(),
@@ -57,9 +57,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
         backgroundColor: backgroundColor,
-        labelTextStyle: WidgetStatePropertyAll(
-          TextStyle(color: accentColor),
-        ),
+        labelTextStyle: WidgetStatePropertyAll(TextStyle(color: accentColor)),
         indicatorColor: accentColor.withValues(alpha: 0.3),
       ),
       body: navigationPages[_currentPageIndex],

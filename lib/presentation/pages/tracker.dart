@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import '../../handler/track.dart';
 import '../style.dart';
 import 'package:flutter/material.dart';
@@ -19,8 +21,28 @@ class TrackerSettingsPage extends StatelessWidget {
   }
 }
 
-class TrackerPage extends StatelessWidget {
+class TrackerPage extends StatefulWidget {
   const TrackerPage({super.key});
+
+  @override
+  State<TrackerPage> createState() => _TrackerPageState();
+}
+
+class _TrackerPageState extends State<TrackerPage> {
+  late Stopwatch stopwatch;
+  late Timer timer;
+  late Duration duration;
+
+  @override
+  void initState() {
+    super.initState();
+    stopwatch = Stopwatch();
+    duration = Duration();
+
+    timer = Timer.periodic(Duration(milliseconds: 500), (timer) {
+      setState(() {});
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +126,7 @@ class TrackerPage extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(top: screenHeight / 25),
             child: Text(
-              '45:00',
+              '${stopwatch.elapsed.inHours}:${stopwatch.elapsed.inMinutes.remainder(60)}:${stopwatch.elapsed.inSeconds.remainder(60)}',
               style: TextStyle(
                 color: foregroundColor,
                 fontSize: 84,
@@ -139,7 +161,13 @@ class TrackerPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: ElevatedButton(
-                onPressed: startTracker,
+                onPressed: () {
+                  if (stopwatch.isRunning) {
+                    stopTracker(stopwatch, duration);
+                  } else {
+                    startTracker(stopwatch, duration);
+                  }
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: accentColor,
                   foregroundColor: foregroundColor,
@@ -149,7 +177,7 @@ class TrackerPage extends StatelessWidget {
                   fixedSize: Size(175.0, 45.0),
                 ),
                 child: Text(
-                  'Start',
+                  stopwatch.isRunning ? 'Stop' : 'Start',
                   style: TextStyle(
                     color: foregroundColor,
                     fontWeight: FontWeight.w500,
