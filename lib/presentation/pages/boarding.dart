@@ -30,7 +30,7 @@ class BoardingPage extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(top: screenHeight / 3.5),
+            padding: EdgeInsets.only(top: screenHeight / 8),
             child: Text(
               'Welcome to Chrono',
               style: TextStyle(
@@ -64,9 +64,8 @@ class BoardingPage extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.only(
-              left: screenWidth / 20,
-              right: screenWidth / 20,
-              top: screenWidth / 5,
+              left: screenWidth / 100,
+              right: screenWidth / 100,
             ),
             child: RichText(
               textAlign: TextAlign.center,

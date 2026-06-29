@@ -8,7 +8,8 @@ import 'package:flutter/material.dart';
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
 
-  final emailController = TextEditingController();
+  // Name controller is either for username or email
+  final nameController = TextEditingController();
   final passwordController = TextEditingController();
 
   @override
@@ -22,7 +23,7 @@ class LoginPage extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(
               top: screenHeight / 20,
-              bottom: screenHeight / 15,
+              bottom: screenHeight / 20,
             ),
             child: const Text(
               'Login to your account',
@@ -30,7 +31,7 @@ class LoginPage extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
           ),
-          InputField(fieldName: 'Email', controller: emailController),
+          InputField(fieldName: 'Username', controller: nameController),
           InputField(fieldName: 'Password', controller: passwordController),
           Align(
             alignment: Alignment.center,
@@ -53,7 +54,7 @@ class LoginPage extends StatelessWidget {
               title: 'Login',
               route: 'Home',
               onPressed: () =>
-                  auth(emailController.text, passwordController.text),
+                  login(nameController.text, passwordController.text),
             ),
           ),
           Text('Or login with', style: bodySmall, textAlign: TextAlign.center),

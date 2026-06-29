@@ -1,3 +1,4 @@
+import '../../handler/register.dart';
 import 'login.dart';
 import '../style.dart';
 import '../widgets/auth.dart';
@@ -36,7 +37,15 @@ class RegisterPage extends StatelessWidget {
             InputField(fieldName: 'Password', controller: passwordController),
             Padding(
               padding: const EdgeInsets.only(top: 5.0),
-              child: AuthButton(title: 'Register', route: 'Home'),
+              child: AuthButton(
+                title: 'Register',
+                route: 'Home',
+                onPressed: () => register(
+                  emailController.text,
+                  usernameController.text,
+                  passwordController.text,
+                ),
+              ),
             ),
             Text(
               'Or register with',

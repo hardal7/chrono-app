@@ -43,30 +43,23 @@ class AuthButton extends StatelessWidget {
           // TODO: Display wrong password error
         }
       },
-      child: Padding(
-        padding: EdgeInsets.only(
-          left: screenWidth / 50,
-          right: screenWidth / 50,
+      child: Container(
+        decoration: BoxDecoration(
+          color: inverted ? backgroundColor : accentColor,
+          border: BoxBorder.all(color: accentColor, width: 2.5),
+          borderRadius: BorderRadius.circular(10),
         ),
-
-        child: Container(
-          decoration: BoxDecoration(
-            color: inverted ? backgroundColor : accentColor,
-            border: BoxBorder.all(color: accentColor, width: 2.5),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          width: screenWidth,
-          height: screenHeight / 12,
-          child: Center(
-            child: Text(
-              title,
-              style: TextStyle(
-                color: inverted ? accentColor : backgroundColor,
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-              ),
-              textAlign: TextAlign.center,
+        width: screenWidth,
+        height: screenHeight / 25,
+        child: Center(
+          child: Text(
+            title,
+            style: TextStyle(
+              color: inverted ? accentColor : backgroundColor,
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
             ),
+            textAlign: TextAlign.center,
           ),
         ),
       ),
@@ -100,7 +93,7 @@ class ThirdPartyAuthButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
         ),
         width: screenWidth / 3,
-        height: screenHeight / 10,
+        height: screenHeight / 100,
         child: Center(
           child: ImageIcon(
             AssetImage(
