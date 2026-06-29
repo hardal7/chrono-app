@@ -12,7 +12,7 @@ class BoardingPage extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.only(top: screenHeight / 20),
+            padding: EdgeInsets.only(top: screenHeight / 10),
             child: Row(
               spacing: 15.0,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -21,7 +21,7 @@ class BoardingPage extends StatelessWidget {
                 Text(
                   'Chrono',
                   style: TextStyle(
-                    fontSize: 40,
+                    fontSize: 42,
                     fontWeight: FontWeight.w500,
                     color: accentColor,
                   ),
@@ -30,7 +30,7 @@ class BoardingPage extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(top: screenHeight / 8),
+            padding: EdgeInsets.only(top: screenHeight / 10),
             child: Text(
               'Welcome to Chrono',
               style: TextStyle(
@@ -55,7 +55,6 @@ class BoardingPage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(15.0),
             child: Column(
-              spacing: 10.0,
               children: <Widget>[
                 AuthButton(title: 'Login', route: 'Login'),
                 AuthButton(title: 'Sign Up', route: 'Register', inverted: true),
@@ -64,8 +63,8 @@ class BoardingPage extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.only(
-              left: screenWidth / 100,
-              right: screenWidth / 100,
+              left: screenWidth / 20,
+              right: screenWidth / 20,
             ),
             child: RichText(
               textAlign: TextAlign.center,

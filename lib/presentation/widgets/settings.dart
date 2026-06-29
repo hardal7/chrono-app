@@ -13,8 +13,8 @@ class SettingsButton extends StatelessWidget {
       children: [
         Padding(
           padding: EdgeInsets.only(
-            top: screenHeight / 20,
-            right: screenWidth / 15,
+            top: screenHeight / 50,
+            right: screenWidth / 25,
           ),
           child: IconButton(
             icon: Icon(
