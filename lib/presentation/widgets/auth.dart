@@ -50,7 +50,7 @@ class AuthButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
         ),
         width: screenWidth,
-        height: screenHeight / 25,
+        height: screenHeight / 40,
         child: Center(
           child: Text(
             title,
@@ -92,8 +92,8 @@ class ThirdPartyAuthButton extends StatelessWidget {
           border: BoxBorder.all(color: accentColor, width: 2.5),
           borderRadius: BorderRadius.circular(10),
         ),
-        width: screenWidth / 3,
-        height: screenHeight / 100,
+        width: screenWidth / 10,
+        height: screenHeight / 30,
         child: Center(
           child: ImageIcon(
             AssetImage(
@@ -130,7 +130,6 @@ class InputField extends StatelessWidget {
           ),
           child: Container(
             width: screenWidth,
-            height: screenHeight / 15,
             decoration: BoxDecoration(
               border: BoxBorder.all(color: accentColor),
               borderRadius: BorderRadius.all(Radius.circular(10.0)),

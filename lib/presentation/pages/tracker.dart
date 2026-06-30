@@ -52,7 +52,7 @@ class _TrackerPageState extends State<TrackerPage> {
         children: [
           SettingsButton(settingsPage: TrackerSettingsPage()),
           Padding(
-            padding: const EdgeInsets.only(top: 10.0),
+            padding: EdgeInsets.only(top: screenHeight / 40),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               spacing: 5.0,
@@ -136,7 +136,7 @@ class _TrackerPageState extends State<TrackerPage> {
           ),
           Text('Count 1', style: greyMedium),
           Padding(
-            padding: EdgeInsets.only(top: screenHeight / 8),
+            padding: EdgeInsets.only(top: screenHeight / 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               spacing: 5.0,

@@ -31,7 +31,13 @@ class LoginPage extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
           ),
-          InputField(fieldName: 'Username', controller: nameController),
+          Padding(
+            padding: EdgeInsets.only(top: screenHeight / 20, bottom: 10.0),
+            child: InputField(
+              fieldName: 'Username',
+              controller: nameController,
+            ),
+          ),
           InputField(fieldName: 'Password', controller: passwordController),
           Align(
             alignment: Alignment.center,
@@ -49,7 +55,11 @@ class LoginPage extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 5.0),
+            padding: EdgeInsets.only(
+              top: 5.0,
+              left: screenWidth / 25,
+              right: screenWidth / 25,
+            ),
             child: AuthButton(
               title: 'Login',
               route: 'Home',
