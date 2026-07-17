@@ -2,7 +2,7 @@ import '../../handler/auth.dart';
 import '../pages/home.dart';
 import '../pages/login.dart';
 import '../pages/register.dart';
-import '../pages/resetPassword.dart';
+import '../pages/reset_password.dart';
 import '../style.dart';
 import 'package:flutter/material.dart';
 
@@ -49,8 +49,6 @@ class AuthButton extends StatelessWidget {
           border: BoxBorder.all(color: accentColor, width: 2.5),
           borderRadius: BorderRadius.circular(10),
         ),
-        width: screenWidth,
-        height: screenHeight / 40,
         child: Center(
           child: Text(
             title,
@@ -92,8 +90,6 @@ class ThirdPartyAuthButton extends StatelessWidget {
           border: BoxBorder.all(color: accentColor, width: 2.5),
           borderRadius: BorderRadius.circular(10),
         ),
-        width: screenWidth / 10,
-        height: screenHeight / 30,
         child: Center(
           child: ImageIcon(
             AssetImage(
@@ -123,29 +119,23 @@ class InputField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(
-            left: screenWidth / 20,
-            right: screenWidth / 20,
+        Container(
+          decoration: BoxDecoration(
+            border: BoxBorder.all(color: accentColor),
+            borderRadius: BorderRadius.all(Radius.circular(10.0)),
           ),
-          child: Container(
-            width: screenWidth,
-            decoration: BoxDecoration(
-              border: BoxBorder.all(color: accentColor),
-              borderRadius: BorderRadius.all(Radius.circular(10.0)),
-            ),
-            child: TextFormField(
-              controller: controller,
-              style: bodySmall,
-              decoration: InputDecoration(
-                hintText: fieldName,
-                hintStyle: bodySmall,
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: accentColor),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: accentColor),
-                ),
+          child: TextFormField(
+            controller: controller,
+            style: bodySmall,
+            obscureText: fieldName == 'Password',
+            decoration: InputDecoration(
+              hintText: fieldName,
+              hintStyle: bodySmall,
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: accentColor),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: accentColor),
               ),
             ),
           ),

@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 const Color backgroundColor = Color(0xFF0E0D0E);
@@ -7,6 +5,7 @@ const Color foregroundColor = Color(0xFFFFFFFF);
 const Color secondaryColor = Color(0xFF9D9D9D);
 const Color greenColor = Color(0xFF00BF60);
 const Color accentColor = Color(0xFF5946B2);
+// const Color accentColor = Color(0xFFFFFFFF);
 const Color accentShadowColor = Color(0xBF5947AD);
 
 TextStyle labelSmall = const TextStyle(
@@ -20,8 +19,3 @@ const bodySmall = TextStyle(
   fontWeight: FontWeight.w500,
   color: secondaryColor,
 );
-
-FlutterView view = WidgetsBinding.instance.platformDispatcher.views.first;
-Size size = view.physicalSize;
-double screenWidth = size.width;
-double screenHeight = size.height;

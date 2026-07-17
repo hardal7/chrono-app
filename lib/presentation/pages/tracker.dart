@@ -46,149 +46,158 @@ class _TrackerPageState extends State<TrackerPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: backgroundColor,
-      child: Column(
-        children: [
-          SettingsButton(settingsPage: TrackerSettingsPage()),
-          Padding(
-            padding: EdgeInsets.only(top: screenHeight / 40),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              spacing: 5.0,
-              children: [
-                Stack(
-                  alignment: Alignment.center,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final height = constraints.maxHeight;
+        final width = constraints.maxWidth;
+        return Material(
+          color: backgroundColor,
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(top: height / 20, right: width / 10),
+                child: SettingsButton(settingsPage: TrackerSettingsPage()),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: height / 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  spacing: 5.0,
                   children: [
-                    ImageIcon(
-                      AssetImage('assets/icons/fire.png'),
-                      size: 32,
-                      color: Colors.red,
-                    ),
-                    Positioned(
-                      top: 10.0,
-                      child: Text(
-                        '3',
-                        style: TextStyle(
-                          color: foregroundColor,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16,
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        ImageIcon(
+                          AssetImage('assets/icons/fire.png'),
+                          size: 32,
+                          color: Colors.red,
                         ),
+                        Positioned(
+                          top: 10.0,
+                          child: Text(
+                            '3',
+                            style: TextStyle(
+                              color: foregroundColor,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Text(
+                      'Topic',
+                      style: TextStyle(
+                        color: foregroundColor,
+                        fontSize: 36,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
+                    Icon(Icons.chevron_right, color: foregroundColor, size: 36),
                   ],
                 ),
-                Text(
-                  'Topic',
+              ),
+              Text('307:52 overall', style: greyMedium),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ImageIcon(
+                    AssetImage('assets/icons/triangle.png'),
+                    color: greenColor,
+                  ),
+                  RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
+                      children: <TextSpan>[
+                        TextSpan(
+                          text: '37:08',
+                          style: TextStyle(
+                            color: greenColor,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        TextSpan(
+                          text: ' today',
+                          style: TextStyle(
+                            color: secondaryColor,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: height / 10),
+                child: Text(
+                  '${stopwatch.elapsed.inHours}:${stopwatch.elapsed.inMinutes.remainder(60)}:${stopwatch.elapsed.inSeconds.remainder(60)}',
                   style: TextStyle(
                     color: foregroundColor,
-                    fontSize: 36,
+                    fontSize: 84,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                Icon(Icons.chevron_right, color: foregroundColor, size: 36),
-              ],
-            ),
-          ),
-          Text('307:52 overall', style: greyMedium),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ImageIcon(
-                AssetImage('assets/icons/triangle.png'),
-                color: greenColor,
               ),
-              RichText(
-                textAlign: TextAlign.center,
-                text: TextSpan(
-                  children: <TextSpan>[
-                    TextSpan(
-                      text: '37:08',
-                      style: TextStyle(
-                        color: greenColor,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    TextSpan(
-                      text: ' today',
-                      style: TextStyle(
-                        color: secondaryColor,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
+              Text('Count 1', style: greyMedium),
+              Padding(
+                padding: EdgeInsets.only(top: height / 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  spacing: 5.0,
+                  children: [
+                    Icon(Icons.circle, color: foregroundColor, size: 16.0),
+                    Icon(Icons.circle, color: secondaryColor, size: 16.0),
+                    Icon(Icons.circle, color: secondaryColor, size: 16.0),
                   ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 20.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: accentShadowColor,
+                        blurRadius: 0,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (stopwatch.isRunning) {
+                        stopTracker(stopwatch, duration);
+                      } else {
+                        startTracker(stopwatch, duration);
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: accentColor,
+                      foregroundColor: foregroundColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      fixedSize: Size(175.0, 45.0),
+                    ),
+                    child: Text(
+                      stopwatch.isRunning ? 'Stop' : 'Start',
+                      style: TextStyle(
+                        color: foregroundColor,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ],
           ),
-          Padding(
-            padding: EdgeInsets.only(top: screenHeight / 25),
-            child: Text(
-              '${stopwatch.elapsed.inHours}:${stopwatch.elapsed.inMinutes.remainder(60)}:${stopwatch.elapsed.inSeconds.remainder(60)}',
-              style: TextStyle(
-                color: foregroundColor,
-                fontSize: 84,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-          Text('Count 1', style: greyMedium),
-          Padding(
-            padding: EdgeInsets.only(top: screenHeight / 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              spacing: 5.0,
-              children: [
-                Icon(Icons.circle, color: foregroundColor, size: 16.0),
-                Icon(Icons.circle, color: secondaryColor, size: 16.0),
-                Icon(Icons.circle, color: secondaryColor, size: 16.0),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 20.0),
-            child: Container(
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: accentShadowColor,
-                    blurRadius: 0,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: ElevatedButton(
-                onPressed: () {
-                  if (stopwatch.isRunning) {
-                    stopTracker(stopwatch, duration);
-                  } else {
-                    startTracker(stopwatch, duration);
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: accentColor,
-                  foregroundColor: foregroundColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  fixedSize: Size(175.0, 45.0),
-                ),
-                child: Text(
-                  stopwatch.isRunning ? 'Stop' : 'Start',
-                  style: TextStyle(
-                    color: foregroundColor,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 20,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

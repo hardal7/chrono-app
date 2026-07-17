@@ -11,26 +11,16 @@ class SettingsButton extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        Padding(
-          padding: EdgeInsets.only(
-            top: screenHeight / 50,
-            right: screenWidth / 25,
-          ),
-          child: IconButton(
-            icon: Icon(
-              Icons.settings_outlined,
-              color: foregroundColor,
-              size: 36,
-            ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (BuildContext context) => settingsPage,
-                ),
-              );
-            },
-          ),
+        IconButton(
+          icon: Icon(Icons.settings_outlined, color: foregroundColor, size: 36),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) => settingsPage,
+              ),
+            );
+          },
         ),
       ],
     );
