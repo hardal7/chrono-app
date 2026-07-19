@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../style.dart';
 import 'login.dart';
 import 'tracker.dart';
+import 'users.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,7 +17,7 @@ class _HomePageState extends State<HomePage> {
   List<Widget> navigationPages = [
     TrackerPage(),
     LoginPage(),
-    LoginPage(),
+    UsersPage(),
     LoginPage(),
     LoginPage(),
   ];
