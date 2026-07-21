@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -8,10 +10,11 @@ void login(String email, String password) async {
       '${dotenv.get('API_URL')}/login',
       data: {'username': email, 'password': password},
     );
+    log(response.toString());
   } on DioException catch (e) {
-    print('Trying to log with email: $email and password: $password');
+    log('Trying to log with email: $email and password: $password');
     if (e.response?.statusCode != 200) {
-      print(e.error);
+      log(e.error.toString());
     }
   }
 }

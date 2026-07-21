@@ -4,9 +4,15 @@ import '../style.dart';
 import '../widgets/auth.dart';
 import 'package:flutter/material.dart';
 
-class RegisterPage extends StatelessWidget {
-  RegisterPage({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
 
+  @override
+  State<RegisterPage> createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+  bool _showPasswordError = false;
   final emailController = TextEditingController();
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
@@ -53,14 +59,26 @@ class RegisterPage extends StatelessWidget {
                   ),
                   child: AuthButton(
                     title: 'Register',
-                    route: 'Home',
-                    onPressed: () => register(
-                      emailController.text,
-                      usernameController.text,
-                      passwordController.text,
-                    ),
+                    onPressed: () async {
+                      final status = await register(
+                        emailController.text,
+                        usernameController.text,
+                        passwordController.text,
+                      );
+                      if (status == 201) {
+                        if (!context.mounted) return;
+                        Navigator.pushNamed(context, 'Home');
+                      } else {
+                        setState(() {
+                          _showPasswordError = true;
+                        });
+                      }
+                    },
                   ),
                 ),
+                // TODO: handle all register errors (username taken etc.)
+                if (_showPasswordError)
+                  Text('error', style: const TextStyle(color: Colors.red)),
                 Text(
                   'Or register with',
                   style: bodySmall,

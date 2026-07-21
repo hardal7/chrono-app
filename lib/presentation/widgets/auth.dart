@@ -10,7 +10,7 @@ class AuthButton extends StatelessWidget {
   const AuthButton({
     super.key,
     required this.title,
-    required this.route,
+    this.route = '',
     this.inverted = false,
     this.onPressed,
   });
@@ -24,9 +24,7 @@ class AuthButton extends StatelessWidget {
     return TextButton(
       onPressed: () {
         onPressed?.call();
-        // TODO: implement server response
-        bool success = true;
-        if (success) {
+        if (route != '') {
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -39,8 +37,6 @@ class AuthButton extends StatelessWidget {
                   : PasswordResetPage(),
             ),
           );
-        } else {
-          // TODO: Display wrong password error
         }
       },
       child: Container(
