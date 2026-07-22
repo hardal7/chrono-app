@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import '../../handler/register.dart';
+import 'home.dart';
 import 'login.dart';
 import '../style.dart';
 import '../widgets/auth.dart';
@@ -12,7 +15,8 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  bool _showPasswordError = false;
+  bool _showError = false;
+  late int? _status;
   final emailController = TextEditingController();
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
@@ -60,30 +64,35 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: AuthButton(
                     title: 'Register',
                     onPressed: () async {
-                      final status = await register(
+                      _status = await register(
                         emailController.text,
                         usernameController.text,
                         passwordController.text,
                       );
-                      if (status == 201) {
+                      if (_status == HttpStatus.created) {
                         if (!context.mounted) return;
-                        Navigator.pushNamed(context, 'Home');
+                        _showError = false;
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => HomePage(),
+                          ),
+                        );
                       } else {
                         setState(() {
-                          _showPasswordError = true;
+                          _showError = true;
                         });
                       }
                     },
                   ),
                 ),
-                // TODO: handle all register errors (username taken etc.)
-                if (_showPasswordError)
-                  Text('error', style: const TextStyle(color: Colors.red)),
-                Text(
-                  'Or register with',
-                  style: bodySmall,
-                  textAlign: TextAlign.center,
-                ),
+                if (_showError)
+                  Text(switch (_status) {
+                    HttpStatus.conflict =>
+                      'User with credentials already exists',
+                    HttpStatus.internalServerError => 'Failed to create user',
+                    _ => 'An unexpected error occurred',
+                  }, style: const TextStyle(color: Colors.red)),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[

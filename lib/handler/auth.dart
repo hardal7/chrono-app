@@ -1,22 +1,18 @@
-import 'dart:developer';
-
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void login(String email, String password) async {
-  final dio = Dio();
-  try {
-    final response = await dio.post(
-      '${dotenv.get('API_URL')}/login',
-      data: {'username': email, 'password': password},
-    );
-    log(response.toString());
-  } on DioException catch (e) {
-    log('Trying to log with email: $email and password: $password');
-    if (e.response?.statusCode != 200) {
-      log(e.error.toString());
-    }
-  }
+Future<int?> login(String name, String password) async {
+  debugPrint('Sending login request');
+  final dio = Dio(BaseOptions(validateStatus: (status) => status != null));
+  final response = await dio.post(
+    '${dotenv.get('API_URL')}/login',
+    data: name.contains('@')
+        ? {'email': name, 'password': password}
+        : {'username': name, 'password': password},
+  );
+  debugPrint(response.statusCode.toString());
+  return response.statusCode;
 }
 
 bool googleAuth() {

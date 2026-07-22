@@ -1,16 +1,26 @@
+import 'dart:io';
+
 import '../../handler/auth.dart';
+import 'home.dart';
 import 'register.dart';
 import 'reset_password.dart';
 import '../style.dart';
 import '../widgets/auth.dart';
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatelessWidget {
-  LoginPage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   // Name controller is either for username or email
   final nameController = TextEditingController();
   final passwordController = TextEditingController();
+  bool _showError = false;
+  late int? _status;
 
   @override
   Widget build(BuildContext context) {
@@ -81,12 +91,35 @@ class LoginPage extends StatelessWidget {
                   width: width,
                   child: AuthButton(
                     title: 'Login',
-                    route: 'Home',
-                    onPressed: () =>
-                        login(nameController.text, passwordController.text),
+                    onPressed: () async {
+                      _status = await login(
+                        nameController.text,
+                        passwordController.text,
+                      );
+                      if (_status == HttpStatus.ok) {
+                        if (!context.mounted) return;
+                        _showError = false;
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => HomePage(),
+                          ),
+                        );
+                      } else {
+                        setState(() {
+                          _showError = true;
+                        });
+                      }
+                    },
                   ),
                 ),
               ),
+              if (_showError)
+                Text(switch (_status) {
+                  HttpStatus.notFound => 'User with credentials not found',
+                  HttpStatus.unauthorized => 'Incorrect credentials',
+                  _ => 'An unexpected error occurred',
+                }, style: const TextStyle(color: Colors.red)),
               Text(
                 'Or login with',
                 style: bodySmall,
