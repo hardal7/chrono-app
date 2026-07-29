@@ -133,7 +133,7 @@ class _TrackerPageState extends State<TrackerPage> {
               Padding(
                 padding: EdgeInsets.only(top: height / 10),
                 child: Text(
-                  '${stopwatch.elapsed.inHours}:${stopwatch.elapsed.inMinutes.remainder(60)}:${stopwatch.elapsed.inSeconds.remainder(60)}',
+                  stopwatch.elapsed.toStopwatchString(),
                   style: TextStyle(
                     color: foregroundColor,
                     fontSize: 84,
@@ -170,9 +170,9 @@ class _TrackerPageState extends State<TrackerPage> {
                   child: ElevatedButton(
                     onPressed: () {
                       if (stopwatch.isRunning) {
-                        stopTracker(stopwatch, duration);
+                        stopTracker(stopwatch);
                       } else {
-                        startTracker(stopwatch, duration);
+                        startTracker(stopwatch);
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -199,5 +199,19 @@ class _TrackerPageState extends State<TrackerPage> {
         );
       },
     );
+  }
+}
+
+extension DurationFormatting on Duration {
+  String toStopwatchString() {
+    final hours = inHours;
+    final minutes = inMinutes.remainder(60);
+    final seconds = inSeconds.remainder(60);
+
+    if (hours > 0) {
+      return '$hours:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+    }
+
+    return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
 }
