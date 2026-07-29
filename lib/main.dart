@@ -3,8 +3,11 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'presentation/pages/boarding.dart';
 import 'package:flutter/material.dart';
 
+import 'services/dio.dart';
+
 Future<void> main() async {
-  await dotenv.load();
+  dotenv.load();
+  initializeDio();
   runApp(const Chrono());
 }
 

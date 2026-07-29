@@ -3,12 +3,14 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../services/dio.dart';
 
-Future<int?> register(String email, String username, String password) async {
+Future<int?> login(String name, String password) async {
   try {
-    debugPrint('Sending register request');
+    debugPrint('Sending login request');
     final response = await dio.post(
-      '${dotenv.get('API_URL')}/register',
-      data: {'email': email, 'username': username, 'password': password},
+      '${dotenv.get('API_URL')}/login',
+      data: name.contains('@')
+          ? {'email': name, 'password': password}
+          : {'username': name, 'password': password},
     );
     debugPrint(response.statusCode.toString());
     return response.statusCode;

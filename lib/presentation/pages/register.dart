@@ -46,14 +46,26 @@ class _RegisterPageState extends State<RegisterPage> {
                     textAlign: TextAlign.center,
                   ),
                 ),
-                InputField(fieldName: 'Email', controller: emailController),
-                InputField(
-                  fieldName: 'Username',
-                  controller: usernameController,
+                Padding(
+                  padding: EdgeInsets.only(left: width / 15, right: width / 15),
+                  child: InputField(
+                    fieldName: 'Email',
+                    controller: emailController,
+                  ),
                 ),
-                InputField(
-                  fieldName: 'Password',
-                  controller: passwordController,
+                Padding(
+                  padding: EdgeInsets.only(left: width / 15, right: width / 15),
+                  child: InputField(
+                    fieldName: 'Username',
+                    controller: usernameController,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: width / 15, right: width / 15),
+                  child: InputField(
+                    fieldName: 'Password',
+                    controller: passwordController,
+                  ),
                 ),
                 Padding(
                   padding: EdgeInsets.only(
@@ -61,43 +73,59 @@ class _RegisterPageState extends State<RegisterPage> {
                     left: width / 25,
                     right: width / 25,
                   ),
-                  child: AuthButton(
-                    title: 'Register',
-                    onPressed: () async {
-                      _status = await register(
-                        emailController.text,
-                        usernameController.text,
-                        passwordController.text,
-                      );
-                      if (_status == HttpStatus.created) {
-                        if (!context.mounted) return;
-                        _showError = false;
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (BuildContext context) => HomePage(),
-                          ),
+                  child: SizedBox(
+                    height: height / 15,
+                    width: width,
+                    child: AuthButton(
+                      title: 'Register',
+                      onPressed: () async {
+                        _status = await register(
+                          emailController.text,
+                          usernameController.text,
+                          passwordController.text,
                         );
-                      } else {
-                        setState(() {
-                          _showError = true;
-                        });
-                      }
-                    },
+                        if (_status == HttpStatus.created) {
+                          if (!context.mounted) return;
+                          _showError = false;
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) => HomePage(),
+                            ),
+                          );
+                        } else {
+                          setState(() {
+                            _showError = true;
+                          });
+                        }
+                      },
+                    ),
                   ),
                 ),
                 if (_showError)
-                  Text(switch (_status) {
-                    HttpStatus.conflict =>
-                      'User with credentials already exists',
-                    HttpStatus.internalServerError => 'Failed to create user',
-                    _ => 'An unexpected error occurred',
-                  }, style: const TextStyle(color: Colors.red)),
+                  Padding(
+                    padding: EdgeInsets.only(left: width / 10),
+                    child: Text(switch (_status) {
+                      HttpStatus.conflict =>
+                        'User with credentials already exists',
+                      HttpStatus.internalServerError => 'Failed to create user',
+                      0 => 'Server is currently down, please try again later.',
+                      _ => 'An unexpected error occurred',
+                    }, style: const TextStyle(color: Colors.red)),
+                  ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    ThirdPartyAuthButton(feature: 'Google'),
-                    ThirdPartyAuthButton(feature: 'Apple'),
+                    SizedBox(
+                      height: height / 10,
+                      width: width / 3,
+                      child: ThirdPartyAuthButton(feature: 'Google'),
+                    ),
+                    SizedBox(
+                      height: height / 10,
+                      width: width / 3,
+                      child: ThirdPartyAuthButton(feature: 'Apple'),
+                    ),
                   ],
                 ),
                 TextButton(

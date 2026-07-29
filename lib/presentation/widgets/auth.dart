@@ -1,4 +1,4 @@
-import '../../handler/auth.dart';
+import '../../handler/oauth.dart';
 import '../pages/home.dart';
 import '../pages/login.dart';
 import '../pages/register.dart';

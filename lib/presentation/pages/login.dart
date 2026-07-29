@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import '../../handler/auth.dart';
+import '../../handler/login.dart';
 import 'home.dart';
 import 'register.dart';
 import 'reset_password.dart';
@@ -43,49 +43,40 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(
-                  top: height / 20,
-                  bottom: 10.0,
-                  right: width / 15,
-                  left: width / 15,
-                ),
+                padding: EdgeInsets.only(right: width / 15, left: width / 15),
                 child: InputField(
                   fieldName: 'Username',
                   controller: nameController,
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(
-                  bottom: 10.0,
-                  right: width / 15,
-                  left: width / 15,
-                ),
+                padding: EdgeInsets.only(right: width / 15, left: width / 15),
                 child: InputField(
                   fieldName: 'Password',
                   controller: passwordController,
                 ),
               ),
               Align(
-                alignment: Alignment.center,
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (BuildContext context) => PasswordResetPage(),
-                      ),
-                      (route) => false,
-                    );
-                  },
-                  child: Text('Forgot password?', style: labelSmall),
+                alignment: Alignment.centerRight,
+                child: Padding(
+                  padding: EdgeInsets.only(right: width / 20),
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              PasswordResetPage(),
+                        ),
+                        (route) => false,
+                      );
+                    },
+                    child: Text('Forgot password?', style: labelSmall),
+                  ),
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(
-                  top: 5.0,
-                  left: width / 25,
-                  right: width / 25,
-                ),
+                padding: EdgeInsets.only(left: width / 25, right: width / 25),
                 child: SizedBox(
                   height: height / 15,
                   width: width,
@@ -115,11 +106,15 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               if (_showError)
-                Text(switch (_status) {
-                  HttpStatus.notFound => 'User with credentials not found',
-                  HttpStatus.unauthorized => 'Incorrect credentials',
-                  _ => 'An unexpected error occurred',
-                }, style: const TextStyle(color: Colors.red)),
+                Padding(
+                  padding: EdgeInsets.only(left: width / 10),
+                  child: Text(switch (_status) {
+                    HttpStatus.notFound => 'User with credentials not found',
+                    HttpStatus.unauthorized => 'Incorrect credentials',
+                    0 => 'Server is currently down, please try again later.',
+                    _ => 'An unexpected error occurred',
+                  }, style: const TextStyle(color: Colors.red)),
+                ),
               Text(
                 'Or login with',
                 style: bodySmall,
@@ -153,7 +148,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: RichText(
                   textAlign: TextAlign.center,
                   text: TextSpan(
-                    children: <TextSpan>[
+                    children: [
                       TextSpan(
                         text: 'Don\'t have an account? ',
                         style: bodySmall,
