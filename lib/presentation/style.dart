@@ -24,3 +24,9 @@ const bodyMedium = TextStyle(
   fontWeight: FontWeight.w500,
   color: secondaryColor,
 );
+
+TextStyle bodyLarge = const TextStyle(
+  color: secondaryColor,
+  fontSize: 24,
+  fontWeight: FontWeight.w500,
+);

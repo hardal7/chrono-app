@@ -111,7 +111,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: Text(switch (_status) {
                     HttpStatus.notFound => 'User with credentials not found',
                     HttpStatus.unauthorized => 'Incorrect credentials',
-                    0 => 'Server is currently down, please try again later.',
+                    null => 'Server is currently down, please try again later.',
                     _ => 'An unexpected error occurred',
                   }, style: const TextStyle(color: Colors.red)),
                 ),

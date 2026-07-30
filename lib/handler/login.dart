@@ -15,6 +15,6 @@ Future<int?> login(String name, String password) async {
     debugPrint(response.statusCode.toString());
     return response.statusCode;
   } catch (e) {
-    return 0;
+    return null;
   }
 }

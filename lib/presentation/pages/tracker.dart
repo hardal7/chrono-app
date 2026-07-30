@@ -1,17 +1,12 @@
 import 'dart:async';
 
+import '../../handler/get_topic.dart';
 import '../../handler/track.dart';
 import '../style.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/button.dart';
 import '../widgets/settings.dart';
-
-TextStyle greyMedium = const TextStyle(
-  color: secondaryColor,
-  fontSize: 24,
-  fontWeight: FontWeight.w500,
-);
 
 class TrackerSettingsPage extends StatelessWidget {
   const TrackerSettingsPage({super.key});
@@ -31,17 +26,37 @@ class TrackerPage extends StatefulWidget {
 
 class _TrackerPageState extends State<TrackerPage> {
   late Stopwatch stopwatch;
-  late Timer timer;
+  late Timer uiTimer;
+  late Timer topicTimer;
   late Duration duration;
+  late String topicTotalTime = '0';
 
   @override
   void initState() {
     super.initState();
+
     stopwatch = Stopwatch();
     duration = Duration();
 
-    timer = Timer.periodic(Duration(milliseconds: 30), (timer) {
+    uiTimer = Timer.periodic(const Duration(milliseconds: 500), (_) {
       setState(() {});
+    });
+
+    topicTimer = Timer.periodic(const Duration(minutes: 1), (_) async {
+      _loadTopicTime();
+    });
+
+    _loadTopicTime();
+  }
+
+  Future<void> _loadTopicTime() async {
+    final seconds = await getTopicTime('General');
+    if (!mounted) return;
+
+    setState(() {
+      if (seconds != null) {
+        topicTotalTime = Duration(seconds: seconds).toStopwatchString();
+      }
     });
   }
 
@@ -84,7 +99,7 @@ class _TrackerPageState extends State<TrackerPage> {
                       ],
                     ),
                     Text(
-                      'Topic',
+                      'General',
                       style: TextStyle(
                         color: foregroundColor,
                         fontSize: 36,
@@ -95,7 +110,7 @@ class _TrackerPageState extends State<TrackerPage> {
                   ],
                 ),
               ),
-              Text('307:52 overall', style: greyMedium),
+              Text('$topicTotalTime overall', style: bodyLarge),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -139,7 +154,7 @@ class _TrackerPageState extends State<TrackerPage> {
                   ),
                 ),
               ),
-              Text('Count 1', style: greyMedium),
+              Text('Count 1', style: bodyLarge),
               Padding(
                 padding: EdgeInsets.only(top: height / 20),
                 child: Row(
@@ -159,6 +174,7 @@ class _TrackerPageState extends State<TrackerPage> {
                   size: Size(175, 45),
                   onPressed: () {
                     if (stopwatch.isRunning) {
+                      _loadTopicTime();
                       stopTracker(stopwatch);
                     } else {
                       startTracker(stopwatch);

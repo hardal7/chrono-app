@@ -109,7 +109,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       HttpStatus.conflict =>
                         'User with credentials already exists',
                       HttpStatus.internalServerError => 'Failed to create user',
-                      0 => 'Server is currently down, please try again later.',
+                      null =>
+                        'Server is currently down, please try again later.',
                       _ => 'An unexpected error occurred',
                     }, style: const TextStyle(color: Colors.red)),
                   ),
