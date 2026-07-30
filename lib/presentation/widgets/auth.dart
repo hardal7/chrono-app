@@ -113,30 +113,26 @@ class InputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Container(
-          decoration: BoxDecoration(
-            border: BoxBorder.all(color: accentColor),
-            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+    return Container(
+      decoration: BoxDecoration(
+        border: BoxBorder.all(color: accentColor),
+        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+      ),
+      child: TextFormField(
+        controller: controller,
+        style: bodySmall,
+        obscureText: fieldName == 'Password',
+        decoration: InputDecoration(
+          hintText: fieldName,
+          hintStyle: bodySmall,
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: accentColor),
           ),
-          child: TextFormField(
-            controller: controller,
-            style: bodySmall,
-            obscureText: fieldName == 'Password',
-            decoration: InputDecoration(
-              hintText: fieldName,
-              hintStyle: bodySmall,
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: accentColor),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: accentColor),
-              ),
-            ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: accentColor),
           ),
         ),
-      ],
+      ),
     );
   }
 }

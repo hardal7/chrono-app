@@ -18,3 +18,9 @@ const bodySmall = TextStyle(
   fontWeight: FontWeight.w500,
   color: secondaryColor,
 );
+
+const bodyMedium = TextStyle(
+  fontSize: 20,
+  fontWeight: FontWeight.w500,
+  color: secondaryColor,
+);

@@ -4,6 +4,7 @@ import '../../handler/track.dart';
 import '../style.dart';
 import 'package:flutter/material.dart';
 
+import '../widgets/button.dart';
 import '../widgets/settings.dart';
 
 TextStyle greyMedium = const TextStyle(
@@ -54,10 +55,7 @@ class _TrackerPageState extends State<TrackerPage> {
           color: backgroundColor,
           child: Column(
             children: [
-              Padding(
-                padding: EdgeInsets.only(top: height / 20, right: width / 10),
-                child: SettingsButton(settingsPage: TrackerSettingsPage()),
-              ),
+              SettingsButton(settingsPage: TrackerSettingsPage()),
               Padding(
                 padding: EdgeInsets.only(top: height / 10),
                 child: Row(
@@ -156,42 +154,16 @@ class _TrackerPageState extends State<TrackerPage> {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 20.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color: accentShadowColor,
-                        blurRadius: 0,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (stopwatch.isRunning) {
-                        stopTracker(stopwatch);
-                      } else {
-                        startTracker(stopwatch);
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: accentColor,
-                      foregroundColor: foregroundColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      fixedSize: Size(175.0, 45.0),
-                    ),
-                    child: Text(
-                      stopwatch.isRunning ? 'Stop' : 'Start',
-                      style: TextStyle(
-                        color: foregroundColor,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
+                child: GenericButton(
+                  text: stopwatch.isRunning ? 'Stop' : 'Start',
+                  size: Size(175, 45),
+                  onPressed: () {
+                    if (stopwatch.isRunning) {
+                      stopTracker(stopwatch);
+                    } else {
+                      startTracker(stopwatch);
+                    }
+                  },
                 ),
               ),
             ],
