@@ -110,7 +110,7 @@ class _TrackerPageState extends State<TrackerPage> {
                   ],
                 ),
               ),
-              Text('$topicTotalTime overall', style: bodyLarge),
+              Text('$topicTotalTime overall', style: labelLargeGrey),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -122,14 +122,7 @@ class _TrackerPageState extends State<TrackerPage> {
                     textAlign: TextAlign.center,
                     text: TextSpan(
                       children: <TextSpan>[
-                        TextSpan(
-                          text: '37:08',
-                          style: TextStyle(
-                            color: greenColor,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
+                        TextSpan(text: '37:08', style: labelMediumGreen),
                         TextSpan(
                           text: ' today',
                           style: TextStyle(
@@ -154,7 +147,7 @@ class _TrackerPageState extends State<TrackerPage> {
                   ),
                 ),
               ),
-              Text('Count 1', style: bodyLarge),
+              Text('Count 1', style: labelLargeGrey),
               Padding(
                 padding: EdgeInsets.only(top: height / 20),
                 child: Row(

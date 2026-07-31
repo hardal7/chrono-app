@@ -13,19 +13,37 @@ TextStyle labelSmall = const TextStyle(
   color: foregroundColor,
 );
 
-const bodySmall = TextStyle(
+TextStyle labelMedium = const TextStyle(
+  fontSize: 20,
+  fontWeight: FontWeight.w500,
+  color: foregroundColor,
+);
+
+TextStyle labelSmallGreen = const TextStyle(
+  fontSize: 14,
+  fontWeight: FontWeight.w500,
+  color: greenColor,
+);
+
+TextStyle labelMediumGreen = const TextStyle(
+  fontSize: 20,
+  fontWeight: FontWeight.w500,
+  color: greenColor,
+);
+
+const labelSmallGrey = TextStyle(
   fontSize: 14,
   fontWeight: FontWeight.w500,
   color: secondaryColor,
 );
 
-const bodyMedium = TextStyle(
+const labelMediumGrey = TextStyle(
   fontSize: 20,
   fontWeight: FontWeight.w500,
   color: secondaryColor,
 );
 
-TextStyle bodyLarge = const TextStyle(
+TextStyle labelLargeGrey = const TextStyle(
   color: secondaryColor,
   fontSize: 24,
   fontWeight: FontWeight.w500,

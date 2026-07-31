@@ -44,11 +44,11 @@ class _UsersPageState extends State<UsersPage> {
                   ),
                   child: TextFormField(
                     controller: searchController,
-                    style: bodyMedium,
+                    style: labelMediumGrey,
                     decoration: InputDecoration(
                       prefixIcon: Icon(Icons.search, color: secondaryColor),
                       hintText: 'Search username',
-                      hintStyle: bodyMedium,
+                      hintStyle: labelMediumGrey,
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: secondaryColor),
                       ),
@@ -60,11 +60,9 @@ class _UsersPageState extends State<UsersPage> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(
-                  top: height / 40,
-                  bottom: height / 40,
-                  left: 20,
-                  right: 20,
+                padding: EdgeInsets.symmetric(
+                  vertical: height / 40,
+                  horizontal: 20,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -90,15 +88,75 @@ class _UsersPageState extends State<UsersPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Text('Rank', style: bodyMedium),
-                  Text('User', style: bodyMedium),
-                  Text('Hours', style: bodyMedium),
+                  Text('Rank', style: labelMediumGrey),
+                  Text('User', style: labelMediumGrey),
+                  Text('Hours', style: labelMediumGrey),
                 ],
               ),
+              UserCard(),
             ],
           ),
         );
       },
+    );
+  }
+}
+
+class UserCard extends StatelessWidget {
+  const UserCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 2,
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 5),
+                  child: Text('1', style: labelMedium),
+                ),
+                ImageIcon(
+                  AssetImage('assets/icons/triangle.png'),
+                  color: greenColor,
+                ),
+                Text('7', style: labelMediumGreen),
+              ],
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Center(
+              child: CircleAvatar(
+                radius: 23,
+                backgroundImage: AssetImage('avatar'),
+              ),
+            ),
+          ),
+          Expanded(flex: 2, child: Text('hardal', style: labelMedium)),
+          Expanded(
+            flex: 2,
+            child: Column(
+              children: [
+                Text('1107:32', style: labelMedium),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ImageIcon(
+                      AssetImage('assets/icons/triangle.png'),
+                      color: greenColor,
+                    ),
+                    Text('21:17', style: labelSmallGreen),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -117,7 +117,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               Text(
                 'Or login with',
-                style: bodySmall,
+                style: labelSmallGrey,
                 textAlign: TextAlign.center,
               ),
               Row(
@@ -151,7 +151,7 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       TextSpan(
                         text: 'Don\'t have an account? ',
-                        style: bodySmall,
+                        style: labelSmallGrey,
                       ),
                       TextSpan(text: 'Register an account', style: labelSmall),
                     ],

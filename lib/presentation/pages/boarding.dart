@@ -49,7 +49,7 @@ class BoardingPage extends StatelessWidget {
                 padding: EdgeInsets.only(left: width / 30, right: width / 30),
                 child: Text(
                   'Start tracking your study habits for a more mindful studying experience.',
-                  style: bodySmall,
+                  style: labelSmallGrey,
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -79,7 +79,7 @@ class BoardingPage extends StatelessWidget {
                 child: RichText(
                   textAlign: TextAlign.center,
                   text: TextSpan(
-                    style: bodySmall,
+                    style: labelSmallGrey,
                     children: <TextSpan>[
                       TextSpan(text: 'By continuing you agree to the '),
                       TextSpan(
