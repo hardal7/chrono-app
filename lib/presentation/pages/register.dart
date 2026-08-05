@@ -30,10 +30,7 @@ class _RegisterPageState extends State<RegisterPage> {
         return Material(
           color: backgroundColor,
           child: Padding(
-            padding: EdgeInsetsGeometry.only(
-              top: height / 20,
-              bottom: height / 20,
-            ),
+            padding: EdgeInsetsGeometry.symmetric(vertical: height / 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               spacing: 10.0,
@@ -47,32 +44,28 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: width / 15, right: width / 15),
+                  padding: EdgeInsets.symmetric(horizontal: 20),
                   child: InputField(
                     fieldName: 'Email',
                     controller: emailController,
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: width / 15, right: width / 15),
+                  padding: EdgeInsets.symmetric(horizontal: 20),
                   child: InputField(
                     fieldName: 'Username',
                     controller: usernameController,
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: width / 15, right: width / 15),
+                  padding: EdgeInsets.symmetric(horizontal: 20),
                   child: InputField(
                     fieldName: 'Password',
                     controller: passwordController,
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(
-                    top: 5.0,
-                    left: width / 25,
-                    right: width / 25,
-                  ),
+                  padding: EdgeInsets.only(top: 5, left: 20, right: 20),
                   child: SizedBox(
                     height: height / 15,
                     width: width,
@@ -104,7 +97,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 if (_showError)
                   Padding(
-                    padding: EdgeInsets.only(left: width / 10),
+                    padding: EdgeInsets.only(left: 20),
                     child: Text(switch (_status) {
                       HttpStatus.conflict =>
                         'User with credentials already exists',

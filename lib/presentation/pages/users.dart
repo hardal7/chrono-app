@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-
+import '../../handler/top_users.dart';
+import '../duration.dart';
 import '../style.dart';
 import '../widgets/button.dart';
 import '../widgets/settings.dart';
@@ -22,6 +23,24 @@ class UsersPage extends StatefulWidget {
 
 class _UsersPageState extends State<UsersPage> {
   final searchController = TextEditingController();
+  List<LeaderboardUser> users = [];
+  bool isLoading = true;
+  @override
+  void initState() {
+    super.initState();
+    loadUsers();
+  }
+
+  Future<void> loadUsers() async {
+    final result = await getTopUsers();
+
+    if (!mounted) return;
+
+    setState(() {
+      users = result;
+      isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +54,7 @@ class _UsersPageState extends State<UsersPage> {
             children: [
               SettingsButton(settingsPage: UserSettingsPage()),
               Padding(
-                padding: EdgeInsets.only(top: height / 40, left: 20, right: 20),
+                padding: EdgeInsets.only(top: 20, left: 20, right: 20),
                 child: Container(
                   height: height / 15,
                   decoration: BoxDecoration(
@@ -93,7 +112,16 @@ class _UsersPageState extends State<UsersPage> {
                   Text('Hours', style: labelMediumGrey),
                 ],
               ),
-              UserCard(),
+              Expanded(
+                child: isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : ListView.builder(
+                        itemCount: users.length,
+                        itemBuilder: (context, index) {
+                          return UserCard(user: users[index]);
+                        },
+                      ),
+              ),
             ],
           ),
         );
@@ -103,7 +131,8 @@ class _UsersPageState extends State<UsersPage> {
 }
 
 class UserCard extends StatelessWidget {
-  const UserCard({super.key});
+  const UserCard({super.key, required this.user});
+  final LeaderboardUser user;
 
   @override
   Widget build(BuildContext context) {
@@ -112,36 +141,46 @@ class UserCard extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            flex: 2,
+            flex: 4,
             child: Row(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 10, right: 5),
-                  child: Text('1', style: labelMedium),
+                  padding: const EdgeInsets.only(left: 30, right: 10),
+                  child: Text('${user.rank}', style: labelMedium),
                 ),
-                ImageIcon(
-                  AssetImage('assets/icons/triangle.png'),
-                  color: greenColor,
+                GestureDetector(
+                  onTap: () {},
+                  child: ImageIcon(
+                    AssetImage('assets/icons/triangle.png'),
+                    color: greenColor,
+                  ),
                 ),
+                // TODO: Later implementation??
                 Text('7', style: labelMediumGreen),
               ],
             ),
           ),
           Expanded(
-            flex: 2,
-            child: Center(
-              child: CircleAvatar(
-                radius: 23,
-                backgroundImage: AssetImage('avatar'),
-              ),
+            flex: 4,
+            child: Row(
+              children: [
+                CircleAvatar(radius: 23, backgroundImage: AssetImage('avatar')),
+                Padding(
+                  padding: const EdgeInsets.only(left: 5),
+                  child: Text(
+                    user.username,
+                    style: labelMedium,
+                    // TODO: text overflow
+                  ),
+                ),
+              ],
             ),
           ),
-          Expanded(flex: 2, child: Text('hardal', style: labelMedium)),
           Expanded(
-            flex: 2,
+            flex: 3,
             child: Column(
               children: [
-                Text('1107:32', style: labelMedium),
+                Text(user.totalTime.toStopwatchString(), style: labelMedium),
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -149,7 +188,10 @@ class UserCard extends StatelessWidget {
                       AssetImage('assets/icons/triangle.png'),
                       color: greenColor,
                     ),
-                    Text('21:17', style: labelSmallGreen),
+                    Text(
+                      user.todayTime.toStopwatchString(),
+                      style: labelSmallGreen,
+                    ),
                   ],
                 ),
               ],

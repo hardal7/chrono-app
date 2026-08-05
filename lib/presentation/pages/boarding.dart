@@ -46,7 +46,7 @@ class BoardingPage extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(left: width / 30, right: width / 30),
+                padding: EdgeInsets.symmetric(horizontal: 20),
                 child: Text(
                   'Start tracking your study habits for a more mindful studying experience.',
                   style: labelSmallGrey,
@@ -54,7 +54,7 @@ class BoardingPage extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(15.0),
+                padding: const EdgeInsets.all(20),
                 child: Column(
                   children: <SizedBox>[
                     SizedBox(
@@ -75,7 +75,7 @@ class BoardingPage extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(left: width / 20, right: width / 20),
+                padding: EdgeInsets.symmetric(horizontal: 20),
                 child: RichText(
                   textAlign: TextAlign.center,
                   text: TextSpan(

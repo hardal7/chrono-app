@@ -35,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
             spacing: 10.0,
             children: <Widget>[
               Padding(
-                padding: EdgeInsets.only(top: height / 20, bottom: height / 20),
+                padding: EdgeInsets.symmetric(vertical: height / 20),
                 child: const Text(
                   'Login to your account',
                   style: TextStyle(color: Colors.white60, fontSize: 24),
@@ -43,14 +43,14 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(right: width / 15, left: width / 15),
+                padding: EdgeInsets.symmetric(horizontal: 20),
                 child: InputField(
                   fieldName: 'Username',
                   controller: nameController,
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(right: width / 15, left: width / 15),
+                padding: EdgeInsets.symmetric(horizontal: 20),
                 child: InputField(
                   fieldName: 'Password',
                   controller: passwordController,
@@ -59,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
               Align(
                 alignment: Alignment.centerRight,
                 child: Padding(
-                  padding: EdgeInsets.only(right: width / 20),
+                  padding: EdgeInsets.only(right: 20),
                   child: TextButton(
                     onPressed: () {
                       Navigator.pushAndRemoveUntil(
@@ -76,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(left: width / 25, right: width / 25),
+                padding: EdgeInsets.symmetric(horizontal: 20),
                 child: SizedBox(
                   height: height / 15,
                   width: width,
@@ -107,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               if (_showError)
                 Padding(
-                  padding: EdgeInsets.only(left: width / 10),
+                  padding: EdgeInsets.only(left: 20),
                   child: Text(switch (_status) {
                     HttpStatus.notFound => 'User with credentials not found',
                     HttpStatus.unauthorized => 'Incorrect credentials',

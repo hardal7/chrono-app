@@ -18,7 +18,7 @@ void stopTracker(Stopwatch stopwatch) async {
       '${dotenv.get('API_URL')}/topic-event/track',
       data: {
         'topic': 'General',
-        'time': timeTracked.inSeconds,
+        'time_seconds': timeTracked.inSeconds,
         'date': DateTime.now().toUtc().toIso8601String(),
       },
     );

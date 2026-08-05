@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import '../../handler/get_today.dart';
 import '../../handler/get_topic.dart';
 import '../../handler/track.dart';
+import '../duration.dart';
 import '../style.dart';
 import 'package:flutter/material.dart';
 
@@ -30,6 +32,7 @@ class _TrackerPageState extends State<TrackerPage> {
   late Timer topicTimer;
   late Duration duration;
   late String topicTotalTime = '0';
+  late String todayTime = '0';
 
   @override
   void initState() {
@@ -43,19 +46,22 @@ class _TrackerPageState extends State<TrackerPage> {
     });
 
     topicTimer = Timer.periodic(const Duration(minutes: 1), (_) async {
-      _loadTopicTime();
+      _loadTimes();
     });
 
-    _loadTopicTime();
+    _loadTimes();
   }
 
-  Future<void> _loadTopicTime() async {
-    final seconds = await getTopicTime('General');
-    if (!mounted) return;
+  Future<void> _loadTimes() async {
+    final secondsTopic = await getTopicTime('General');
+    final secondsToday = await getTodayTime();
 
     setState(() {
-      if (seconds != null) {
-        topicTotalTime = Duration(seconds: seconds).toStopwatchString();
+      if (secondsTopic != null) {
+        topicTotalTime = Duration(seconds: secondsTopic).toStopwatchString();
+      }
+      if (secondsToday != null) {
+        todayTime = Duration(seconds: secondsToday).toStopwatchString();
       }
     });
   }
@@ -72,7 +78,7 @@ class _TrackerPageState extends State<TrackerPage> {
             children: [
               SettingsButton(settingsPage: TrackerSettingsPage()),
               Padding(
-                padding: EdgeInsets.only(top: height / 10),
+                padding: EdgeInsets.only(top: 20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   spacing: 5.0,
@@ -122,7 +128,7 @@ class _TrackerPageState extends State<TrackerPage> {
                     textAlign: TextAlign.center,
                     text: TextSpan(
                       children: <TextSpan>[
-                        TextSpan(text: '37:08', style: labelMediumGreen),
+                        TextSpan(text: '$todayTime', style: labelMediumGreen),
                         TextSpan(
                           text: ' today',
                           style: TextStyle(
@@ -167,7 +173,7 @@ class _TrackerPageState extends State<TrackerPage> {
                   size: Size(175, 45),
                   onPressed: () {
                     if (stopwatch.isRunning) {
-                      _loadTopicTime();
+                      _loadTimes();
                       stopTracker(stopwatch);
                     } else {
                       startTracker(stopwatch);
@@ -180,19 +186,5 @@ class _TrackerPageState extends State<TrackerPage> {
         );
       },
     );
-  }
-}
-
-extension DurationFormatting on Duration {
-  String toStopwatchString() {
-    final hours = inHours;
-    final minutes = inMinutes.remainder(60);
-    final seconds = inSeconds.remainder(60);
-
-    if (hours > 0) {
-      return '$hours:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
-    }
-
-    return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
 }
