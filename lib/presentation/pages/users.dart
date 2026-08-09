@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../../handler/top_users.dart';
 import '../duration.dart';
 import '../style.dart';
@@ -164,7 +165,12 @@ class UserCard extends StatelessWidget {
             flex: 4,
             child: Row(
               children: [
-                CircleAvatar(radius: 23, backgroundImage: AssetImage('avatar')),
+                CircleAvatar(
+                  radius: 23,
+                  backgroundImage: NetworkImage(
+                    'http://${dotenv.get('API_URL')}${user.avatarPath}',
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.only(left: 5),
                   child: Text(
