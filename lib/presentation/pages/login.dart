@@ -71,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
                         (route) => false,
                       );
                     },
-                    child: Text('Forgot password?', style: labelSmall),
+                    child: Text('Forgot password?', style: bodySmall),
                   ),
                 ),
               ),
@@ -117,7 +117,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               Text(
                 'Or login with',
-                style: labelSmallGrey,
+                style: bodySmallGrey,
                 textAlign: TextAlign.center,
               ),
               Row(
@@ -151,9 +151,9 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       TextSpan(
                         text: 'Don\'t have an account? ',
-                        style: labelSmallGrey,
+                        style: bodySmallGrey,
                       ),
-                      TextSpan(text: 'Register an account', style: labelSmall),
+                      TextSpan(text: 'Register an account', style: bodySmall),
                     ],
                   ),
                 ),

@@ -138,9 +138,9 @@ class _RegisterPageState extends State<RegisterPage> {
                       children: <TextSpan>[
                         TextSpan(
                           text: 'Already have an account? ',
-                          style: labelSmallGrey,
+                          style: bodySmallGrey,
                         ),
-                        TextSpan(text: 'Login to account', style: labelSmall),
+                        TextSpan(text: 'Login to account', style: bodySmall),
                       ],
                     ),
                   ),

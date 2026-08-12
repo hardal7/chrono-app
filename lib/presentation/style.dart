@@ -7,44 +7,56 @@ const Color greenColor = Color(0xFF00BF60);
 const Color accentColor = Color(0xFF5946B2);
 const Color accentShadowColor = Color(0xBF5947AD);
 
-TextStyle labelSmall = const TextStyle(
+TextStyle bodySmall = const TextStyle(
   fontSize: 14,
   fontWeight: FontWeight.w500,
   color: foregroundColor,
 );
 
-TextStyle labelMedium = const TextStyle(
+TextStyle bodyMedium = const TextStyle(
   fontSize: 20,
   fontWeight: FontWeight.w500,
   color: foregroundColor,
 );
 
-TextStyle labelSmallGreen = const TextStyle(
+TextStyle bodyLarge = const TextStyle(
+  color: foregroundColor,
+  fontSize: 36,
+  fontWeight: FontWeight.w500,
+);
+
+TextStyle bodyMax = const TextStyle(
+  color: foregroundColor,
+  fontSize: 84,
+  fontWeight: FontWeight.w500,
+);
+
+TextStyle bodySmallGreen = const TextStyle(
   fontSize: 14,
   fontWeight: FontWeight.w500,
   color: greenColor,
 );
 
-TextStyle labelMediumGreen = const TextStyle(
+TextStyle bodyMediumGreen = const TextStyle(
   fontSize: 20,
   fontWeight: FontWeight.w500,
   color: greenColor,
 );
 
-const labelSmallGrey = TextStyle(
+const bodySmallGrey = TextStyle(
   fontSize: 14,
   fontWeight: FontWeight.w500,
   color: secondaryColor,
 );
 
-const labelMediumGrey = TextStyle(
-  fontSize: 20,
+const bodyMediumGrey = TextStyle(
+  fontSize: 22,
   fontWeight: FontWeight.w500,
   color: secondaryColor,
 );
 
-TextStyle labelLargeGrey = const TextStyle(
+TextStyle bodyLargeGrey = const TextStyle(
   color: secondaryColor,
-  fontSize: 24,
+  fontSize: 26,
   fontWeight: FontWeight.w500,
 );

@@ -9,7 +9,7 @@ void startTracker(Stopwatch stopwatch) {
 }
 
 Duration totalTime = Duration.zero;
-void stopTracker(Stopwatch stopwatch) async {
+Future<void> stopTracker(Stopwatch stopwatch) async {
   stopwatch.stop();
   Duration timeTracked = stopwatch.elapsed - totalTime;
   totalTime = stopwatch.elapsed;
@@ -22,6 +22,7 @@ void stopTracker(Stopwatch stopwatch) async {
         'date': DateTime.now().toUtc().toIso8601String(),
       },
     );
+    debugPrint(response.statusCode.toString());
   } on DioException catch (e) {
     debugPrint('Trying to track time');
     if (e.response?.statusCode != 200) {

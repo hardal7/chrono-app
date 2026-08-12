@@ -64,11 +64,11 @@ class _UsersPageState extends State<UsersPage> {
                   ),
                   child: TextFormField(
                     controller: searchController,
-                    style: labelMediumGrey,
+                    style: bodyMediumGrey,
                     decoration: InputDecoration(
                       prefixIcon: Icon(Icons.search, color: secondaryColor),
                       hintText: 'Search username',
-                      hintStyle: labelMediumGrey,
+                      hintStyle: bodyMediumGrey,
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: secondaryColor),
                       ),
@@ -108,9 +108,9 @@ class _UsersPageState extends State<UsersPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Text('Rank', style: labelMediumGrey),
-                  Text('User', style: labelMediumGrey),
-                  Text('Hours', style: labelMediumGrey),
+                  Text('Rank', style: bodyMediumGrey),
+                  Text('User', style: bodyMediumGrey),
+                  Text('Hours', style: bodyMediumGrey),
                 ],
               ),
               Expanded(
@@ -131,6 +131,7 @@ class _UsersPageState extends State<UsersPage> {
   }
 }
 
+// TODO: Grey out the user that is you
 class UserCard extends StatelessWidget {
   const UserCard({super.key, required this.user});
   final LeaderboardUser user;
@@ -147,17 +148,13 @@ class UserCard extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 30, right: 10),
-                  child: Text('${user.rank}', style: labelMedium),
+                  child: Text('${user.rank}', style: bodyMedium),
                 ),
-                GestureDetector(
-                  onTap: () {},
-                  child: ImageIcon(
-                    AssetImage('assets/icons/triangle.png'),
-                    color: greenColor,
-                  ),
+                ImageIcon(
+                  AssetImage('assets/icons/triangle.png'),
+                  color: greenColor,
                 ),
-                // TODO: Later implementation??
-                Text('7', style: labelMediumGreen),
+                Text('7', style: bodyMediumGreen),
               ],
             ),
           ),
@@ -165,17 +162,21 @@ class UserCard extends StatelessWidget {
             flex: 4,
             child: Row(
               children: [
-                CircleAvatar(
-                  radius: 23,
-                  backgroundImage: NetworkImage(
-                    'http://${dotenv.get('API_URL')}${user.avatarPath}',
+                GestureDetector(
+                  // TODO: Route to users page
+                  onTap: () {},
+                  child: CircleAvatar(
+                    radius: 23,
+                    backgroundImage: NetworkImage(
+                      '${dotenv.get('API_URL')}${user.avatarPath}',
+                    ),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 5),
                   child: Text(
                     user.username,
-                    style: labelMedium,
+                    style: bodyMedium,
                     // TODO: text overflow
                   ),
                 ),
@@ -186,7 +187,7 @@ class UserCard extends StatelessWidget {
             flex: 3,
             child: Column(
               children: [
-                Text(user.totalTime.toStopwatchString(), style: labelMedium),
+                Text(user.totalTime.toHoursString(), style: bodyMedium),
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -194,10 +195,7 @@ class UserCard extends StatelessWidget {
                       AssetImage('assets/icons/triangle.png'),
                       color: greenColor,
                     ),
-                    Text(
-                      user.todayTime.toStopwatchString(),
-                      style: labelSmallGreen,
-                    ),
+                    Text(user.todayTime.toHoursString(), style: bodySmallGreen),
                   ],
                 ),
               ],

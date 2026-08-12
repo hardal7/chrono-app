@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 import '../widgets/settings.dart';
 
-class StatsSettingsPage extends StatelessWidget {
-  const StatsSettingsPage({super.key});
+class ProfileSettingsPage extends StatelessWidget {
+  const ProfileSettingsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -12,14 +12,14 @@ class StatsSettingsPage extends StatelessWidget {
   }
 }
 
-class StatsPage extends StatefulWidget {
-  const StatsPage({super.key});
+class ProfilePage extends StatefulWidget {
+  const ProfilePage({super.key});
 
   @override
-  State<StatsPage> createState() => _StatsPageState();
+  State<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _StatsPageState extends State<StatsPage> {
+class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -29,7 +29,7 @@ class _StatsPageState extends State<StatsPage> {
         return Material(
           color: backgroundColor,
           child: Column(
-            children: [SettingsButton(settingsPage: StatsSettingsPage())],
+            children: [SettingsButton(settingsPage: ProfileSettingsPage())],
           ),
         );
       },

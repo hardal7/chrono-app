@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../handler/get_today.dart';
 import '../../handler/get_topic.dart';
@@ -31,8 +32,8 @@ class _TrackerPageState extends State<TrackerPage> {
   late Timer uiTimer;
   late Timer topicTimer;
   late Duration duration;
-  late String topicTotalTime = '0';
-  late String todayTime = '0';
+  late String topicTime = '00:00';
+  late String todayTime = '00:00';
 
   @override
   void initState() {
@@ -42,28 +43,42 @@ class _TrackerPageState extends State<TrackerPage> {
     duration = Duration();
 
     uiTimer = Timer.periodic(const Duration(milliseconds: 500), (_) {
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     });
 
     topicTimer = Timer.periodic(const Duration(minutes: 1), (_) async {
-      _loadTimes();
+      await loadTimes();
     });
 
-    _loadTimes();
+    loadTimes();
   }
 
-  Future<void> _loadTimes() async {
+  Future<void> loadTimes() async {
     final secondsTopic = await getTopicTime('General');
     final secondsToday = await getTodayTime();
 
+    if (!mounted) return;
+
     setState(() {
       if (secondsTopic != null) {
-        topicTotalTime = Duration(seconds: secondsTopic).toStopwatchString();
+        topicTime = Duration(seconds: secondsTopic).toStopwatchString();
       }
+
       if (secondsToday != null) {
         todayTime = Duration(seconds: secondsToday).toStopwatchString();
       }
     });
+  }
+
+  @override
+  void dispose() {
+    uiTimer.cancel();
+    topicTimer.cancel();
+    stopwatch.stop();
+
+    super.dispose();
   }
 
   @override
@@ -72,13 +87,14 @@ class _TrackerPageState extends State<TrackerPage> {
       builder: (context, constraints) {
         final height = constraints.maxHeight;
         final width = constraints.maxWidth;
+
         return Material(
           color: backgroundColor,
           child: Column(
             children: [
               SettingsButton(settingsPage: TrackerSettingsPage()),
               Padding(
-                padding: EdgeInsets.only(top: 20),
+                padding: EdgeInsets.only(top: height / 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   spacing: 5.0,
@@ -87,7 +103,7 @@ class _TrackerPageState extends State<TrackerPage> {
                       alignment: Alignment.center,
                       children: [
                         ImageIcon(
-                          AssetImage('assets/icons/fire.png'),
+                          const AssetImage('assets/icons/fire.png'),
                           size: 32,
                           color: Colors.red,
                         ),
@@ -104,87 +120,96 @@ class _TrackerPageState extends State<TrackerPage> {
                         ),
                       ],
                     ),
-                    Text(
-                      'General',
-                      style: TextStyle(
-                        color: foregroundColor,
-                        fontSize: 36,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
+                    Text('General', style: bodyLarge),
+
                     Icon(Icons.chevron_right, color: foregroundColor, size: 36),
                   ],
                 ),
               ),
-              Text('$topicTotalTime overall', style: labelLargeGrey),
+              Text('$topicTime overall', style: bodyLargeGrey),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ImageIcon(
-                    AssetImage('assets/icons/triangle.png'),
+                    const AssetImage('assets/icons/triangle.png'),
                     color: greenColor,
                   ),
                   RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(
-                      children: <TextSpan>[
-                        TextSpan(text: '$todayTime', style: labelMediumGreen),
-                        TextSpan(
-                          text: ' today',
-                          style: TextStyle(
-                            color: secondaryColor,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
+                      children: [
+                        TextSpan(text: todayTime, style: bodyMediumGreen),
+                        TextSpan(text: ' today', style: bodyMediumGrey),
                       ],
                     ),
                   ),
                 ],
               ),
-              Padding(
-                padding: EdgeInsets.only(top: height / 10),
-                child: Text(
-                  stopwatch.elapsed.toStopwatchString(),
-                  style: TextStyle(
-                    color: foregroundColor,
-                    fontSize: 84,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-              Text('Count 1', style: labelLargeGrey),
-              Padding(
-                padding: EdgeInsets.only(top: height / 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  spacing: 5.0,
-                  children: [
-                    Icon(Icons.circle, color: foregroundColor, size: 16.0),
-                    Icon(Icons.circle, color: secondaryColor, size: 16.0),
-                    Icon(Icons.circle, color: secondaryColor, size: 16.0),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 20.0),
-                child: GenericButton(
-                  text: stopwatch.isRunning ? 'Stop' : 'Start',
-                  size: Size(175, 45),
-                  onPressed: () {
-                    if (stopwatch.isRunning) {
-                      _loadTimes();
-                      stopTracker(stopwatch);
-                    } else {
-                      startTracker(stopwatch);
-                    }
-                  },
-                ),
+              TrackerStopwatch(
+                height: height,
+                stopwatch: stopwatch,
+                onTimeChanged: loadTimes,
               ),
             ],
           ),
         );
       },
+    );
+  }
+}
+
+class TrackerStopwatch extends StatelessWidget {
+  const TrackerStopwatch({
+    super.key,
+    required this.height,
+    required this.stopwatch,
+    required this.onTimeChanged,
+  });
+
+  final double height;
+  final Stopwatch stopwatch;
+  final Future<void> Function() onTimeChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.only(top: height / 10),
+          child: Text(stopwatch.elapsed.toStopwatchString(), style: bodyMax),
+        ),
+
+        Text('Count 1', style: bodyLargeGrey),
+
+        Padding(
+          padding: EdgeInsets.only(top: height / 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            spacing: 5.0,
+            children: [
+              Icon(Icons.circle, color: foregroundColor, size: 16.0),
+              Icon(Icons.circle, color: secondaryColor, size: 16.0),
+              Icon(Icons.circle, color: secondaryColor, size: 16.0),
+            ],
+          ),
+        ),
+
+        Padding(
+          padding: const EdgeInsets.only(top: 20.0),
+          child: GenericButton(
+            text: stopwatch.isRunning ? 'Stop' : 'Start',
+            size: const Size(175, 45),
+            onPressed: () async {
+              if (stopwatch.isRunning) {
+                await stopTracker(stopwatch);
+                await onTimeChanged();
+              } else {
+                startTracker(stopwatch);
+              }
+            },
+          ),
+        ),
+      ],
     );
   }
 }

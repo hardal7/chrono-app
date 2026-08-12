@@ -11,6 +11,7 @@ class BoardingPage extends StatelessWidget {
       builder: (context, constraints) {
         final height = constraints.maxHeight;
         final width = constraints.maxWidth;
+
         return Material(
           color: backgroundColor,
           child: Column(
@@ -49,7 +50,7 @@ class BoardingPage extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: Text(
                   'Start tracking your study habits for a more mindful studying experience.',
-                  style: labelSmallGrey,
+                  style: bodySmallGrey,
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -79,7 +80,7 @@ class BoardingPage extends StatelessWidget {
                 child: RichText(
                   textAlign: TextAlign.center,
                   text: TextSpan(
-                    style: labelSmallGrey,
+                    style: bodySmallGrey,
                     children: <TextSpan>[
                       TextSpan(text: 'By continuing you agree to the '),
                       TextSpan(
