@@ -13,6 +13,7 @@ Future<void> stopTracker(Stopwatch stopwatch) async {
   stopwatch.stop();
   Duration timeTracked = stopwatch.elapsed - totalTime;
   totalTime = stopwatch.elapsed;
+
   try {
     final response = await dio.post(
       '${dotenv.get('API_URL')}/topic-event/track',
@@ -22,6 +23,7 @@ Future<void> stopTracker(Stopwatch stopwatch) async {
         'date': DateTime.now().toUtc().toIso8601String(),
       },
     );
+
     debugPrint(response.statusCode.toString());
   } on DioException catch (e) {
     debugPrint('Trying to track time');

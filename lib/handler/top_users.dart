@@ -6,6 +6,7 @@ import '../services/dio.dart';
 Future<List<LeaderboardUser>> getTopUsers() async {
   try {
     debugPrint('Sending get top users request');
+
     final response = await dio.get(
       '${dotenv.get('API_URL')}/user/top',
       data: {
@@ -14,7 +15,9 @@ Future<List<LeaderboardUser>> getTopUsers() async {
         'limit': 20,
       },
     );
+
     debugPrint(response.statusCode.toString());
+
     final users = List<Map<String, dynamic>>.from(response.data['users']);
     return users.map(LeaderboardUser.fromJson).toList();
   } catch (e) {
