@@ -1,14 +1,14 @@
 import 'dart:async';
-import 'dart:io';
+
+import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import '../../handler/get_today.dart';
-import '../../handler/get_topic.dart';
+import '../../handler/all_topics.dart';
+import '../../handler/today_time.dart';
+import '../../handler/topic_time.dart';
 import '../../handler/track.dart';
 import '../duration.dart';
 import '../style.dart';
-import 'package:flutter/material.dart';
-
 import '../widgets/button.dart';
 import '../widgets/settings.dart';
 
@@ -28,44 +28,58 @@ class TrackerPage extends StatefulWidget {
   State<TrackerPage> createState() => _TrackerPageState();
 }
 
-Future<void> loadTimes(String topic, Times times) async {
-  final (secondsTopic, streak) = await getTopic(topic);
+Future<void> loadTimes(Tracker tracker) async {
+  final (secondsTopic, streak) = await getTopicTime(tracker.topicName);
   final secondsToday = await getTopicTimeToday();
 
   if (secondsTopic != null) {
-    times.topicTime = Duration(seconds: secondsTopic).toStopwatchString();
+    tracker.topicTime = Duration(seconds: secondsTopic).toStopwatchString();
   }
   if (secondsToday != null) {
-    times.todayTime = Duration(seconds: secondsToday).toStopwatchString();
+    tracker.todayTime = Duration(seconds: secondsToday).toStopwatchString();
   }
 }
 
-class Times {
-  Times({this.topicTime, this.todayTime});
-  String? topicTime;
-  String? todayTime;
+class Tracker {
+  Tracker({
+    required this.topicName,
+    required this.topicTime,
+    required this.todayTime,
+    required this.streak,
+  });
+  String topicName;
+  String topicTime;
+  String todayTime;
+  int streak;
 }
 
-ValueNotifier<Times> times = ValueNotifier(
-  Times(topicTime: '00:00', todayTime: '00:00'),
+ValueNotifier<Tracker> tracker = ValueNotifier(
+  Tracker(
+    topicName: 'General',
+    topicTime: Duration.zero.toStopwatchString(),
+    todayTime: Duration.zero.toStopwatchString(),
+    streak: 0,
+  ),
 );
+
+List<Topic> topics = List.empty();
+bool showDropdown = false;
 
 class _TrackerPageState extends State<TrackerPage> {
   final trackerController = PageController();
   late Stopwatch stopwatch;
   late Timer uiTimer;
   late Timer topicTimer;
-  late Duration duration;
-  String setTopic = 'General';
-  // TODO: Return streak
-  int streak = 0;
+
+  Future<void> _loadTopics() async {
+    topics = await getAllTopics();
+  }
 
   @override
   void initState() {
     super.initState();
 
     stopwatch = Stopwatch();
-    duration = Duration();
 
     uiTimer = Timer.periodic(const Duration(milliseconds: 500), (_) {
       if (mounted) {
@@ -74,9 +88,11 @@ class _TrackerPageState extends State<TrackerPage> {
     });
 
     topicTimer = Timer.periodic(const Duration(minutes: 1), (_) async {
-      await loadTimes(setTopic, times.value);
+      await loadTimes(tracker.value);
     });
-    loadTimes(setTopic, times.value);
+
+    loadTimes(tracker.value);
+    _loadTopics();
   }
 
   @override
@@ -96,8 +112,8 @@ class _TrackerPageState extends State<TrackerPage> {
         final height = constraints.maxHeight;
         final width = constraints.maxWidth;
 
-        return ValueListenableBuilder<Times>(
-          valueListenable: times,
+        return ValueListenableBuilder<Tracker>(
+          valueListenable: tracker,
           builder: (context, value, child) {
             return Material(
               color: backgroundColor,
@@ -110,7 +126,7 @@ class _TrackerPageState extends State<TrackerPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       spacing: 5.0,
                       children: [
-                        if (streak != 0)
+                        if (tracker.value.streak != 0)
                           Stack(
                             alignment: Alignment.center,
                             children: [
@@ -122,7 +138,7 @@ class _TrackerPageState extends State<TrackerPage> {
                               Positioned(
                                 top: 10.0,
                                 child: Text(
-                                  '$streak',
+                                  '${tracker.value.streak}',
                                   style: TextStyle(
                                     color: foregroundColor,
                                     fontWeight: FontWeight.w500,
@@ -132,39 +148,64 @@ class _TrackerPageState extends State<TrackerPage> {
                               ),
                             ],
                           ),
-                        Text('General', style: bodyLarge),
-                        Icon(
-                          Icons.chevron_right,
-                          color: foregroundColor,
-                          size: 36,
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              showDropdown = !showDropdown;
+                            });
+                          },
+                          child: Row(
+                            children: [
+                              Text(tracker.value.topicName, style: bodyLarge),
+                              Icon(
+                                Icons.chevron_right,
+                                color: foregroundColor,
+                                size: 36,
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
                   ),
-                  Text(
-                    '${times.value.topicTime} overall',
-                    style: bodyLargeGrey,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ImageIcon(
-                        const AssetImage('assets/icons/triangle.png'),
-                        color: greenColor,
-                      ),
-                      RichText(
-                        textAlign: TextAlign.center,
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: times.value.todayTime,
-                              style: bodyMediumGreen,
-                            ),
-                            TextSpan(text: ' today', style: bodyMediumGrey),
-                          ],
-                        ),
-                      ),
-                    ],
+                  SizedBox(
+                    height: height / 8,
+                    child: showDropdown
+                        ? TopicDropdown(height: height)
+                        : Column(
+                            children: [
+                              Text(
+                                '${tracker.value.topicTime} overall',
+                                style: bodyLargeGrey,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ImageIcon(
+                                    const AssetImage(
+                                      'assets/icons/triangle.png',
+                                    ),
+                                    color: greenColor,
+                                  ),
+                                  RichText(
+                                    textAlign: TextAlign.center,
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: tracker.value.todayTime,
+                                          style: bodyMediumGreen,
+                                        ),
+                                        TextSpan(
+                                          text: ' today',
+                                          style: bodyMediumGrey,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                   ),
                   SizedBox(
                     height: height / 2.5,
@@ -175,12 +216,12 @@ class _TrackerPageState extends State<TrackerPage> {
                           0 => TrackerStopwatch(
                             height: height,
                             stopwatch: stopwatch,
-                            topic: setTopic,
+                            topic: tracker.value.topicName,
                           ),
                           1 => TrackerTimer(
                             height: height,
                             stopwatch: stopwatch,
-                            topic: setTopic,
+                            topic: tracker.value.topicName,
                             timer: Duration(minutes: 25),
                           ),
                           _ => const SizedBox.shrink(),
@@ -241,7 +282,7 @@ class TrackerStopwatch extends StatelessWidget {
             onPressed: () async {
               if (stopwatch.isRunning) {
                 await stopTracker(stopwatch);
-                await loadTimes(topic, times.value);
+                await loadTimes(tracker.value);
               } else {
                 startTracker(stopwatch);
               }
@@ -287,7 +328,7 @@ class TrackerTimer extends StatelessWidget {
             onPressed: () async {
               if (stopwatch.isRunning) {
                 await stopTracker(stopwatch);
-                await loadTimes(topic, times.value);
+                await loadTimes(tracker.value);
               } else {
                 startTracker(stopwatch);
               }
@@ -295,6 +336,38 @@ class TrackerTimer extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class TopicDropdown extends StatefulWidget {
+  const TopicDropdown({super.key, required this.height});
+  final double height;
+
+  @override
+  State<TopicDropdown> createState() => _TopicDropdownState();
+}
+
+class _TopicDropdownState extends State<TopicDropdown> {
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        children: topics.map((topic) {
+          return GestureDetector(
+            onTap: () {
+              tracker.value.topicName = topic.name;
+              showDropdown = false;
+            },
+            child: topic.name != tracker.value.topicName
+                ? Text(
+                    '${topic.name}: ${Duration(seconds: topic.time).toHoursString()}',
+                    style: bodyMediumGrey,
+                  )
+                : SizedBox.shrink(),
+          );
+        }).toList(),
+      ),
     );
   }
 }
