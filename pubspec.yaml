@@ -18,6 +18,7 @@ dependencies:
   flutter_dotenv: ^6.0.1
   path: ^1.9.1
   path_provider: ^2.1.6
+  audioplayers: ^6.8.1
   # HTTP Handling
   dio: ^5.9.2
   dio_cookie_manager: ^3.5.0
@@ -39,6 +40,7 @@ flutter:
     - .env
     - assets/icons/
     - assets/images/
+    - assets/sounds/
 
   # fonts:
   #   - family: Schyler

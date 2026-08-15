@@ -26,6 +26,7 @@ class _UsersPageState extends State<UsersPage> {
   final searchController = TextEditingController();
   List<LeaderboardUser> users = [];
   bool isLoading = true;
+  String searchScope = 'Global';
   @override
   void initState() {
     super.initState();
@@ -89,17 +90,32 @@ class _UsersPageState extends State<UsersPage> {
                       GenericButton(
                         text: 'Friends',
                         size: Size(width / 3.5, 45),
-                        onPressed: () {},
+                        isPressed: searchScope == 'Friends',
+                        onPressed: () {
+                          setState(() {
+                            searchScope = 'Friends';
+                          });
+                        },
                       ),
                       GenericButton(
                         text: 'Local',
                         size: Size(width / 3.5, 45),
-                        onPressed: () {},
+                        isPressed: searchScope == 'Local',
+                        onPressed: () {
+                          setState(() {
+                            searchScope = 'Local';
+                          });
+                        },
                       ),
                       GenericButton(
                         text: 'Global',
                         size: Size(width / 3.5, 45),
-                        onPressed: () {},
+                        isPressed: searchScope == 'Global',
+                        onPressed: () {
+                          setState(() {
+                            searchScope = 'Global';
+                          });
+                        },
                       ),
                     ],
                   ),

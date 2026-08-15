@@ -13,6 +13,7 @@ import '../widgets/button.dart';
 import '../widgets/settings.dart';
 import '../widgets/time.dart';
 
+// TODO: Move settings pages to lib/pres/pages/settings/*
 class TrackerSettingsPage extends StatelessWidget {
   const TrackerSettingsPage({super.key});
 
@@ -20,13 +21,6 @@ class TrackerSettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Placeholder();
   }
-}
-
-class TrackerPage extends StatefulWidget {
-  const TrackerPage({super.key});
-
-  @override
-  State<TrackerPage> createState() => _TrackerPageState();
 }
 
 Future<void> loadTimes(Tracker tracker) async {
@@ -63,8 +57,12 @@ ValueNotifier<Tracker> tracker = ValueNotifier(
   ),
 );
 
-List<Topic> topics = List.empty();
-bool showDropdown = false;
+class TrackerPage extends StatefulWidget {
+  const TrackerPage({super.key});
+
+  @override
+  State<TrackerPage> createState() => _TrackerPageState();
+}
 
 class _TrackerPageState extends State<TrackerPage> {
   final trackerController = PageController();
@@ -262,6 +260,7 @@ class TrackerStopwatch extends StatelessWidget {
           child: GenericButton(
             text: stopwatch.isRunning ? 'Stop' : 'Start',
             size: const Size(175, 45),
+            isPressed: stopwatch.isRunning,
             onPressed: () async {
               if (stopwatch.isRunning) {
                 await stopTracker(stopwatch);
@@ -310,8 +309,8 @@ class TrackerTimer extends StatelessWidget {
             size: const Size(175, 45),
             onPressed: () async {
               if (stopwatch.isRunning) {
-                await stopTracker(stopwatch);
-                await loadTimes(tracker.value);
+                stopTracker(stopwatch);
+                loadTimes(tracker.value);
               } else {
                 startTracker(stopwatch);
               }
@@ -322,6 +321,9 @@ class TrackerTimer extends StatelessWidget {
     );
   }
 }
+
+List<Topic> topics = List.empty();
+bool showDropdown = false;
 
 class TopicDropdown extends StatefulWidget {
   const TopicDropdown({super.key, required this.height});
