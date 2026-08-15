@@ -31,28 +31,36 @@ class _SessionsPageState extends State<SessionsPage> {
         final width = constraints.maxWidth;
         return Material(
           color: backgroundColor,
-          child: Column(
-            children: [
-              SettingsButton(settingsPage: SessionsSettingsPage()),
-              Padding(
-                padding: EdgeInsets.only(top: height / 16),
-                child: Text('Physics Students', style: bodyLarge),
-              ),
-              Text('Members: 5/8', style: bodyMediumGrey),
-              Text('45:39', style: bodyMax),
-              Padding(
-                padding: EdgeInsets.only(bottom: height / 20),
-                child: Text('Expires in 5 days', style: bodyMediumGrey),
-              ),
-              UserCard(
-                user: SessionUser(
-                  username: 'Guest',
-                  totalTime: Duration(minutes: 1),
-                  todayTime: Duration(hours: 1),
-                  avatarPath: '',
+          child: Padding(
+            padding: pageInset,
+            child: Column(
+              children: [
+                SettingsButton(settingsPage: SessionsSettingsPage()),
+                Padding(
+                  padding: EdgeInsets.only(top: height / 24),
+                  child: Text(
+                    'Physics Students',
+                    style: bodyLarge,
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                  ),
                 ),
-              ),
-            ],
+                Text('Members: 5/8', style: bodySmallGrey),
+                Text('45:39 h', style: bodyMax),
+                Text('Expires in 5 days', style: bodySmallGrey),
+                Padding(
+                  padding: EdgeInsets.only(top: height / 20),
+                  child: UserCard(
+                    user: SessionUser(
+                      username: 'Guest',
+                      totalTime: Duration(minutes: 1),
+                      todayTime: Duration(hours: 1),
+                      avatarPath: '',
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -97,7 +105,7 @@ class UserCard extends StatelessWidget {
                 spacing: 5,
                 children: [
                   Icon(Icons.circle, color: greenColor, size: 10),
-                  Text('Online', style: bodySmallGreen),
+                  Text('Online', style: bodyMinGreen),
                 ],
               ),
               Row(
@@ -106,7 +114,7 @@ class UserCard extends StatelessWidget {
                     AssetImage('assets/icons/triangle.png'),
                     color: greenColor,
                   ),
-                  Text(user.todayTime.toHoursString(), style: bodySmallGreen),
+                  Text(user.todayTime.toHoursString(), style: bodyMinGreen),
                 ],
               ),
             ],

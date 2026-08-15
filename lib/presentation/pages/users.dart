@@ -51,79 +51,79 @@ class _UsersPageState extends State<UsersPage> {
         final width = constraints.maxWidth;
         return Material(
           color: backgroundColor,
-          child: Column(
-            children: [
-              SettingsButton(settingsPage: UserSettingsPage()),
-              Padding(
-                padding: EdgeInsets.only(top: 20, left: 20, right: 20),
-                child: Container(
-                  height: height / 15,
-                  decoration: BoxDecoration(
-                    border: BoxBorder.all(color: secondaryColor),
-                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                  ),
-                  child: TextFormField(
-                    controller: searchController,
-                    style: bodyMediumGrey,
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.search, color: secondaryColor),
-                      hintText: 'Search username',
-                      hintStyle: bodyMediumGrey,
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: secondaryColor),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: secondaryColor),
+          child: Padding(
+            padding: pageInset,
+            child: Column(
+              children: [
+                SettingsButton(settingsPage: UserSettingsPage()),
+                Padding(
+                  padding: EdgeInsets.only(top: 20),
+                  child: Container(
+                    height: height / 15,
+                    decoration: BoxDecoration(
+                      border: BoxBorder.all(color: secondaryColor),
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    ),
+                    child: TextFormField(
+                      controller: searchController,
+                      style: bodyMediumGrey,
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.search, color: secondaryColor),
+                        hintText: 'Search username',
+                        hintStyle: bodyMediumGrey,
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: secondaryColor),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: secondaryColor),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  vertical: height / 40,
-                  horizontal: 20,
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: height / 40),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GenericButton(
+                        text: 'Friends',
+                        size: Size(width / 3.5, 45),
+                        onPressed: () {},
+                      ),
+                      GenericButton(
+                        text: 'Local',
+                        size: Size(width / 3.5, 45),
+                        onPressed: () {},
+                      ),
+                      GenericButton(
+                        text: 'Global',
+                        size: Size(width / 3.5, 45),
+                        onPressed: () {},
+                      ),
+                    ],
+                  ),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    GenericButton(
-                      text: 'Friends',
-                      size: Size(width / 3.5, 45),
-                      onPressed: () {},
-                    ),
-                    GenericButton(
-                      text: 'Local',
-                      size: Size(width / 3.5, 45),
-                      onPressed: () {},
-                    ),
-                    GenericButton(
-                      text: 'Global',
-                      size: Size(width / 3.5, 45),
-                      onPressed: () {},
-                    ),
+                    Text('Rank', style: bodyMediumGrey),
+                    Text('User', style: bodyMediumGrey),
+                    Text('Hours', style: bodyMediumGrey),
                   ],
                 ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Text('Rank', style: bodyMediumGrey),
-                  Text('User', style: bodyMediumGrey),
-                  Text('Hours', style: bodyMediumGrey),
-                ],
-              ),
-              Expanded(
-                child: isLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : ListView.builder(
-                        itemCount: users.length,
-                        itemBuilder: (context, index) {
-                          return UserCard(user: users[index]);
-                        },
-                      ),
-              ),
-            ],
+                Expanded(
+                  child: isLoading
+                      ? const Center(child: CircularProgressIndicator())
+                      : ListView.builder(
+                          itemCount: users.length,
+                          itemBuilder: (context, index) {
+                            return UserCard(user: users[index]);
+                          },
+                        ),
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -138,71 +138,68 @@ class UserCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Row(
-        children: [
-          Expanded(
-            flex: 4,
-            child: Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 30, right: 10),
-                  child: Text('${user.rank}', style: bodyMedium),
-                ),
-                ImageIcon(
-                  AssetImage('assets/icons/triangle.png'),
-                  color: greenColor,
-                ),
-                Text('7', style: bodyMediumGreen),
-              ],
-            ),
+    return Row(
+      children: [
+        Expanded(
+          flex: 4,
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: Text('${user.rank}', style: bodyMedium),
+              ),
+              ImageIcon(
+                AssetImage('assets/icons/triangle.png'),
+                color: greenColor,
+              ),
+              Text('7', style: bodyMediumGreen),
+            ],
           ),
-          Expanded(
-            flex: 4,
-            child: Row(
-              children: [
-                GestureDetector(
-                  // TODO: Route to users page
-                  onTap: () {},
-                  child: CircleAvatar(
-                    radius: 23,
-                    backgroundImage: NetworkImage(
-                      '${dotenv.get('API_URL')}${user.avatarPath}',
-                    ),
+        ),
+        Expanded(
+          flex: 4,
+          child: Row(
+            children: [
+              GestureDetector(
+                // TODO: Route to users page
+                onTap: () {},
+                child: CircleAvatar(
+                  radius: 23,
+                  backgroundImage: NetworkImage(
+                    '${dotenv.get('API_URL')}${user.avatarPath}',
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 5),
-                  child: Text(
-                    user.username,
-                    style: bodyMedium,
-                    // TODO: text overflow
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 5),
+                child: Text(
+                  user.username,
+                  style: bodyMedium,
+                  // TODO: text overflow
+                ),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          flex: 3,
+          child: Column(
+            children: [
+              Text(user.totalTime.toHoursString(), style: bodyMedium),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ImageIcon(
+                    AssetImage('assets/icons/triangle.png'),
+                    color: greenColor,
                   ),
-                ),
-              ],
-            ),
+                  Text(user.todayTime.toHoursString(), style: bodyMinGreen),
+                ],
+              ),
+            ],
           ),
-          Expanded(
-            flex: 3,
-            child: Column(
-              children: [
-                Text(user.totalTime.toHoursString(), style: bodyMedium),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ImageIcon(
-                      AssetImage('assets/icons/triangle.png'),
-                      color: greenColor,
-                    ),
-                    Text(user.todayTime.toHoursString(), style: bodySmallGreen),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

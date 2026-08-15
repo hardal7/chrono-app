@@ -120,11 +120,11 @@ class InputField extends StatelessWidget {
       ),
       child: TextFormField(
         controller: controller,
-        style: bodySmallGrey,
+        style: bodyMinGrey,
         obscureText: fieldName == 'Password',
         decoration: InputDecoration(
           hintText: fieldName,
-          hintStyle: bodySmallGrey,
+          hintStyle: bodyMinGrey,
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(color: accentColor),
           ),

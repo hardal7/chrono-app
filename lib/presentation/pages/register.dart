@@ -30,42 +30,30 @@ class _RegisterPageState extends State<RegisterPage> {
         return Material(
           color: backgroundColor,
           child: Padding(
-            padding: EdgeInsetsGeometry.symmetric(vertical: height / 20),
+            padding: pageInset,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               spacing: 10.0,
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.only(bottom: height / 20),
+                  padding: EdgeInsets.symmetric(vertical: height / 20),
                   child: const Text(
                     'Register an account',
                     style: TextStyle(color: Colors.white60, fontSize: 24),
                     textAlign: TextAlign.center,
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: InputField(
-                    fieldName: 'Email',
-                    controller: emailController,
-                  ),
+                InputField(fieldName: 'Email', controller: emailController),
+                InputField(
+                  fieldName: 'Username',
+                  controller: usernameController,
+                ),
+                InputField(
+                  fieldName: 'Password',
+                  controller: passwordController,
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: InputField(
-                    fieldName: 'Username',
-                    controller: usernameController,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: InputField(
-                    fieldName: 'Password',
-                    controller: passwordController,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 5, left: 20, right: 20),
+                  padding: EdgeInsets.only(top: 5),
                   child: SizedBox(
                     height: height / 15,
                     width: width,
@@ -138,9 +126,9 @@ class _RegisterPageState extends State<RegisterPage> {
                       children: <TextSpan>[
                         TextSpan(
                           text: 'Already have an account? ',
-                          style: bodySmallGrey,
+                          style: bodyMinGrey,
                         ),
-                        TextSpan(text: 'Login to account', style: bodySmall),
+                        TextSpan(text: 'Login to account', style: bodyMin),
                       ],
                     ),
                   ),

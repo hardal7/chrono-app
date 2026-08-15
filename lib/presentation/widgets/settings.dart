@@ -12,7 +12,7 @@ class SettingsButton extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Padding(
-          padding: EdgeInsets.only(top: 20, right: 20),
+          padding: const EdgeInsets.symmetric(vertical: 20),
           child: IconButton(
             icon: Icon(
               Icons.settings_outlined,

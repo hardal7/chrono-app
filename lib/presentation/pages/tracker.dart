@@ -11,6 +11,7 @@ import '../duration.dart';
 import '../style.dart';
 import '../widgets/button.dart';
 import '../widgets/settings.dart';
+import '../widgets/time.dart';
 
 class TrackerSettingsPage extends StatelessWidget {
   const TrackerSettingsPage({super.key});
@@ -117,133 +118,115 @@ class _TrackerPageState extends State<TrackerPage> {
           builder: (context, value, child) {
             return Material(
               color: backgroundColor,
-              child: Column(
-                children: [
-                  SettingsButton(settingsPage: TrackerSettingsPage()),
-                  Padding(
-                    padding: EdgeInsets.only(top: height / 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      spacing: 5.0,
-                      children: [
-                        if (tracker.value.streak != 0)
-                          Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              ImageIcon(
-                                const AssetImage('assets/icons/fire.png'),
-                                size: 32,
-                                color: Colors.red,
-                              ),
-                              Positioned(
-                                top: 10.0,
-                                child: Text(
-                                  '${tracker.value.streak}',
-                                  style: TextStyle(
-                                    color: foregroundColor,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16,
+              child: Padding(
+                padding: pageInset,
+                child: Column(
+                  children: [
+                    SettingsButton(settingsPage: TrackerSettingsPage()),
+                    Padding(
+                      padding: EdgeInsets.only(top: height / 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        spacing: 5.0,
+                        children: [
+                          if (tracker.value.streak != 0)
+                            Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                ImageIcon(
+                                  const AssetImage('assets/icons/fire.png'),
+                                  size: 32,
+                                  color: Colors.red,
+                                ),
+                                Positioned(
+                                  top: 10.0,
+                                  child: Text(
+                                    '${tracker.value.streak}',
+                                    style: TextStyle(
+                                      color: foregroundColor,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 16,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                showDropdown = !showDropdown;
+                              });
+                            },
+                            child: Row(
+                              children: [
+                                Text(
+                                  tracker.value.topicName,
+                                  style: bodyLarge,
+                                  maxLines: 1,
+                                ),
+                                Icon(
+                                  Icons.chevron_right,
+                                  color: foregroundColor,
+                                  size: 40,
+                                ),
+                              ],
+                            ),
                           ),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              showDropdown = !showDropdown;
-                            });
-                          },
-                          child: Row(
-                            children: [
-                              Text(tracker.value.topicName, style: bodyLarge),
-                              Icon(
-                                Icons.chevron_right,
-                                color: foregroundColor,
-                                size: 36,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: height / 8,
-                    child: showDropdown
-                        ? TopicDropdown(height: height)
-                        : Column(
-                            children: [
-                              Text(
-                                '${tracker.value.topicTime} overall',
-                                style: bodyLargeGrey,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  ImageIcon(
-                                    const AssetImage(
-                                      'assets/icons/triangle.png',
-                                    ),
-                                    color: greenColor,
-                                  ),
-                                  RichText(
-                                    textAlign: TextAlign.center,
-                                    text: TextSpan(
-                                      children: [
-                                        TextSpan(
-                                          text: tracker.value.todayTime,
-                                          style: bodyMediumGreen,
-                                        ),
-                                        TextSpan(
-                                          text: ' today',
-                                          style: bodyMediumGrey,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                  ),
-                  SizedBox(
-                    height: height / 2.5,
-                    child: PageView.builder(
-                      controller: trackerController,
-                      itemBuilder: (_, index) {
-                        return switch (index) {
-                          0 => TrackerStopwatch(
-                            height: height,
-                            stopwatch: stopwatch,
-                            topic: tracker.value.topicName,
-                          ),
-                          1 => TrackerTimer(
-                            height: height,
-                            stopwatch: stopwatch,
-                            topic: tracker.value.topicName,
-                            timer: Duration(minutes: 25),
-                          ),
-                          _ => const SizedBox.shrink(),
-                        };
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: height / 20),
-                    child: SmoothPageIndicator(
-                      controller: trackerController,
-                      count: 3,
-                      effect: WormEffect(
-                        dotHeight: 18,
-                        dotWidth: 18,
-                        type: WormType.thin,
-                        dotColor: secondaryColor,
-                        activeDotColor: foregroundColor,
+                        ],
                       ),
                     ),
-                  ),
-                ],
+                    SizedBox(
+                      height: height / 8,
+                      child: showDropdown
+                          ? TopicDropdown(height: height)
+                          : Column(
+                              children: [
+                                Text(
+                                  '${tracker.value.topicTime} overall',
+                                  style: bodyMediumGrey,
+                                ),
+                                TodayTime(todayTime: tracker.value.todayTime),
+                              ],
+                            ),
+                    ),
+                    SizedBox(
+                      height: height / 2.5,
+                      child: PageView.builder(
+                        controller: trackerController,
+                        itemBuilder: (_, index) {
+                          return switch (index) {
+                            0 => TrackerStopwatch(
+                              height: height,
+                              stopwatch: stopwatch,
+                              topic: tracker.value.topicName,
+                            ),
+                            1 => TrackerTimer(
+                              height: height,
+                              stopwatch: stopwatch,
+                              topic: tracker.value.topicName,
+                              timer: Duration(minutes: 25),
+                            ),
+                            _ => const SizedBox.shrink(),
+                          };
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: height / 20),
+                      child: SmoothPageIndicator(
+                        controller: trackerController,
+                        count: 3,
+                        effect: WormEffect(
+                          dotHeight: 18,
+                          dotWidth: 18,
+                          type: WormType.thin,
+                          dotColor: secondaryColor,
+                          activeDotColor: foregroundColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             );
           },
