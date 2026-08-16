@@ -6,15 +6,6 @@ import '../style.dart';
 import '../widgets/button.dart';
 import '../widgets/settings.dart';
 
-class UserSettingsPage extends StatelessWidget {
-  const UserSettingsPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
-}
-
 class UsersPage extends StatefulWidget {
   const UsersPage({super.key});
 
@@ -56,7 +47,7 @@ class _UsersPageState extends State<UsersPage> {
             padding: pageInset,
             child: Column(
               children: [
-                SettingsButton(settingsPage: UserSettingsPage()),
+                // SettingsButton(popup: ),
                 Padding(
                   padding: EdgeInsets.only(top: 20),
                   child: Container(

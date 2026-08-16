@@ -6,15 +6,6 @@ import 'package:flutter/material.dart';
 
 import '../widgets/settings.dart';
 
-class SessionsSettingsPage extends StatelessWidget {
-  const SessionsSettingsPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
-}
-
 class SessionsPage extends StatefulWidget {
   const SessionsPage({super.key});
 
@@ -35,7 +26,7 @@ class _SessionsPageState extends State<SessionsPage> {
             padding: pageInset,
             child: Column(
               children: [
-                SettingsButton(settingsPage: SessionsSettingsPage()),
+                // SettingsButton(popup: ),
                 Padding(
                   padding: EdgeInsets.only(top: height / 24),
                   child: Text(

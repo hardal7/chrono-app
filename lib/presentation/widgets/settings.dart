@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../style.dart';
 
 class SettingsButton extends StatelessWidget {
-  const SettingsButton({super.key, required this.settingsPage});
-  final Widget settingsPage;
+  const SettingsButton({super.key, required this.popup});
+  final void Function(BuildContext context) popup;
 
   @override
   Widget build(BuildContext context) {
@@ -20,12 +20,7 @@ class SettingsButton extends StatelessWidget {
               size: 36,
             ),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (BuildContext context) => settingsPage,
-                ),
-              );
+              popup(context);
             },
           ),
         ),

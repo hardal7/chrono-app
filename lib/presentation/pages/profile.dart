@@ -5,15 +5,6 @@ import '../widgets/back.dart';
 import '../widgets/settings.dart';
 import '../widgets/time.dart';
 
-class ProfileSettingsPage extends StatelessWidget {
-  const ProfileSettingsPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
-}
-
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
@@ -38,7 +29,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     PageBackButton(),
-                    SettingsButton(settingsPage: ProfileSettingsPage()),
+                    // SettingsButton(popup: ),
                   ],
                 ),
                 Padding(

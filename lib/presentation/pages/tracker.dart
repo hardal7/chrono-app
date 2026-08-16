@@ -15,15 +15,6 @@ import '../widgets/button.dart';
 import '../widgets/settings.dart';
 import '../widgets/time.dart';
 
-class TrackerSettingsPage extends StatelessWidget {
-  const TrackerSettingsPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
-}
-
 Future<void> loadTimes(TrackerValues tracker) async {
   final (secondsTopic, streak) = await getTopicTime(tracker.topicName);
   final secondsToday = await getTimeToday(topic: tracker.topicName);
@@ -42,11 +33,13 @@ class TrackerValues {
     required this.topicTime,
     required this.todayTime,
     required this.streak,
+    required this.countdownTime,
   });
   String topicName;
   String topicTime;
   String todayTime;
   int streak;
+  Duration countdownTime;
 }
 
 ValueNotifier<TrackerValues> tracker = ValueNotifier(
@@ -55,6 +48,7 @@ ValueNotifier<TrackerValues> tracker = ValueNotifier(
     topicTime: Duration.zero.toStopwatchString(),
     todayTime: Duration.zero.toStopwatchString(),
     streak: 0,
+    countdownTime: Duration(minutes: 25),
   ),
 );
 
@@ -115,7 +109,7 @@ class _TrackerPageState extends State<TrackerPage> {
                 padding: pageInset,
                 child: Column(
                   children: [
-                    SettingsButton(settingsPage: TrackerSettingsPage()),
+                    SettingsButton(popup: settingsPopup),
                     Padding(
                       padding: EdgeInsets.only(top: height / 16),
                       child: Row(
@@ -204,12 +198,12 @@ class _TrackerPageState extends State<TrackerPage> {
                               stopwatch: stopwatch,
                               topic: tracker.value.topicName,
                             ),
+                            // TODO: Do something after countdown runs out
                             1 => Tracker(
                               height: height,
                               stopwatch: timer,
                               topic: tracker.value.topicName,
                               isStopwatch: false,
-                              timer: Duration(minutes: 25),
                             ),
                             _ => const SizedBox.shrink(),
                           };
@@ -248,45 +242,50 @@ class Tracker extends StatelessWidget {
     required this.stopwatch,
     required this.topic,
     this.isStopwatch = true,
-    this.timer = const Duration(minutes: 25),
   });
 
   final double height;
   final Stopwatch stopwatch;
   final String topic;
   final bool isStopwatch;
-  final Duration timer;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.only(top: height / 12),
-          child: Text(
-            (isStopwatch ? (timer - stopwatch.elapsed) : stopwatch.elapsed)
-                .toStopwatchString(),
-            style: bodyMax,
-          ),
-        ),
+    return ValueListenableBuilder<TrackerValues>(
+      valueListenable: tracker,
+      builder: (context, value, child) {
+        return Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(top: height / 12),
+              child: Text(
+                (isStopwatch
+                        ? (tracker.value.countdownTime - stopwatch.elapsed)
+                        : stopwatch.elapsed)
+                    .toStopwatchString(),
+                style: bodyMax,
+              ),
+            ),
 
-        Padding(
-          padding: EdgeInsets.only(top: 10),
-          child: GenericButton(
-            text: stopwatch.isRunning ? 'Stop' : 'Start',
-            isPressed: stopwatch.isRunning,
-            size: const Size(175, 45),
-            onPressed: () {
-              if (stopwatch.isRunning) {
-                stopTracker(stopwatch);
-                loadTimes(tracker.value);
-              } else {
-                startTracker(stopwatch);
-              }
-            },
-          ),
-        ),
-      ],
+            Padding(
+              padding: EdgeInsets.only(top: 10),
+              child: GenericButton(
+                text: stopwatch.isRunning ? 'Stop' : 'Start',
+                isPressed: stopwatch.isRunning,
+                size: const Size(175, 45),
+                onPressed: () {
+                  if (stopwatch.isRunning) {
+                    stopTracker(stopwatch);
+                    loadTimes(tracker.value);
+                  } else {
+                    startTracker(stopwatch);
+                  }
+                },
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -358,7 +357,6 @@ class _TopicDropdownState extends State<TopicDropdown> {
 }
 
 void newTopicPopup(BuildContext context) {
-  final formKey = GlobalKey<FormState>();
   final controller = TextEditingController();
 
   showDialog(
@@ -378,18 +376,16 @@ void newTopicPopup(BuildContext context) {
                 Navigator.pop(context);
               },
             ),
+            Text('Create Topic', style: bodySmallGrey),
           ],
         ),
-        content: Form(
-          key: formKey,
-          child: TextFormField(
-            controller: controller,
-            decoration: const InputDecoration(
-              labelText: 'Topic Name',
-              border: OutlineInputBorder(),
-            ),
-            style: bodyMediumGrey,
+        content: TextFormField(
+          controller: controller,
+          decoration: const InputDecoration(
+            labelText: 'Topic Name',
+            border: OutlineInputBorder(),
           ),
+          style: bodyMediumGrey,
         ),
         actions: [
           GenericButton(
@@ -406,4 +402,92 @@ void newTopicPopup(BuildContext context) {
       );
     },
   );
+}
+
+void settingsPopup(BuildContext context) {
+  final secondsController = TextEditingController();
+  final minutesController = TextEditingController();
+  final hoursController = TextEditingController();
+
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        backgroundColor: backgroundColor,
+        title: Row(
+          children: [
+            IconButton(
+              icon: const Icon(
+                Icons.chevron_left,
+                color: secondaryColor,
+                size: 32,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            Text('Set Timer', style: bodySmallGrey),
+          ],
+        ),
+        content: Row(
+          children: [
+            Expanded(
+              child: SettingsForm(label: 'Hours', controller: hoursController),
+            ),
+            Expanded(
+              child: SettingsForm(
+                label: 'Minutes',
+                controller: minutesController,
+              ),
+            ),
+            Expanded(
+              child: SettingsForm(
+                label: 'Seconds',
+                controller: secondsController,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          GenericButton(
+            size: Size(100, 20),
+            text: 'Save',
+            textStyle: bodyMin,
+            onPressed: () {
+              tracker.value.countdownTime = Duration(
+                hours: int.tryParse(hoursController.text) ?? 0,
+                minutes: int.tryParse(minutesController.text) ?? 0,
+                seconds: int.tryParse(secondsController.text) ?? 0,
+              );
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
+class SettingsForm extends StatelessWidget {
+  const SettingsForm({
+    super.key,
+    required this.label,
+    required this.controller,
+  });
+
+  final String label;
+  final TextEditingController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      keyboardType: TextInputType.number,
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: label,
+        border: OutlineInputBorder(),
+      ),
+      style: bodyMediumGrey,
+    );
+  }
 }
