@@ -3,12 +3,15 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../services/dio.dart';
 
-Future<int?> getTopicTimeToday() async {
+Future<int?> getTimeToday({String? topic}) async {
   try {
     debugPrint('Sending get topic time today request');
 
     final response = await dio.get(
       '${dotenv.get('API_URL')}/topic-event/today',
+      data: {
+        if (topic != null) 'topics': [topic],
+      },
     );
 
     debugPrint(response.statusCode.toString());

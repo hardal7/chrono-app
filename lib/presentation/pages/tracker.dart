@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../handler/all_topics.dart';
+import '../../handler/create_topic.dart';
 import '../../handler/today_time.dart';
 import '../../handler/topic_time.dart';
 import '../../handler/track.dart';
@@ -13,7 +15,6 @@ import '../widgets/button.dart';
 import '../widgets/settings.dart';
 import '../widgets/time.dart';
 
-// TODO: Move settings pages to lib/pres/pages/settings/*
 class TrackerSettingsPage extends StatelessWidget {
   const TrackerSettingsPage({super.key});
 
@@ -23,9 +24,9 @@ class TrackerSettingsPage extends StatelessWidget {
   }
 }
 
-Future<void> loadTimes(Tracker tracker) async {
+Future<void> loadTimes(TrackerValues tracker) async {
   final (secondsTopic, streak) = await getTopicTime(tracker.topicName);
-  final secondsToday = await getTopicTimeToday();
+  final secondsToday = await getTimeToday(topic: tracker.topicName);
 
   if (secondsTopic != null) {
     tracker.topicTime = Duration(seconds: secondsTopic).toStopwatchString();
@@ -35,8 +36,8 @@ Future<void> loadTimes(Tracker tracker) async {
   }
 }
 
-class Tracker {
-  Tracker({
+class TrackerValues {
+  TrackerValues({
     required this.topicName,
     required this.topicTime,
     required this.todayTime,
@@ -48,8 +49,8 @@ class Tracker {
   int streak;
 }
 
-ValueNotifier<Tracker> tracker = ValueNotifier(
-  Tracker(
+ValueNotifier<TrackerValues> tracker = ValueNotifier(
+  TrackerValues(
     topicName: 'General',
     topicTime: Duration.zero.toStopwatchString(),
     todayTime: Duration.zero.toStopwatchString(),
@@ -66,19 +67,14 @@ class TrackerPage extends StatefulWidget {
 
 class _TrackerPageState extends State<TrackerPage> {
   final trackerController = PageController();
-  late Stopwatch stopwatch;
+  late Stopwatch timer = Stopwatch();
+  late Stopwatch stopwatch = Stopwatch();
   late Timer uiTimer;
   late Timer topicTimer;
-
-  Future<void> _loadTopics() async {
-    topics = await getAllTopics();
-  }
 
   @override
   void initState() {
     super.initState();
-
-    stopwatch = Stopwatch();
 
     uiTimer = Timer.periodic(const Duration(milliseconds: 500), (_) {
       if (mounted) {
@@ -91,7 +87,6 @@ class _TrackerPageState extends State<TrackerPage> {
     });
 
     loadTimes(tracker.value);
-    _loadTopics();
   }
 
   @override
@@ -111,7 +106,7 @@ class _TrackerPageState extends State<TrackerPage> {
         final height = constraints.maxHeight;
         final width = constraints.maxWidth;
 
-        return ValueListenableBuilder<Tracker>(
+        return ValueListenableBuilder<TrackerValues>(
           valueListenable: tracker,
           builder: (context, value, child) {
             return Material(
@@ -162,10 +157,20 @@ class _TrackerPageState extends State<TrackerPage> {
                                   style: bodyLarge,
                                   maxLines: 1,
                                 ),
-                                Icon(
-                                  Icons.chevron_right,
-                                  color: foregroundColor,
-                                  size: 40,
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    left: showDropdown ? 5 : 0,
+                                  ),
+                                  child: Icon(
+                                    showDropdown
+                                        ? CupertinoIcons.chevron_down
+                                        : Icons.chevron_right,
+                                    color: foregroundColor,
+                                    size: showDropdown ? 32 : 40,
+                                    fontWeight: FontWeight(
+                                      showDropdown ? 900 : 100,
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -190,18 +195,20 @@ class _TrackerPageState extends State<TrackerPage> {
                     SizedBox(
                       height: height / 2.5,
                       child: PageView.builder(
+                        itemCount: 2,
                         controller: trackerController,
                         itemBuilder: (_, index) {
                           return switch (index) {
-                            0 => TrackerStopwatch(
+                            0 => Tracker(
                               height: height,
                               stopwatch: stopwatch,
                               topic: tracker.value.topicName,
                             ),
-                            1 => TrackerTimer(
+                            1 => Tracker(
                               height: height,
-                              stopwatch: stopwatch,
+                              stopwatch: timer,
                               topic: tracker.value.topicName,
+                              isStopwatch: false,
                               timer: Duration(minutes: 25),
                             ),
                             _ => const SizedBox.shrink(),
@@ -213,7 +220,7 @@ class _TrackerPageState extends State<TrackerPage> {
                       padding: EdgeInsets.only(top: height / 20),
                       child: SmoothPageIndicator(
                         controller: trackerController,
-                        count: 3,
+                        count: 2,
                         effect: WormEffect(
                           dotHeight: 18,
                           dotWidth: 18,
@@ -234,60 +241,20 @@ class _TrackerPageState extends State<TrackerPage> {
   }
 }
 
-class TrackerStopwatch extends StatelessWidget {
-  const TrackerStopwatch({
+class Tracker extends StatelessWidget {
+  const Tracker({
     super.key,
     required this.height,
     required this.stopwatch,
     required this.topic,
+    this.isStopwatch = true,
+    this.timer = const Duration(minutes: 25),
   });
 
   final double height;
   final Stopwatch stopwatch;
   final String topic;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.only(top: height / 12),
-          child: Text(stopwatch.elapsed.toStopwatchString(), style: bodyMax),
-        ),
-
-        Padding(
-          padding: EdgeInsets.only(top: 10),
-          child: GenericButton(
-            text: stopwatch.isRunning ? 'Stop' : 'Start',
-            size: const Size(175, 45),
-            isPressed: stopwatch.isRunning,
-            onPressed: () async {
-              if (stopwatch.isRunning) {
-                await stopTracker(stopwatch);
-                await loadTimes(tracker.value);
-              } else {
-                startTracker(stopwatch);
-              }
-            },
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class TrackerTimer extends StatelessWidget {
-  const TrackerTimer({
-    super.key,
-    required this.height,
-    required this.stopwatch,
-    required this.topic,
-    required this.timer,
-  });
-
-  final double height;
-  final Stopwatch stopwatch;
-  final String topic;
+  final bool isStopwatch;
   final Duration timer;
 
   @override
@@ -297,7 +264,8 @@ class TrackerTimer extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(top: height / 12),
           child: Text(
-            (timer - stopwatch.elapsed).toStopwatchString(),
+            (isStopwatch ? (timer - stopwatch.elapsed) : stopwatch.elapsed)
+                .toStopwatchString(),
             style: bodyMax,
           ),
         ),
@@ -306,8 +274,9 @@ class TrackerTimer extends StatelessWidget {
           padding: EdgeInsets.only(top: 10),
           child: GenericButton(
             text: stopwatch.isRunning ? 'Stop' : 'Start',
+            isPressed: stopwatch.isRunning,
             size: const Size(175, 45),
-            onPressed: () async {
+            onPressed: () {
               if (stopwatch.isRunning) {
                 stopTracker(stopwatch);
                 loadTimes(tracker.value);
@@ -322,8 +291,12 @@ class TrackerTimer extends StatelessWidget {
   }
 }
 
-List<Topic> topics = List.empty();
+ValueNotifier<List<Topic>> topics = ValueNotifier(List.empty());
 bool showDropdown = false;
+
+Future<void> loadTopics() async {
+  topics.value = await getAllTopics();
+}
 
 class TopicDropdown extends StatefulWidget {
   const TopicDropdown({super.key, required this.height});
@@ -335,24 +308,102 @@ class TopicDropdown extends StatefulWidget {
 
 class _TopicDropdownState extends State<TopicDropdown> {
   @override
+  void initState() {
+    super.initState();
+    loadTopics();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: topics.map((topic) {
-          return GestureDetector(
-            onTap: () {
-              tracker.value.topicName = topic.name;
-              showDropdown = false;
-            },
-            child: topic.name != tracker.value.topicName
-                ? Text(
-                    '${topic.name}: ${Duration(seconds: topic.time).toHoursString()}',
-                    style: bodyMediumGrey,
-                  )
-                : SizedBox.shrink(),
-          );
-        }).toList(),
-      ),
+    return ValueListenableBuilder<List<Topic>>(
+      valueListenable: topics,
+      builder: (context, value, child) {
+        return SingleChildScrollView(
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.add, size: 24, color: secondaryColor),
+                  GestureDetector(
+                    onTap: () {
+                      newTopicPopup(context);
+                    },
+
+                    child: Text('Create Topic', style: bodySmallGrey),
+                  ),
+                ],
+              ),
+              ...topics.value.map((topic) {
+                return GestureDetector(
+                  onTap: () {
+                    tracker.value.topicName = topic.name;
+                    loadTimes(tracker.value);
+                    showDropdown = false;
+                  },
+                  child: topic.name != tracker.value.topicName
+                      ? Text(
+                          '${topic.name}: ${Duration(seconds: topic.time).toHoursString()}',
+                          style: bodySmallGrey,
+                        )
+                      : SizedBox.shrink(),
+                );
+              }),
+            ],
+          ),
+        );
+      },
     );
   }
+}
+
+void newTopicPopup(BuildContext context) {
+  final formKey = GlobalKey<FormState>();
+  final controller = TextEditingController();
+
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        backgroundColor: backgroundColor,
+        title: Row(
+          children: [
+            IconButton(
+              icon: const Icon(
+                Icons.chevron_left,
+                color: secondaryColor,
+                size: 32,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+        content: Form(
+          key: formKey,
+          child: TextFormField(
+            controller: controller,
+            decoration: const InputDecoration(
+              labelText: 'Topic Name',
+              border: OutlineInputBorder(),
+            ),
+            style: bodyMediumGrey,
+          ),
+        ),
+        actions: [
+          GenericButton(
+            size: Size(100, 20),
+            text: 'Create',
+            textStyle: bodyMin,
+            onPressed: () {
+              createTopic(controller.text);
+              loadTopics();
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      );
+    },
+  );
 }

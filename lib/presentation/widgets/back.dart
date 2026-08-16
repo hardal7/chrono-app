@@ -9,12 +9,7 @@ class PageBackButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20),
-      child: Icon(
-        Icons.chevron_right,
-        color: foregroundColor,
-        size: 48,
-        textDirection: TextDirection.rtl,
-      ),
+      child: Icon(Icons.chevron_left, color: foregroundColor, size: 48),
     );
   }
 }

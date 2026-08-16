@@ -1,5 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+
 import '../style.dart';
 
 class GenericButton extends StatefulWidget {
@@ -9,18 +10,22 @@ class GenericButton extends StatefulWidget {
     required this.text,
     required this.size,
     this.isPressed = false,
+    this.textStyle = bodyMedium,
   });
 
   final VoidCallback onPressed;
   final String text;
   final Size size;
   final bool isPressed;
+  final TextStyle textStyle;
 
   @override
   State<GenericButton> createState() => _GenericButtonState();
 }
 
 class _GenericButtonState extends State<GenericButton> {
+  // TODO: Change player sound
+  // TODO: Button animation too slow
   final player = AudioPlayer();
 
   @override
@@ -55,14 +60,7 @@ class _GenericButtonState extends State<GenericButton> {
               borderRadius: BorderRadius.circular(12),
             ),
           ),
-          child: Text(
-            widget.text,
-            style: TextStyle(
-              color: foregroundColor,
-              fontWeight: FontWeight.w500,
-              fontSize: 20,
-            ),
-          ),
+          child: Text(widget.text, style: widget.textStyle),
         ),
       ),
     );

@@ -15,49 +15,49 @@ const double mediumFontSize = 24;
 const double largeFontSize = 36;
 const double maxFontSize = 84;
 
-TextStyle bodyMin = const TextStyle(
+const TextStyle bodyMin = TextStyle(
   fontSize: minFontSize,
   fontWeight: FontWeight.w500,
   color: foregroundColor,
 );
-TextStyle bodySmall = const TextStyle(
+const TextStyle bodySmall = TextStyle(
   fontSize: smallFontSize,
   fontWeight: FontWeight.w500,
   color: foregroundColor,
 );
-TextStyle bodyMedium = const TextStyle(
+const TextStyle bodyMedium = TextStyle(
   fontSize: mediumFontSize,
   fontWeight: FontWeight.w500,
   color: foregroundColor,
 );
-TextStyle bodyLarge = const TextStyle(
+const TextStyle bodyLarge = TextStyle(
   fontSize: largeFontSize,
   fontWeight: FontWeight.w500,
   color: foregroundColor,
 );
-TextStyle bodyMax = const TextStyle(
+const TextStyle bodyMax = TextStyle(
   fontSize: maxFontSize,
   fontWeight: FontWeight.w500,
   color: foregroundColor,
 );
 
-TextStyle bodyMinGreen = const TextStyle(
+const TextStyle bodyMinGreen = TextStyle(
   fontSize: minFontSize,
   fontWeight: FontWeight.w500,
   color: greenColor,
 );
-TextStyle bodySmallGreen = const TextStyle(
+const TextStyle bodySmallGreen = TextStyle(
   fontSize: smallFontSize,
   fontWeight: FontWeight.w500,
   color: greenColor,
 );
-TextStyle bodyMediumGreen = const TextStyle(
+const TextStyle bodyMediumGreen = TextStyle(
   fontSize: mediumFontSize,
   fontWeight: FontWeight.w500,
   color: greenColor,
 );
 
-TextStyle bodyMinGrey = const TextStyle(
+const TextStyle bodyMinGrey = TextStyle(
   fontSize: minFontSize,
   fontWeight: FontWeight.w500,
   color: secondaryColor,
@@ -72,7 +72,7 @@ const bodyMediumGrey = TextStyle(
   fontWeight: FontWeight.w500,
   color: secondaryColor,
 );
-TextStyle bodyLargeGrey = const TextStyle(
+const TextStyle bodyLargeGrey = TextStyle(
   fontSize: largeFontSize,
   color: secondaryColor,
   fontWeight: FontWeight.w500,
