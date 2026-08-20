@@ -14,6 +14,7 @@ import '../duration.dart';
 import '../style.dart';
 import '../widgets/button.dart';
 import '../widgets/settings.dart';
+import '../widgets/streak.dart';
 import '../widgets/time.dart';
 
 Future<void> loadTimes(TrackerValues tracker) async {
@@ -118,27 +119,7 @@ class _TrackerPageState extends State<TrackerPage> {
                         spacing: 5.0,
                         children: [
                           if (tracker.value.streak != 0)
-                            Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                ImageIcon(
-                                  const AssetImage('assets/icons/fire.png'),
-                                  size: 32,
-                                  color: Colors.red,
-                                ),
-                                Positioned(
-                                  top: 10.0,
-                                  child: Text(
-                                    '${tracker.value.streak}',
-                                    style: TextStyle(
-                                      color: foregroundColor,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                            Streak(streak: tracker.value.streak),
                           GestureDetector(
                             onTap: () {
                               setState(() {

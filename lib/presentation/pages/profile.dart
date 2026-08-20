@@ -2,7 +2,9 @@ import '../style.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/back.dart';
+import '../widgets/button.dart';
 import '../widgets/settings.dart';
+import '../widgets/streak.dart';
 import '../widgets/time.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -60,6 +62,58 @@ class _ProfilePageState extends State<ProfilePage> {
                     ],
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 30),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        spacing: 10,
+                        children: [
+                          Text('hardal', style: bodyLarge),
+                          Streak(streak: 1),
+                        ],
+                      ),
+                      Text('Best Topic', style: bodyMediumGrey),
+                    ],
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.location_on_outlined,
+                          color: secondaryColor,
+                          size: 24,
+                        ),
+                        Text('Kenya', style: bodyMediumGrey),
+                      ],
+                    ),
+                    Text('biology', style: bodyMedium),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GenericButton(
+                        onPressed: () {},
+                        text: 'Add Friend',
+                        textStyle: bodySmall,
+                        size: Size(width / 2.4, 40),
+                      ),
+                      GenericButton(
+                        onPressed: () {},
+                        text: 'Invite',
+                        textStyle: bodySmall,
+                        size: Size(width / 2.4, 40),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
@@ -87,7 +141,7 @@ void settingsPopup(BuildContext context) {
                 Navigator.pop(context);
               },
             ),
-            Text('Session Settings', style: bodySmallGrey),
+            Text('Profile Settings', style: bodySmallGrey),
           ],
         ),
         content: Row(children: []),
