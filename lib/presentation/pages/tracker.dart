@@ -22,10 +22,10 @@ Future<void> loadTimes(TrackerValues tracker) async {
   final secondsToday = await getTimeToday(topic: tracker.topicName);
 
   if (secondsTopic != null) {
-    tracker.topicTime = Duration(seconds: secondsTopic).toStopwatchString();
+    tracker.topicTime = secondsTopic;
   }
   if (secondsToday != null) {
-    tracker.todayTime = Duration(seconds: secondsToday).toStopwatchString();
+    tracker.todayTime = secondsToday;
   }
 }
 
@@ -38,8 +38,8 @@ class TrackerValues {
     required this.countdownTime,
   });
   String topicName;
-  String topicTime;
-  String todayTime;
+  int topicTime;
+  int todayTime;
   int streak;
   Duration countdownTime;
 }
@@ -47,8 +47,8 @@ class TrackerValues {
 ValueNotifier<TrackerValues> tracker = ValueNotifier(
   TrackerValues(
     topicName: 'General',
-    topicTime: Duration.zero.toStopwatchString(),
-    todayTime: Duration.zero.toStopwatchString(),
+    topicTime: 0,
+    todayTime: 0,
     streak: 0,
     countdownTime: Duration(minutes: 25),
   ),
