@@ -9,6 +9,7 @@ import '../../handler/create_topic.dart';
 import '../../handler/today_time.dart';
 import '../../handler/topic_time.dart';
 import '../../handler/track.dart';
+import '../../models/topic.dart';
 import '../duration.dart';
 import '../style.dart';
 import '../widgets/button.dart';
@@ -193,16 +194,11 @@ class _TrackerPageState extends State<TrackerPage> {
                         controller: trackerController,
                         itemBuilder: (_, index) {
                           return switch (index) {
-                            0 => Tracker(
-                              height: height,
-                              stopwatch: stopwatch,
-                              topic: tracker.value.topicName,
-                            ),
+                            0 => Tracker(height: height, stopwatch: stopwatch),
                             // TODO: Do something after countdown runs out
                             1 => Tracker(
                               height: height,
                               stopwatch: timer,
-                              topic: tracker.value.topicName,
                               isStopwatch: false,
                             ),
                             _ => const SizedBox.shrink(),
@@ -210,18 +206,33 @@ class _TrackerPageState extends State<TrackerPage> {
                         },
                       ),
                     ),
+                    SmoothPageIndicator(
+                      controller: trackerController,
+                      count: 2,
+                      effect: WormEffect(
+                        dotHeight: 16,
+                        dotWidth: 16,
+                        type: WormType.thin,
+                        dotColor: secondaryColor,
+                        activeDotColor: foregroundColor,
+                      ),
+                    ),
+
+                    // TODO: Reset timer
                     Padding(
-                      padding: EdgeInsets.only(top: height / 20),
-                      child: SmoothPageIndicator(
-                        controller: trackerController,
-                        count: 2,
-                        effect: WormEffect(
-                          dotHeight: 18,
-                          dotWidth: 18,
-                          type: WormType.thin,
-                          dotColor: secondaryColor,
-                          activeDotColor: foregroundColor,
-                        ),
+                      padding: EdgeInsets.only(top: 20),
+                      child: GenericButton(
+                        text: stopwatch.isRunning ? 'Stop' : 'Start',
+                        isPressed: stopwatch.isRunning,
+                        size: const Size(175, 45),
+                        onPressed: () {
+                          if (stopwatch.isRunning) {
+                            stopTracker(stopwatch);
+                            loadTimes(tracker.value);
+                          } else {
+                            startTracker(stopwatch);
+                          }
+                        },
                       ),
                     ),
                   ],
@@ -240,13 +251,11 @@ class Tracker extends StatelessWidget {
     super.key,
     required this.height,
     required this.stopwatch,
-    required this.topic,
     this.isStopwatch = true,
   });
 
   final double height;
   final Stopwatch stopwatch;
-  final String topic;
   final bool isStopwatch;
 
   @override
@@ -264,23 +273,6 @@ class Tracker extends StatelessWidget {
                         : stopwatch.elapsed)
                     .toStopwatchString(),
                 style: bodyMax,
-              ),
-            ),
-
-            Padding(
-              padding: EdgeInsets.only(top: 10),
-              child: GenericButton(
-                text: stopwatch.isRunning ? 'Stop' : 'Start',
-                isPressed: stopwatch.isRunning,
-                size: const Size(175, 45),
-                onPressed: () {
-                  if (stopwatch.isRunning) {
-                    stopTracker(stopwatch);
-                    loadTimes(tracker.value);
-                  } else {
-                    startTracker(stopwatch);
-                  }
-                },
               ),
             ),
           ],
@@ -452,7 +444,7 @@ void settingsPopup(BuildContext context) {
           GenericButton(
             size: Size(100, 20),
             text: 'Save',
-            textStyle: bodyMin,
+            textStyle: bodySmall,
             onPressed: () {
               tracker.value.countdownTime = Duration(
                 hours: int.tryParse(hoursController.text) ?? 0,

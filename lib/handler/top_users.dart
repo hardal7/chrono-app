@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import '../models/leaderboard.dart';
 import '../services/dio.dart';
 
-Future<List<LeaderboardUser>> getTopUsers() async {
+Future<List<LeaderboardUser>> getTopUsers(
+  String scope, {
+  String? matchName,
+}) async {
   try {
     debugPrint('Sending get top users request');
 
@@ -13,6 +17,8 @@ Future<List<LeaderboardUser>> getTopUsers() async {
         // TODO
         'cursor': 100000,
         'limit': 20,
+        'scope': scope,
+        if (matchName != null) 'match_name': matchName,
       },
     );
 
@@ -23,28 +29,4 @@ Future<List<LeaderboardUser>> getTopUsers() async {
   } catch (e) {
     return [];
   }
-}
-
-class LeaderboardUser {
-  factory LeaderboardUser.fromJson(Map<String, dynamic> json) {
-    return LeaderboardUser(
-      rank: json['rank'] as int,
-      username: json['username'] as String,
-      totalTime: Duration(seconds: json['total_time'] as int),
-      todayTime: Duration(seconds: json['today_time'] as int),
-      avatarPath: json['avatar_path'] as String,
-    );
-  }
-  const LeaderboardUser({
-    required this.rank,
-    required this.username,
-    required this.totalTime,
-    required this.todayTime,
-    required this.avatarPath,
-  });
-  final int rank;
-  final String username;
-  final Duration totalTime;
-  final Duration todayTime;
-  final String avatarPath;
 }

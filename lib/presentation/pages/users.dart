@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../../handler/top_users.dart';
+import '../../models/leaderboard.dart';
 import '../duration.dart';
 import '../style.dart';
 import '../widgets/button.dart';
@@ -17,7 +20,8 @@ class _UsersPageState extends State<UsersPage> {
   final searchController = TextEditingController();
   List<LeaderboardUser> users = [];
   bool isLoading = true;
-  String searchScope = 'Global';
+  String searchScope = 'global';
+  String? searchQuery;
   @override
   void initState() {
     super.initState();
@@ -25,7 +29,7 @@ class _UsersPageState extends State<UsersPage> {
   }
 
   Future<void> loadUsers() async {
-    final result = await getTopUsers();
+    final result = await getTopUsers(searchScope, matchName: searchQuery);
 
     if (!mounted) return;
 
@@ -33,6 +37,27 @@ class _UsersPageState extends State<UsersPage> {
       users = result;
       isLoading = false;
     });
+  }
+
+  Timer? searchDebounce;
+  void onSearchChanged(String query) {
+    searchDebounce?.cancel();
+
+    if (query.length <= 3) {
+      searchQuery = null;
+    } else {
+      searchQuery = query;
+    }
+
+    searchDebounce = Timer(const Duration(milliseconds: 200), () {
+      loadUsers();
+    });
+  }
+
+  @override
+  void dispose() {
+    searchDebounce?.cancel();
+    super.dispose();
   }
 
   @override
@@ -47,7 +72,7 @@ class _UsersPageState extends State<UsersPage> {
             padding: pageInset,
             child: Column(
               children: [
-                // SettingsButton(popup: ),
+                SettingsButton(popup: settingsPopup),
                 Padding(
                   padding: EdgeInsets.only(top: 20),
                   child: Container(
@@ -58,11 +83,12 @@ class _UsersPageState extends State<UsersPage> {
                     ),
                     child: TextFormField(
                       controller: searchController,
-                      style: bodyMediumGrey,
+                      onChanged: onSearchChanged,
+                      style: bodySmallGrey,
                       decoration: InputDecoration(
                         prefixIcon: Icon(Icons.search, color: secondaryColor),
                         hintText: 'Search username',
-                        hintStyle: bodyMediumGrey,
+                        hintStyle: bodySmallGrey,
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: secondaryColor),
                         ),
@@ -79,32 +105,38 @@ class _UsersPageState extends State<UsersPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       GenericButton(
-                        text: 'Friends',
-                        size: Size(width / 3.5, 45),
-                        isPressed: searchScope == 'Friends',
+                        text: 'Friend',
+                        size: Size(width / 3.7, 45),
+                        textStyle: bodySmall,
+                        isPressed: searchScope == 'friends',
                         onPressed: () {
                           setState(() {
-                            searchScope = 'Friends';
+                            searchScope = 'friends';
+                            loadUsers();
                           });
                         },
                       ),
                       GenericButton(
                         text: 'Local',
-                        size: Size(width / 3.5, 45),
-                        isPressed: searchScope == 'Local',
+                        textStyle: bodySmall,
+                        size: Size(width / 3.7, 45),
+                        isPressed: searchScope == 'local',
                         onPressed: () {
                           setState(() {
-                            searchScope = 'Local';
+                            searchScope = 'local';
+                            loadUsers();
                           });
                         },
                       ),
                       GenericButton(
                         text: 'Global',
-                        size: Size(width / 3.5, 45),
-                        isPressed: searchScope == 'Global',
+                        textStyle: bodySmall,
+                        size: Size(width / 3.7, 45),
+                        isPressed: searchScope == 'global',
                         onPressed: () {
                           setState(() {
-                            searchScope = 'Global';
+                            searchScope = 'global';
+                            loadUsers();
                           });
                         },
                       ),
@@ -114,9 +146,9 @@ class _UsersPageState extends State<UsersPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Text('Rank', style: bodyMediumGrey),
-                    Text('User', style: bodyMediumGrey),
-                    Text('Hours', style: bodyMediumGrey),
+                    Text('Rank', style: bodySmallGrey),
+                    Text('User', style: bodySmallGrey),
+                    Text('Time', style: bodySmallGrey),
                   ],
                 ),
                 Expanded(
@@ -155,6 +187,7 @@ class UserCard extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 10),
                 child: Text('${user.rank}', style: bodyMedium),
               ),
+              // TODO: rank changes
               ImageIcon(
                 AssetImage('assets/icons/triangle.png'),
                 color: greenColor,
@@ -173,7 +206,7 @@ class UserCard extends StatelessWidget {
                 child: CircleAvatar(
                   radius: 23,
                   backgroundImage: NetworkImage(
-                    '${dotenv.get('API_URL')}${user.avatarPath}',
+                    '${dotenv.get('API_URL')}/${user.avatarPath}',
                   ),
                 ),
               ),
@@ -200,7 +233,7 @@ class UserCard extends StatelessWidget {
                     AssetImage('assets/icons/triangle.png'),
                     color: greenColor,
                   ),
-                  Text(user.todayTime.toHoursString(), style: bodyMinGreen),
+                  Text(user.todayTime.toStopwatchString(), style: bodyMinGreen),
                 ],
               ),
             ],
@@ -209,4 +242,32 @@ class UserCard extends StatelessWidget {
       ],
     );
   }
+}
+
+void settingsPopup(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        backgroundColor: backgroundColor,
+        title: Row(
+          children: [
+            IconButton(
+              icon: const Icon(
+                Icons.chevron_left,
+                color: secondaryColor,
+                size: 32,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            Text('Leaderboard Settings', style: bodySmallGrey),
+          ],
+        ),
+        content: Row(children: []),
+        actions: [],
+      );
+    },
+  );
 }

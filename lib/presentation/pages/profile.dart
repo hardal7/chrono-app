@@ -28,8 +28,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    // TODO: Don't show back button if own profile
                     PageBackButton(),
-                    // SettingsButton(popup: ),
+                    SettingsButton(popup: settingsPopup),
                   ],
                 ),
                 Padding(
@@ -41,7 +42,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         radius: 48,
                         backgroundImage: NetworkImage(
                           '',
-                          // '${dotenv.get('API_URL')}${user.avatarPath}',
+                          // '${dotenv.get('API_URL')}/${user.avatarPath}',
                         ),
                       ),
                       Column(
@@ -66,4 +67,32 @@ class _ProfilePageState extends State<ProfilePage> {
       },
     );
   }
+}
+
+void settingsPopup(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        backgroundColor: backgroundColor,
+        title: Row(
+          children: [
+            IconButton(
+              icon: const Icon(
+                Icons.chevron_left,
+                color: secondaryColor,
+                size: 32,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            Text('Session Settings', style: bodySmallGrey),
+          ],
+        ),
+        content: Row(children: []),
+        actions: [],
+      );
+    },
+  );
 }

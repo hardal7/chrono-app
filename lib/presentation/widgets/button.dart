@@ -30,7 +30,7 @@ class _GenericButtonState extends State<GenericButton> {
 
   @override
   Widget build(BuildContext context) {
-    final shadowOffset = widget.isPressed ? 0.0 : 4.0;
+    final shadowOffset = widget.isPressed ? 0.0 : 2.0;
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 10),
@@ -46,7 +46,7 @@ class _GenericButtonState extends State<GenericButton> {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Transform.translate(
-        offset: Offset(0, 4 - shadowOffset),
+        offset: Offset(0, 2 - shadowOffset),
         child: ElevatedButton(
           onPressed: () {
             player.play(AssetSource('sounds/button_press.wav'));

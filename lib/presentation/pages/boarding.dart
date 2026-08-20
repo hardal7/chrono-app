@@ -1,3 +1,7 @@
+import 'package:flutter/gestures.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import '../style.dart';
 import '../widgets/auth.dart';
 import 'package:flutter/material.dart';
@@ -54,7 +58,7 @@ class BoardingPage extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.only(top: 20),
                   child: Column(
                     children: <SizedBox>[
                       SizedBox(
@@ -74,28 +78,50 @@ class BoardingPage extends StatelessWidget {
                     ],
                   ),
                 ),
-                RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                    style: bodyMinGrey,
-                    children: <TextSpan>[
-                      TextSpan(text: 'By continuing you agree to the '),
-                      TextSpan(
-                        text: 'Privacy Policy',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: accentColor,
+                Expanded(
+                  child: Align(
+                    alignment: FractionalOffset.bottomCenter,
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: height / 20),
+                      child: RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                          style: bodyMinGrey,
+                          children: <TextSpan>[
+                            TextSpan(text: 'By continuing you agree to the '),
+                            TextSpan(
+                              text: 'Privacy Policy',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: accentColor,
+                              ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () async {
+                                  final url = Uri.parse(
+                                    '${dotenv.get('API_URL')}/privacy',
+                                  );
+                                  await launchUrl(url);
+                                },
+                            ),
+                            TextSpan(text: ' and '),
+                            TextSpan(
+                              text: 'User Terms',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: accentColor,
+                              ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () async {
+                                  final url = Uri.parse(
+                                    '${dotenv.get('API_URL')}/terms',
+                                  );
+                                  await launchUrl(url);
+                                },
+                            ),
+                          ],
                         ),
                       ),
-                      TextSpan(text: ' and '),
-                      TextSpan(
-                        text: 'User Terms',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: accentColor,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               ],
