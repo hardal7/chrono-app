@@ -1,7 +1,7 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-import '../../handler/profile.dart';
-import '../../models/profile.dart';
+import '../../handler/user.dart';
+import '../../models/user.dart';
 import '../duration.dart';
 import '../style.dart';
 import 'package:flutter/material.dart';
@@ -136,7 +136,11 @@ class _ProfilePageState extends State<ProfilePage> {
                               size: Size(width / 2.4, 40),
                             ),
                             GenericButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                if (profile.friendStatus == 'none') {
+                                  // sendFriendRequest();
+                                }
+                              },
                               text: switch (profile.friendStatus) {
                                 'none' => 'Invite',
                                 'pending' => 'Sent',

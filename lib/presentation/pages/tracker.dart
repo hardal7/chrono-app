@@ -4,11 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import '../../handler/all_topics.dart';
-import '../../handler/create_topic.dart';
-import '../../handler/today_time.dart';
-import '../../handler/topic_time.dart';
-import '../../handler/track.dart';
+import '../../handler/topic.dart';
 import '../../models/topic.dart';
 import '../duration.dart';
 import '../style.dart';
@@ -18,7 +14,7 @@ import '../widgets/streak.dart';
 import '../widgets/time.dart';
 
 Future<void> loadTimes(TrackerValues tracker) async {
-  final (secondsTopic, streak) = await getTopicTime(tracker.topicName);
+  final (secondsTopic, streak) = await getTimeTopic(tracker.topicName);
   final secondsToday = await getTimeToday(topic: tracker.topicName);
 
   if (secondsTopic != null) {

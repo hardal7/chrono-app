@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import '../../handler/top_users.dart';
-import '../../models/leaderboard.dart';
+import '../../handler/user.dart';
+import '../../models/user.dart';
 import '../duration.dart';
 import '../style.dart';
 import '../widgets/button.dart';

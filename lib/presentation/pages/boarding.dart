@@ -98,7 +98,7 @@ class BoardingPage extends StatelessWidget {
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () async {
                                   final url = Uri.parse(
-                                    '${dotenv.get('API_URL')}/privacy',
+                                    '${dotenv.get('SITE_URL')}/privacy',
                                   );
                                   await launchUrl(url);
                                 },
@@ -113,7 +113,7 @@ class BoardingPage extends StatelessWidget {
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () async {
                                   final url = Uri.parse(
-                                    '${dotenv.get('API_URL')}/terms',
+                                    '${dotenv.get('SITE_URL')}/terms',
                                   );
                                   await launchUrl(url);
                                 },

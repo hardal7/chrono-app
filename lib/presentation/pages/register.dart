@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import '../../handler/register.dart';
+import '../../handler/user.dart';
 import 'home.dart';
 import 'login.dart';
 import '../style.dart';
