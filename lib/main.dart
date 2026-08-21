@@ -1,13 +1,22 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'presentation/pages/boarding.dart';
 import 'package:flutter/material.dart';
 
+import 'presentation/pages/home.dart';
 import 'services/dio.dart';
 
+late String username;
+
 Future<void> main() async {
-  dotenv.load();
-  initializeDio();
+  await dotenv.load();
+  await initializeDio();
+
+  final prefs = await SharedPreferences.getInstance();
+  username = prefs.getString('username') ?? '';
+  debugPrint('Username: $username');
+
   runApp(const Chrono());
 }
 
@@ -19,7 +28,7 @@ class Chrono extends StatelessWidget {
     return MaterialApp(
       title: 'Chrono',
       debugShowCheckedModeBanner: false,
-      home: BoardingPage(),
+      home: username == '' ? BoardingPage() : HomePage(),
     );
   }
 }

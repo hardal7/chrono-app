@@ -1,5 +1,6 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import '../../handler/friend.dart';
 import '../../handler/user.dart';
 import '../../models/user.dart';
 import '../duration.dart';
@@ -13,7 +14,8 @@ import '../widgets/streak.dart';
 import '../widgets/time.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  const ProfilePage({super.key, required this.username});
+  final String username;
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -24,11 +26,9 @@ class _ProfilePageState extends State<ProfilePage> {
   bool isLoading = true;
 
   Future<void> loadProfile() async {
-    // TODO: Use username
-    final result = await getProfile('flutter');
+    final result = await getProfile(widget.username);
 
     if (!mounted) return;
-
     setState(() {
       if (result != null) {
         profile = result;
@@ -130,23 +130,28 @@ class _ProfilePageState extends State<ProfilePage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             GenericButton(
-                              onPressed: () {},
-                              text: 'Add Friend',
-                              textStyle: bodySmall,
-                              size: Size(width / 2.4, 40),
-                            ),
-                            GenericButton(
                               onPressed: () {
                                 if (profile.friendStatus == 'none') {
-                                  // sendFriendRequest();
+                                  () async {
+                                    await sendFriendRequest(profile.username);
+                                  }();
                                 }
                               },
                               text: switch (profile.friendStatus) {
-                                'none' => 'Invite',
-                                'pending' => 'Sent',
+                                'none' => 'Add Friend',
+                                'pending' => 'Sent Request',
                                 'accepted' => 'Friends',
                                 _ => 'Invite',
                               },
+                              textStyle: bodySmall,
+                              isPressed: profile.friendStatus == 'none'
+                                  ? false
+                                  : true,
+                              size: Size(width / 2.4, 40),
+                            ),
+                            GenericButton(
+                              onPressed: () {},
+                              text: 'Invite',
                               textStyle: bodySmall,
                               size: Size(width / 2.4, 40),
                             ),

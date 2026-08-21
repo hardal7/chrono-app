@@ -157,7 +157,7 @@ class _TrackerPageState extends State<TrackerPage> {
                           : Column(
                               children: [
                                 Text(
-                                  '${tracker.value.topicTime} overall',
+                                  '${Duration(seconds: tracker.value.topicTime).toStopwatchString()} overall',
                                   style: bodyMediumGrey,
                                 ),
                                 TodayTime(todayTime: tracker.value.todayTime),

@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../handler/user.dart';
 import 'home.dart';
 import 'login.dart';
@@ -20,6 +22,33 @@ class _RegisterPageState extends State<RegisterPage> {
   final emailController = TextEditingController();
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
+
+  Future<void> registerOnPressed() async {
+    _status = await register(
+      emailController.text,
+      usernameController.text,
+      passwordController.text,
+    );
+
+    if (_status == HttpStatus.created) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('username', usernameController.text);
+
+      if (!mounted) return;
+      setState(() {
+        _showError = false;
+      });
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (BuildContext context) => HomePage()),
+      );
+    } else {
+      setState(() {
+        _showError = true;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,27 +88,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     width: width,
                     child: AuthButton(
                       title: 'Register',
-                      onPressed: () async {
-                        _status = await register(
-                          emailController.text,
-                          usernameController.text,
-                          passwordController.text,
-                        );
-                        if (_status == HttpStatus.created) {
-                          if (!context.mounted) return;
-                          _showError = false;
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (BuildContext context) => HomePage(),
-                            ),
-                          );
-                        } else {
-                          setState(() {
-                            _showError = true;
-                          });
-                        }
-                      },
+                      onPressed: registerOnPressed,
                     ),
                   ),
                 ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../style.dart';
 import 'profile.dart';
@@ -16,11 +17,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentPageIndex = 0;
-  List<Widget> navigationPages = [
+  late String username;
+
+  List<Widget> get navigationPages => [
     TrackerPage(),
     SessionsPage(),
     UsersPage(),
-    ProfilePage(),
+    ProfilePage(username: username),
     SettingsPage(),
   ];
   List<Widget> destinations = [
@@ -46,14 +49,27 @@ class _HomePageState extends State<HomePage> {
     ),
   ];
 
-  NavigationDestinationLabelBehavior bodyBehavior =
-      NavigationDestinationLabelBehavior.alwaysShow;
+  Future<void> loadUsername() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    if (!mounted) return;
+
+    setState(() {
+      username = prefs.getString('username') ?? '';
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadUsername();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: NavigationBar(
-        labelBehavior: bodyBehavior,
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
         selectedIndex: _currentPageIndex,
         onDestinationSelected: (int index) {
           setState(() {

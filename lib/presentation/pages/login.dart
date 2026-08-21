@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../handler/user.dart';
 import 'home.dart';
 import 'register.dart';
@@ -21,6 +23,30 @@ class _LoginPageState extends State<LoginPage> {
   final passwordController = TextEditingController();
   bool _showError = false;
   late int? _status;
+
+  Future<void> loginOnPressed() async {
+    _status = await login(nameController.text, passwordController.text);
+
+    if (_status == HttpStatus.ok) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('username', nameController.text);
+      //TODO: Could technically be email too
+
+      if (!mounted) return;
+      setState(() {
+        _showError = false;
+      });
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (BuildContext context) => HomePage()),
+      );
+    } else {
+      setState(() {
+        _showError = true;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,29 +97,7 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   height: height / 15,
                   width: width,
-                  child: AuthButton(
-                    title: 'Login',
-                    onPressed: () async {
-                      _status = await login(
-                        nameController.text,
-                        passwordController.text,
-                      );
-                      if (_status == HttpStatus.ok) {
-                        if (!context.mounted) return;
-                        _showError = false;
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (BuildContext context) => HomePage(),
-                          ),
-                        );
-                      } else {
-                        setState(() {
-                          _showError = true;
-                        });
-                      }
-                    },
-                  ),
+                  child: AuthButton(title: 'Login', onPressed: loginOnPressed),
                 ),
                 if (_showError)
                   Padding(

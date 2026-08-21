@@ -2,12 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../handler/user.dart';
 import '../../models/user.dart';
 import '../duration.dart';
 import '../style.dart';
 import '../widgets/button.dart';
 import '../widgets/settings.dart';
+import 'profile.dart';
 
 class UsersPage extends StatefulWidget {
   const UsersPage({super.key});
@@ -15,6 +17,8 @@ class UsersPage extends StatefulWidget {
   @override
   State<UsersPage> createState() => _UsersPageState();
 }
+
+late String username;
 
 class _UsersPageState extends State<UsersPage> {
   final searchController = TextEditingController();
@@ -31,8 +35,9 @@ class _UsersPageState extends State<UsersPage> {
   Future<void> loadUsers() async {
     final result = await getTopUsers(searchScope, matchName: searchQuery);
 
-    if (!mounted) return;
+    await loadUsername();
 
+    if (!mounted) return;
     setState(() {
       users = result;
       isLoading = false;
@@ -51,6 +56,16 @@ class _UsersPageState extends State<UsersPage> {
 
     searchDebounce = Timer(const Duration(milliseconds: 200), () {
       loadUsers();
+    });
+  }
+
+  Future<void> loadUsername() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    if (!mounted) return;
+
+    setState(() {
+      username = prefs.getString('username') ?? '';
     });
   }
 
@@ -170,76 +185,91 @@ class _UsersPageState extends State<UsersPage> {
   }
 }
 
-// TODO: Grey out the user that is you
 class UserCard extends StatelessWidget {
   const UserCard({super.key, required this.user});
   final LeaderboardUser user;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          flex: 4,
-          child: Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 10),
-                child: Text('${user.rank}', style: bodyMedium),
-              ),
-              // TODO: rank changes
-              ImageIcon(
-                AssetImage('assets/icons/triangle.png'),
-                color: greenColor,
-              ),
-              Text('7', style: bodyMediumGreen),
-            ],
+    return Container(
+      decoration: BoxDecoration(
+        color: username == user.username ? secondaryColor : Colors.transparent,
+        borderRadius: BorderRadius.all(Radius.circular(16)),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 4,
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  child: Text('${user.rank}', style: bodyMedium),
+                ),
+                // TODO: rank changes
+                ImageIcon(
+                  AssetImage('assets/icons/triangle.png'),
+                  color: greenColor,
+                ),
+                Text('7', style: bodyMediumGreen),
+              ],
+            ),
           ),
-        ),
-        Expanded(
-          flex: 4,
-          child: Row(
-            children: [
-              GestureDetector(
-                // TODO: Route to users page
-                onTap: () {},
-                child: CircleAvatar(
-                  radius: 23,
-                  backgroundImage: NetworkImage(
-                    '${dotenv.get('API_URL')}/${user.avatarPath}',
+          Expanded(
+            flex: 4,
+            child: Row(
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            ProfilePage(username: user.username),
+                      ),
+                    );
+                  },
+                  child: CircleAvatar(
+                    radius: 23,
+                    backgroundImage: NetworkImage(
+                      '${dotenv.get('API_URL')}/${user.avatarPath}',
+                    ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 5),
-                child: Text(
-                  user.username,
-                  style: bodyMedium,
-                  // TODO: text overflow
-                ),
-              ),
-            ],
-          ),
-        ),
-        Expanded(
-          flex: 3,
-          child: Column(
-            children: [
-              Text(user.totalTime.toHoursString(), style: bodyMedium),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ImageIcon(
-                    AssetImage('assets/icons/triangle.png'),
-                    color: greenColor,
+                Padding(
+                  padding: const EdgeInsets.only(left: 5),
+                  child: Text(
+                    user.username,
+                    style: bodyMedium,
+                    // TODO: text overflow
                   ),
-                  Text(user.todayTime.toStopwatchString(), style: bodyMinGreen),
-                ],
-              ),
-            ],
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
+          Expanded(
+            flex: 3,
+            child: Column(
+              children: [
+                Text(user.totalTime.toHoursString(), style: bodyMedium),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ImageIcon(
+                      AssetImage('assets/icons/triangle.png'),
+                      color: greenColor,
+                    ),
+                    Text(
+                      user.todayTime.toStopwatchString(),
+                      style: bodyMinGreen,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
