@@ -77,12 +77,13 @@ class _UsersPageState extends State<UsersPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final height = constraints.maxHeight;
         final width = constraints.maxWidth;
         return Material(
-          color: backgroundColor,
           child: Padding(
             padding: pageInset,
             child: Column(
@@ -93,22 +94,22 @@ class _UsersPageState extends State<UsersPage> {
                   child: Container(
                     height: height / 15,
                     decoration: BoxDecoration(
-                      border: BoxBorder.all(color: secondaryColor),
+                      border: BoxBorder.all(color: colors.secondary),
                       borderRadius: BorderRadius.all(Radius.circular(10.0)),
                     ),
                     child: TextFormField(
                       controller: searchController,
                       onChanged: onSearchChanged,
-                      style: bodySmallGrey,
+                      style: bodySmall.copyWith(color: colors.secondary),
                       decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.search, color: secondaryColor),
+                        prefixIcon: Icon(Icons.search, color: colors.secondary),
                         hintText: 'Search username',
-                        hintStyle: bodySmallGrey,
+                        hintStyle: bodySmall.copyWith(color: colors.secondary),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: secondaryColor),
+                          borderSide: BorderSide(color: colors.secondary),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: secondaryColor),
+                          borderSide: BorderSide(color: colors.secondary),
                         ),
                       ),
                     ),
@@ -161,9 +162,18 @@ class _UsersPageState extends State<UsersPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Text('Rank', style: bodySmallGrey),
-                    Text('User', style: bodySmallGrey),
-                    Text('Time', style: bodySmallGrey),
+                    Text(
+                      'Rank',
+                      style: bodySmall.copyWith(color: colors.secondary),
+                    ),
+                    Text(
+                      'User',
+                      style: bodySmall.copyWith(color: colors.secondary),
+                    ),
+                    Text(
+                      'Time',
+                      style: bodySmall.copyWith(color: colors.secondary),
+                    ),
                   ],
                 ),
                 Expanded(
@@ -191,9 +201,13 @@ class UserCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+
     return Container(
       decoration: BoxDecoration(
-        color: username == user.username ? secondaryColor : Colors.transparent,
+        color: username == user.username
+            ? colors.secondary
+            : Colors.transparent,
         borderRadius: BorderRadius.all(Radius.circular(16)),
       ),
       child: Row(
@@ -211,7 +225,7 @@ class UserCard extends StatelessWidget {
                   AssetImage('assets/icons/triangle.png'),
                   color: greenColor,
                 ),
-                Text('7', style: bodyMediumGreen),
+                Text('7', style: bodyMedium.copyWith(color: greenColor)),
               ],
             ),
           ),
@@ -261,7 +275,7 @@ class UserCard extends StatelessWidget {
                     ),
                     Text(
                       user.todayTime.toStopwatchString(),
-                      style: bodyMinGreen,
+                      style: bodyMedium.copyWith(color: greenColor),
                     ),
                   ],
                 ),
@@ -275,24 +289,24 @@ class UserCard extends StatelessWidget {
 }
 
 void settingsPopup(BuildContext context) {
+  final colors = Theme.of(context).colorScheme;
+
   showDialog(
     context: context,
     builder: (context) {
       return AlertDialog(
-        backgroundColor: backgroundColor,
         title: Row(
           children: [
             IconButton(
-              icon: const Icon(
-                Icons.chevron_left,
-                color: secondaryColor,
-                size: 32,
-              ),
+              icon: Icon(Icons.chevron_left, color: colors.secondary, size: 32),
               onPressed: () {
                 Navigator.pop(context);
               },
             ),
-            Text('Leaderboard Settings', style: bodySmallGrey),
+            Text(
+              'Leaderboard Settings',
+              style: bodySmall.copyWith(color: colors.secondary),
+            ),
           ],
         ),
         content: Row(children: []),

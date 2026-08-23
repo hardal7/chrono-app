@@ -45,12 +45,13 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final height = constraints.maxHeight;
         final width = constraints.maxWidth;
         return Material(
-          color: backgroundColor,
           child: Padding(
             padding: pageInset,
             child: isLoading
@@ -79,7 +80,12 @@ class _ProfilePageState extends State<ProfilePage> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                Text('Total Time', style: bodyMediumGrey),
+                                Text(
+                                  'Total Time',
+                                  style: bodyMedium.copyWith(
+                                    color: colors.secondary,
+                                  ),
+                                ),
                                 Text(
                                   Duration(
                                     seconds: profile.totalTime,
@@ -104,7 +110,12 @@ class _ProfilePageState extends State<ProfilePage> {
                                 Streak(streak: 1),
                               ],
                             ),
-                            Text('Best Topic', style: bodyMediumGrey),
+                            Text(
+                              'Best Topic',
+                              style: bodyMedium.copyWith(
+                                color: colors.secondary,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -115,10 +126,16 @@ class _ProfilePageState extends State<ProfilePage> {
                             children: [
                               Icon(
                                 Icons.location_on_outlined,
-                                color: secondaryColor,
+                                color: colors.secondary,
                                 size: 24,
                               ),
-                              Text(profile.country, style: bodyMediumGrey),
+                              // TODO: Show country flag ??
+                              Text(
+                                profile.country,
+                                style: bodyMedium.copyWith(
+                                  color: colors.secondary,
+                                ),
+                              ),
                             ],
                           ),
                           Text(profile.bestTopic, style: bodyMedium),
@@ -168,24 +185,24 @@ class _ProfilePageState extends State<ProfilePage> {
 }
 
 void settingsPopup(BuildContext context) {
+  final colors = Theme.of(context).colorScheme;
+
   showDialog(
     context: context,
     builder: (context) {
       return AlertDialog(
-        backgroundColor: backgroundColor,
         title: Row(
           children: [
             IconButton(
-              icon: const Icon(
-                Icons.chevron_left,
-                color: secondaryColor,
-                size: 32,
-              ),
+              icon: Icon(Icons.chevron_left, color: colors.secondary, size: 32),
               onPressed: () {
                 Navigator.pop(context);
               },
             ),
-            Text('Profile Settings', style: bodySmallGrey),
+            Text(
+              'Profile Settings',
+              style: bodySmall.copyWith(color: colors.secondary),
+            ),
           ],
         ),
         content: Row(children: []),

@@ -21,6 +21,8 @@ class AuthButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+
     return TextButton(
       onPressed: () {
         onPressed?.call();
@@ -41,15 +43,15 @@ class AuthButton extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: inverted ? backgroundColor : accentColor,
-          border: BoxBorder.all(color: accentColor, width: 2.5),
+          color: inverted ? colors.surface : colors.primary,
+          border: BoxBorder.all(color: colors.primary, width: 2.5),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Center(
           child: Text(
             title,
             style: TextStyle(
-              color: inverted ? accentColor : backgroundColor,
+              color: inverted ? colors.primary : colors.surface,
               fontSize: 20,
               fontWeight: FontWeight.w600,
             ),
@@ -67,6 +69,8 @@ class ThirdPartyAuthButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+
     return TextButton(
       onPressed: () {
         bool success = (feature == 'Google' ? googleAuth() : appleAuth());
@@ -82,8 +86,8 @@ class ThirdPartyAuthButton extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: backgroundColor,
-          border: BoxBorder.all(color: accentColor, width: 2.5),
+          color: colors.surface,
+          border: BoxBorder.all(color: colors.primary, width: 2.5),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Center(
@@ -94,7 +98,7 @@ class ThirdPartyAuthButton extends StatelessWidget {
                   : 'assets/icons/apple.png',
             ),
             size: 24,
-            color: Colors.white60,
+            color: colors.secondary,
           ),
         ),
       ),
@@ -113,23 +117,25 @@ class InputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+
     return Container(
       decoration: BoxDecoration(
-        border: BoxBorder.all(color: accentColor),
+        border: BoxBorder.all(color: colors.primary),
         borderRadius: BorderRadius.all(Radius.circular(10.0)),
       ),
       child: TextFormField(
         controller: controller,
-        style: bodyMinGrey,
+        style: bodyMin.copyWith(color: colors.secondary),
         obscureText: fieldName == 'Password',
         decoration: InputDecoration(
           hintText: fieldName,
-          hintStyle: bodyMinGrey,
+          hintStyle: bodyMin.copyWith(color: colors.secondary),
           enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: accentColor),
+            borderSide: BorderSide(color: colors.primary),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: accentColor),
+            borderSide: BorderSide(color: colors.primary),
           ),
         ),
       ),

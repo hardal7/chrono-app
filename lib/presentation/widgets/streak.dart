@@ -18,7 +18,7 @@ class Streak extends StatelessWidget {
           child: Text(
             '$streak',
             style: TextStyle(
-              color: foregroundColor,
+              color: Colors.white,
               fontWeight: FontWeight.w500,
               fontSize: 16,
             ),

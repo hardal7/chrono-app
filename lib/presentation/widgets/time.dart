@@ -9,6 +9,8 @@ class TodayTime extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -21,9 +23,12 @@ class TodayTime extends StatelessWidget {
             children: [
               TextSpan(
                 text: Duration(seconds: todayTime).toStopwatchString(),
-                style: bodySmallGreen,
+                style: bodyMedium.copyWith(color: greenColor),
               ),
-              TextSpan(text: ' today', style: bodySmallGrey),
+              TextSpan(
+                text: ' today',
+                style: bodySmall.copyWith(color: colors.secondary),
+              ),
             ],
           ),
         ),

@@ -50,12 +50,13 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final height = constraints.maxHeight;
         final width = constraints.maxWidth;
         return Material(
-          color: backgroundColor,
           child: Padding(
             padding: pageInset,
             child: Column(
@@ -64,9 +65,9 @@ class _LoginPageState extends State<LoginPage> {
               children: <Widget>[
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: height / 20),
-                  child: const Text(
+                  child: Text(
                     'Login to your account',
-                    style: TextStyle(color: Colors.white60, fontSize: 24),
+                    style: TextStyle(color: colors.secondary, fontSize: 24),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -112,7 +113,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 Text(
                   'Or login with',
-                  style: bodyMinGrey,
+                  style: bodyMin.copyWith(color: colors.secondary),
                   textAlign: TextAlign.center,
                 ),
                 Row(
@@ -146,7 +147,7 @@ class _LoginPageState extends State<LoginPage> {
                       children: [
                         TextSpan(
                           text: 'Don\'t have an account? ',
-                          style: bodyMinGrey,
+                          style: bodyMin.copyWith(color: colors.secondary),
                         ),
                         TextSpan(text: 'Register an account', style: bodyMin),
                       ],

@@ -30,6 +30,7 @@ class _GenericButtonState extends State<GenericButton> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     final shadowOffset = widget.isPressed ? 0.0 : 2.0;
 
     return AnimatedContainer(
@@ -38,7 +39,7 @@ class _GenericButtonState extends State<GenericButton> {
         boxShadow: [
           if (!widget.isPressed)
             BoxShadow(
-              color: accentShadowColor,
+              color: colors.shadow,
               blurRadius: 0,
               offset: Offset(0, shadowOffset),
             ),
@@ -53,8 +54,8 @@ class _GenericButtonState extends State<GenericButton> {
             widget.onPressed();
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: accentColor,
-            foregroundColor: foregroundColor,
+            backgroundColor: colors.primary,
+            foregroundColor: colors.onSurface,
             fixedSize: widget.size,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),

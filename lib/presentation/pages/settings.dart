@@ -20,7 +20,9 @@ class _SettingsPageState extends State<SettingsPage> {
     Setting(
       label: 'Dark Mode',
       icon: Icons.dark_mode_outlined,
-      onChanged: (bool isEnabled) {},
+      onChanged: (bool isEnabled) {
+        themeNotifier.value = isEnabled ? darkTheme : lighTheme;
+      },
     ),
     Setting(
       label: 'Notifications',
@@ -52,7 +54,6 @@ class _SettingsPageState extends State<SettingsPage> {
         final width = constraints.maxWidth;
 
         return Material(
-          color: backgroundColor,
           child: Padding(
             padding: pageInset,
             child: Column(children: [...settings]),
@@ -90,21 +91,26 @@ class _SettingState extends State<Setting> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Row(
           spacing: 10,
           children: [
-            Icon(widget.icon, color: foregroundColor, size: 32),
+            Icon(widget.icon, color: colors.onSurface, size: 32),
             Text(widget.label, style: bodyMedium),
           ],
         ),
         widget.isSelection
             ? Row(
                 children: [
-                  Text(widget.currentSelection, style: bodySmallGrey),
-                  Icon(Icons.chevron_right, size: 40, color: secondaryColor),
+                  Text(
+                    widget.currentSelection,
+                    style: bodySmall.copyWith(color: colors.secondary),
+                  ),
+                  Icon(Icons.chevron_right, size: 40, color: colors.secondary),
                 ],
               )
             : Switch(
@@ -115,10 +121,6 @@ class _SettingState extends State<Setting> {
                     widget.onChanged(isEnabled);
                   });
                 },
-                activeTrackColor: accentColor,
-                activeThumbColor: foregroundColor,
-                inactiveTrackColor: foregroundColor,
-                inactiveThumbColor: secondaryColor,
               ),
       ],
     );

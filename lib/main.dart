@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'presentation/pages/boarding.dart';
 import 'package:flutter/material.dart';
 
-import 'presentation/pages/home.dart';
+import 'presentation/style.dart';
 import 'services/dio.dart';
 
 late String username;
@@ -20,15 +20,27 @@ Future<void> main() async {
   runApp(const Chrono());
 }
 
-class Chrono extends StatelessWidget {
+class Chrono extends StatefulWidget {
   const Chrono({super.key});
 
   @override
+  State<Chrono> createState() => _ChronoState();
+}
+
+class _ChronoState extends State<Chrono> {
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Chrono',
-      debugShowCheckedModeBanner: false,
-      home: username == '' ? BoardingPage() : HomePage(),
+    return ValueListenableBuilder<ThemeData>(
+      valueListenable: themeNotifier,
+      builder: (context, theme, child) {
+        return MaterialApp(
+          title: 'Chrono',
+          debugShowCheckedModeBanner: false,
+          theme: theme,
+          // home: username == '' ? BoardingPage() : HomePage(),
+          home: BoardingPage(),
+        );
+      },
     );
   }
 }

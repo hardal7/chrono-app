@@ -93,6 +93,8 @@ class _TrackerPageState extends State<TrackerPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final height = constraints.maxHeight;
@@ -102,7 +104,6 @@ class _TrackerPageState extends State<TrackerPage> {
           valueListenable: tracker,
           builder: (context, value, child) {
             return Material(
-              color: backgroundColor,
               child: Padding(
                 padding: pageInset,
                 child: Column(
@@ -137,7 +138,7 @@ class _TrackerPageState extends State<TrackerPage> {
                                     showDropdown
                                         ? CupertinoIcons.chevron_down
                                         : Icons.chevron_right,
-                                    color: foregroundColor,
+                                    color: colors.onSurface,
                                     size: showDropdown ? 32 : 40,
                                     fontWeight: FontWeight(
                                       showDropdown ? 900 : 100,
@@ -158,7 +159,9 @@ class _TrackerPageState extends State<TrackerPage> {
                               children: [
                                 Text(
                                   '${Duration(seconds: tracker.value.topicTime).toStopwatchString()} overall',
-                                  style: bodyMediumGrey,
+                                  style: bodyMedium.copyWith(
+                                    color: colors.secondary,
+                                  ),
                                 ),
                                 TodayTime(todayTime: tracker.value.todayTime),
                               ],
@@ -190,8 +193,8 @@ class _TrackerPageState extends State<TrackerPage> {
                         dotHeight: 16,
                         dotWidth: 16,
                         type: WormType.thin,
-                        dotColor: secondaryColor,
-                        activeDotColor: foregroundColor,
+                        dotColor: colors.secondary,
+                        activeDotColor: colors.primary,
                       ),
                     ),
 
@@ -283,6 +286,8 @@ class _TopicDropdownState extends State<TopicDropdown> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+
     return ValueListenableBuilder<List<Topic>>(
       valueListenable: topics,
       builder: (context, value, child) {
@@ -292,13 +297,16 @@ class _TopicDropdownState extends State<TopicDropdown> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.add, size: 24, color: secondaryColor),
+                  Icon(Icons.add, size: 24, color: colors.secondary),
                   GestureDetector(
                     onTap: () {
                       newTopicPopup(context);
                     },
 
-                    child: Text('Create Topic', style: bodySmallGrey),
+                    child: Text(
+                      'Create Topic',
+                      style: bodySmall.copyWith(color: colors.secondary),
+                    ),
                   ),
                 ],
               ),
@@ -312,7 +320,7 @@ class _TopicDropdownState extends State<TopicDropdown> {
                   child: topic.name != tracker.value.topicName
                       ? Text(
                           '${topic.name}: ${Duration(seconds: topic.time).toHoursString()}',
-                          style: bodySmallGrey,
+                          style: bodySmall.copyWith(color: colors.secondary),
                         )
                       : SizedBox.shrink(),
                 );
@@ -326,35 +334,37 @@ class _TopicDropdownState extends State<TopicDropdown> {
 }
 
 void newTopicPopup(BuildContext context) {
+  final colors = Theme.of(context).colorScheme;
   final controller = TextEditingController();
 
   showDialog(
     context: context,
     builder: (context) {
       return AlertDialog(
-        backgroundColor: backgroundColor,
         title: Row(
           children: [
             IconButton(
-              icon: const Icon(
-                Icons.chevron_left,
-                color: secondaryColor,
-                size: 32,
-              ),
+              icon: Icon(Icons.chevron_left, color: colors.secondary, size: 32),
               onPressed: () {
                 Navigator.pop(context);
               },
             ),
-            Text('Create Topic', style: bodySmallGrey),
+            Text(
+              'Create Topic',
+              style: bodySmall.copyWith(color: colors.secondary),
+            ),
           ],
         ),
         content: TextFormField(
           controller: controller,
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             labelText: 'Topic Name',
             border: OutlineInputBorder(),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: colors.secondary),
+            ),
           ),
-          style: bodyMediumGrey,
+          style: bodyMedium.copyWith(color: colors.secondary),
         ),
         actions: [
           GenericButton(
@@ -374,6 +384,7 @@ void newTopicPopup(BuildContext context) {
 }
 
 void settingsPopup(BuildContext context) {
+  final colors = Theme.of(context).colorScheme;
   final secondsController = TextEditingController();
   final minutesController = TextEditingController();
   final hoursController = TextEditingController();
@@ -381,21 +392,21 @@ void settingsPopup(BuildContext context) {
   showDialog(
     context: context,
     builder: (context) {
+      final colors = Theme.of(context).colorScheme;
+
       return AlertDialog(
-        backgroundColor: backgroundColor,
         title: Row(
           children: [
             IconButton(
-              icon: const Icon(
-                Icons.chevron_left,
-                color: secondaryColor,
-                size: 32,
-              ),
+              icon: Icon(Icons.chevron_left, color: colors.secondary, size: 32),
               onPressed: () {
                 Navigator.pop(context);
               },
             ),
-            Text('Set Timer', style: bodySmallGrey),
+            Text(
+              'Set Timer',
+              style: bodySmall.copyWith(color: colors.secondary),
+            ),
           ],
         ),
         content: Row(
@@ -449,14 +460,19 @@ class SettingsForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+
     return TextFormField(
       keyboardType: TextInputType.number,
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: colors.secondary),
+        ),
         border: OutlineInputBorder(),
       ),
-      style: bodyMediumGrey,
+      style: bodyMedium.copyWith(color: colors.secondary),
     );
   }
 }

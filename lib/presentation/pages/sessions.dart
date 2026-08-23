@@ -17,12 +17,13 @@ class SessionsPage extends StatefulWidget {
 class _SessionsPageState extends State<SessionsPage> {
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final height = constraints.maxHeight;
         final width = constraints.maxWidth;
         return Material(
-          color: backgroundColor,
           child: Padding(
             padding: pageInset,
             child: Column(
@@ -37,12 +38,18 @@ class _SessionsPageState extends State<SessionsPage> {
                     maxLines: 1,
                   ),
                 ),
-                Text('Members: 5/8', style: bodySmallGrey),
+                Text(
+                  'Members: 5/8',
+                  style: bodySmall.copyWith(color: colors.secondary),
+                ),
                 Text(
                   Duration(hours: 45, minutes: 39).toHoursString(),
                   style: bodyMax,
                 ),
-                Text('Expires in 5 days', style: bodySmallGrey),
+                Text(
+                  'Expires in 5 days',
+                  style: bodySmall.copyWith(color: colors.secondary),
+                ),
                 Padding(
                   padding: EdgeInsets.only(top: height / 20),
                   child: UserCard(
@@ -98,7 +105,7 @@ class UserCard extends StatelessWidget {
               spacing: 5,
               children: [
                 Icon(Icons.circle, color: greenColor, size: 10),
-                Text('Online', style: bodyMinGreen),
+                Text('Online', style: bodyMedium.copyWith(color: greenColor)),
               ],
             ),
             Row(
@@ -107,7 +114,10 @@ class UserCard extends StatelessWidget {
                   AssetImage('assets/icons/triangle.png'),
                   color: greenColor,
                 ),
-                Text(user.todayTime.toHoursString(), style: bodyMinGreen),
+                Text(
+                  user.todayTime.toHoursString(),
+                  style: bodyMedium.copyWith(color: greenColor),
+                ),
               ],
             ),
           ],
@@ -118,24 +128,24 @@ class UserCard extends StatelessWidget {
 }
 
 void settingsPopup(BuildContext context) {
+  final colors = Theme.of(context).colorScheme;
+
   showDialog(
     context: context,
     builder: (context) {
       return AlertDialog(
-        backgroundColor: backgroundColor,
         title: Row(
           children: [
             IconButton(
-              icon: const Icon(
-                Icons.chevron_left,
-                color: secondaryColor,
-                size: 32,
-              ),
+              icon: Icon(Icons.chevron_left, color: colors.secondary, size: 32),
               onPressed: () {
                 Navigator.pop(context);
               },
             ),
-            Text('Session Settings', style: bodySmallGrey),
+            Text(
+              'Session Settings',
+              style: bodySmall.copyWith(color: colors.secondary),
+            ),
           ],
         ),
         content: Row(children: []),

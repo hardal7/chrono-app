@@ -11,13 +11,14 @@ class BoardingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final height = constraints.maxHeight;
         final width = constraints.maxWidth;
 
         return Material(
-          color: backgroundColor,
           child: Padding(
             padding: pageInset,
             child: Column(
@@ -28,13 +29,13 @@ class BoardingPage extends StatelessWidget {
                     spacing: 15.0,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Icon(Icons.access_time, size: 48, color: accentColor),
+                      Icon(Icons.access_time, size: 48, color: colors.primary),
                       Text(
                         'Chrono',
                         style: TextStyle(
                           fontSize: 48,
                           fontWeight: FontWeight.w500,
-                          color: accentColor,
+                          color: colors.primary,
                         ),
                       ),
                     ],
@@ -47,14 +48,14 @@ class BoardingPage extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.w500,
-                      color: accentColor,
+                      color: colors.primary,
                     ),
                     textAlign: TextAlign.center,
                   ),
                 ),
                 Text(
                   'Start tracking your study habits for a more mindful studying experience.',
-                  style: bodyMinGrey,
+                  style: bodyMin.copyWith(color: colors.secondary),
                   textAlign: TextAlign.center,
                 ),
                 Padding(
@@ -86,14 +87,14 @@ class BoardingPage extends StatelessWidget {
                       child: RichText(
                         textAlign: TextAlign.center,
                         text: TextSpan(
-                          style: bodyMinGrey,
+                          style: bodyMin.copyWith(color: colors.secondary),
                           children: <TextSpan>[
                             TextSpan(text: 'By continuing you agree to the '),
                             TextSpan(
                               text: 'Privacy Policy',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: accentColor,
+                                color: colors.primary,
                               ),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () async {
@@ -106,9 +107,9 @@ class BoardingPage extends StatelessWidget {
                             TextSpan(text: ' and '),
                             TextSpan(
                               text: 'User Terms',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: accentColor,
+                                color: colors.primary,
                               ),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () async {

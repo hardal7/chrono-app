@@ -52,12 +52,13 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final height = constraints.maxHeight;
         final width = constraints.maxWidth;
         return Material(
-          color: backgroundColor,
           child: Padding(
             padding: pageInset,
             child: Column(
@@ -66,9 +67,9 @@ class _RegisterPageState extends State<RegisterPage> {
               children: <Widget>[
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: height / 20),
-                  child: const Text(
+                  child: Text(
                     'Register an account',
-                    style: TextStyle(color: Colors.white60, fontSize: 24),
+                    style: TextStyle(color: colors.secondary, fontSize: 24),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -135,7 +136,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       children: <TextSpan>[
                         TextSpan(
                           text: 'Already have an account? ',
-                          style: bodyMinGrey,
+                          style: bodyMin.copyWith(color: colors.secondary),
                         ),
                         TextSpan(text: 'Login to account', style: bodyMin),
                       ],
