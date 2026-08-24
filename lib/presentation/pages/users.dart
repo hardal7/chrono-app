@@ -206,9 +206,9 @@ class UserCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: username == user.username
-            ? colors.secondary
+            ? colors.secondary.withAlpha(25)
             : Colors.transparent,
-        borderRadius: BorderRadius.all(Radius.circular(16)),
+        borderRadius: BorderRadius.all(Radius.circular(12)),
       ),
       child: Row(
         children: [

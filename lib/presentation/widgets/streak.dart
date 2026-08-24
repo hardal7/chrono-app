@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../style.dart';
-
 class Streak extends StatelessWidget {
   const Streak({super.key, required this.streak});
 

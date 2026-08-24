@@ -1,3 +1,9 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../../handler/location.dart';
+import '../../handler/user.dart';
 import '../style.dart';
 import 'package:flutter/material.dart';
 
@@ -13,36 +19,51 @@ class _SettingsPageState extends State<SettingsPage> {
     Setting(
       label: 'Language',
       icon: Icons.language_outlined,
-      onChanged: (bool isEnabled) {},
-      isSelection: true,
+      settingType: SettingType.selection,
       currentSelection: 'English',
+      onPressed: (value) {},
     ),
     Setting(
       label: 'Dark Mode',
       icon: Icons.dark_mode_outlined,
-      onChanged: (bool isEnabled) {
-        themeNotifier.value = isEnabled ? darkTheme : lighTheme;
+      settingType: SettingType.bool,
+      onPressed: (value) {
+        themeNotifier.value = (value) ? darkTheme : lightTheme;
       },
     ),
     Setting(
       label: 'Notifications',
       icon: Icons.notifications_outlined,
-      onChanged: (bool isEnabled) {},
+      settingType: SettingType.bool,
+      onPressed: (value) async {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('notifications', value);
+      },
     ),
     Setting(
       label: 'Hide Account',
       icon: Icons.lock_outlined,
-      onChanged: (bool isEnabled) {},
+      settingType: SettingType.bool,
+      onPressed: (value) {
+        setAccountPrivacy(value);
+      },
     ),
     Setting(
       label: 'Hide Location',
       icon: Icons.location_on_outlined,
-      onChanged: (bool isEnabled) {},
+      settingType: SettingType.bool,
+      onPressed: (value) {
+        setLocationPrivacy(value);
+      },
     ),
     Setting(
       label: 'Report a Problem',
       icon: Icons.bug_report_outlined,
-      onChanged: (bool isEnabled) {},
+      settingType: SettingType.button,
+      onPressed: (value) {
+        final url = Uri.parse('${dotenv.get('SITE_URL')}/report');
+        launchUrl(url);
+      },
     ),
   ];
 
@@ -64,22 +85,24 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 }
 
+enum SettingType { selection, bool, button }
+
 class Setting extends StatefulWidget {
   const Setting({
     super.key,
     required this.label,
     required this.icon,
-    required this.onChanged,
+    required this.onPressed,
 
-    this.isSelection = false,
+    required this.settingType,
     this.currentSelection = '',
   });
 
   final String label;
   final IconData icon;
-  final ValueChanged<bool> onChanged;
+  final void Function(bool value) onPressed;
 
-  final bool isSelection;
+  final SettingType settingType;
   final String currentSelection;
 
   @override
@@ -93,36 +116,45 @@ class _SettingState extends State<Setting> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Row(
-          spacing: 10,
-          children: [
-            Icon(widget.icon, color: colors.onSurface, size: 32),
-            Text(widget.label, style: bodyMedium),
-          ],
-        ),
-        widget.isSelection
-            ? Row(
-                children: [
-                  Text(
-                    widget.currentSelection,
-                    style: bodySmall.copyWith(color: colors.secondary),
-                  ),
-                  Icon(Icons.chevron_right, size: 40, color: colors.secondary),
-                ],
-              )
-            : Switch(
-                value: isEnabled,
-                onChanged: (value) {
-                  setState(() {
-                    isEnabled = value;
-                    widget.onChanged(isEnabled);
-                  });
-                },
-              ),
-      ],
+    return GestureDetector(
+      onTap: () async {
+        setState(() {
+          widget.onPressed(true);
+        });
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            spacing: 10,
+            children: [
+              Icon(widget.icon, color: colors.onSurface, size: 32),
+              Text(widget.label, style: bodyMedium),
+            ],
+          ),
+          switch (widget.settingType) {
+            SettingType.selection => Row(
+              children: [
+                Text(
+                  widget.currentSelection,
+                  style: bodySmall.copyWith(color: colors.secondary),
+                ),
+                Icon(Icons.chevron_right, size: 40, color: colors.secondary),
+              ],
+            ),
+            SettingType.bool => Switch(
+              value: isEnabled,
+              onChanged: (value) {
+                setState(() {
+                  isEnabled = !isEnabled;
+                  widget.onPressed(value);
+                });
+              },
+            ),
+            SettingType.button => SizedBox.shrink(),
+          },
+        ],
+      ),
     );
   }
 }

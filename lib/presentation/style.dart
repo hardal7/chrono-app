@@ -17,7 +17,7 @@ final darkTheme = ThemeData(
   ),
 );
 
-final lighTheme = ThemeData(
+final lightTheme = ThemeData(
   colorScheme: ColorScheme(
     surface: _backgroundColorLight,
     onSurface: _foregroundColorLight,

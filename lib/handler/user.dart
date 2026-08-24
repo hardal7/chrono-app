@@ -55,7 +55,7 @@ Future<List<LeaderboardUser>> getTopUsers(
         'cursor': 100000,
         'limit': 20,
         'scope': scope,
-        if (matchName != null) 'match_name': matchName,
+        'match_name': ?matchName,
       },
     );
 
@@ -80,5 +80,20 @@ Future<UserProfile?> getProfile(String username) async {
     return UserProfile.fromJson(response.data as Map<String, dynamic>);
   } catch (e) {
     return null;
+  }
+}
+
+Future<void> setAccountPrivacy(bool hide) async {
+  try {
+    debugPrint('Sending set account privacy request');
+
+    final response = await dio.post(
+      '${dotenv.get('API_URL')}/user/privacy',
+      data: {'hide': hide},
+    );
+
+    debugPrint(response.statusCode.toString());
+  } catch (e) {
+    debugPrint('Error sending set account privacy request: $e');
   }
 }

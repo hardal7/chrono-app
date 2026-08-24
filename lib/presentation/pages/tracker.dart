@@ -40,7 +40,7 @@ class TrackerValues {
   Duration countdownTime;
 }
 
-ValueNotifier<TrackerValues> tracker = ValueNotifier(
+ValueNotifier<TrackerValues> trackerNotifier = ValueNotifier(
   TrackerValues(
     topicName: 'General',
     topicTime: 0,
@@ -75,10 +75,10 @@ class _TrackerPageState extends State<TrackerPage> {
     });
 
     topicTimer = Timer.periodic(const Duration(minutes: 1), (_) async {
-      await loadTimes(tracker.value);
+      await loadTimes(trackerNotifier.value);
     });
 
-    loadTimes(tracker.value);
+    loadTimes(trackerNotifier.value);
   }
 
   @override
@@ -101,8 +101,8 @@ class _TrackerPageState extends State<TrackerPage> {
         final width = constraints.maxWidth;
 
         return ValueListenableBuilder<TrackerValues>(
-          valueListenable: tracker,
-          builder: (context, value, child) {
+          valueListenable: trackerNotifier,
+          builder: (context, tracker, child) {
             return Material(
               child: Padding(
                 padding: pageInset,
@@ -115,8 +115,8 @@ class _TrackerPageState extends State<TrackerPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         spacing: 5.0,
                         children: [
-                          if (tracker.value.streak != 0)
-                            Streak(streak: tracker.value.streak),
+                          if (tracker.streak != 0)
+                            Streak(streak: tracker.streak),
                           GestureDetector(
                             onTap: () {
                               setState(() {
@@ -126,7 +126,7 @@ class _TrackerPageState extends State<TrackerPage> {
                             child: Row(
                               children: [
                                 Text(
-                                  tracker.value.topicName,
+                                  tracker.topicName,
                                   style: bodyLarge,
                                   maxLines: 1,
                                 ),
@@ -158,12 +158,12 @@ class _TrackerPageState extends State<TrackerPage> {
                           : Column(
                               children: [
                                 Text(
-                                  '${Duration(seconds: tracker.value.topicTime).toStopwatchString()} overall',
+                                  '${Duration(seconds: tracker.topicTime).toStopwatchString()} overall',
                                   style: bodyMedium.copyWith(
                                     color: colors.secondary,
                                   ),
                                 ),
-                                TodayTime(todayTime: tracker.value.todayTime),
+                                TodayTime(todayTime: tracker.todayTime),
                               ],
                             ),
                     ),
@@ -194,7 +194,7 @@ class _TrackerPageState extends State<TrackerPage> {
                         dotWidth: 16,
                         type: WormType.thin,
                         dotColor: colors.secondary,
-                        activeDotColor: colors.primary,
+                        activeDotColor: colors.onSurface,
                       ),
                     ),
 
@@ -202,13 +202,13 @@ class _TrackerPageState extends State<TrackerPage> {
                     Padding(
                       padding: EdgeInsets.only(top: 20),
                       child: GenericButton(
-                        text: stopwatch.isRunning ? 'Stop' : 'Start',
+                        text: stopwatch.isRunning ? 'Pause' : 'Start',
                         isPressed: stopwatch.isRunning,
                         size: const Size(175, 45),
                         onPressed: () {
                           if (stopwatch.isRunning) {
                             stopTracker(stopwatch);
-                            loadTimes(tracker.value);
+                            loadTimes(tracker);
                           } else {
                             startTracker(stopwatch);
                           }
@@ -241,15 +241,15 @@ class Tracker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<TrackerValues>(
-      valueListenable: tracker,
-      builder: (context, value, child) {
+      valueListenable: trackerNotifier,
+      builder: (context, tracker, child) {
         return Column(
           children: [
             Padding(
               padding: EdgeInsets.only(top: height / 12),
               child: Text(
                 (isStopwatch
-                        ? (tracker.value.countdownTime - stopwatch.elapsed)
+                        ? (tracker.countdownTime - stopwatch.elapsed)
                         : stopwatch.elapsed)
                     .toStopwatchString(),
                 style: bodyMax,
@@ -262,11 +262,11 @@ class Tracker extends StatelessWidget {
   }
 }
 
-ValueNotifier<List<Topic>> topics = ValueNotifier(List.empty());
+ValueNotifier<List<Topic>> topicsNotifier = ValueNotifier(List.empty());
 bool showDropdown = false;
 
 Future<void> loadTopics() async {
-  topics.value = await getAllTopics();
+  topicsNotifier.value = await getAllTopics();
 }
 
 class TopicDropdown extends StatefulWidget {
@@ -289,8 +289,8 @@ class _TopicDropdownState extends State<TopicDropdown> {
     final colors = Theme.of(context).colorScheme;
 
     return ValueListenableBuilder<List<Topic>>(
-      valueListenable: topics,
-      builder: (context, value, child) {
+      valueListenable: topicsNotifier,
+      builder: (context, topics, child) {
         return SingleChildScrollView(
           child: Column(
             children: [
@@ -310,14 +310,14 @@ class _TopicDropdownState extends State<TopicDropdown> {
                   ),
                 ],
               ),
-              ...topics.value.map((topic) {
+              ...topics.map((topic) {
                 return GestureDetector(
                   onTap: () {
-                    tracker.value.topicName = topic.name;
-                    loadTimes(tracker.value);
+                    trackerNotifier.value.topicName = topic.name;
+                    loadTimes(trackerNotifier.value);
                     showDropdown = false;
                   },
-                  child: topic.name != tracker.value.topicName
+                  child: topic.name != trackerNotifier.value.topicName
                       ? Text(
                           '${topic.name}: ${Duration(seconds: topic.time).toHoursString()}',
                           style: bodySmall.copyWith(color: colors.secondary),
@@ -359,6 +359,7 @@ void newTopicPopup(BuildContext context) {
           controller: controller,
           decoration: InputDecoration(
             labelText: 'Topic Name',
+            labelStyle: bodySmall.copyWith(color: colors.secondary),
             border: OutlineInputBorder(),
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: colors.secondary),
@@ -384,7 +385,6 @@ void newTopicPopup(BuildContext context) {
 }
 
 void settingsPopup(BuildContext context) {
-  final colors = Theme.of(context).colorScheme;
   final secondsController = TextEditingController();
   final minutesController = TextEditingController();
   final hoursController = TextEditingController();
@@ -434,7 +434,7 @@ void settingsPopup(BuildContext context) {
             text: 'Save',
             textStyle: bodySmall,
             onPressed: () {
-              tracker.value.countdownTime = Duration(
+              trackerNotifier.value.countdownTime = Duration(
                 hours: int.tryParse(hoursController.text) ?? 0,
                 minutes: int.tryParse(minutesController.text) ?? 0,
                 seconds: int.tryParse(secondsController.text) ?? 0,

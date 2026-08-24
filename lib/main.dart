@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'presentation/pages/boarding.dart';
 import 'package:flutter/material.dart';
 
+import 'presentation/pages/home.dart';
 import 'presentation/style.dart';
 import 'services/dio.dart';
 
@@ -37,8 +38,7 @@ class _ChronoState extends State<Chrono> {
           title: 'Chrono',
           debugShowCheckedModeBanner: false,
           theme: theme,
-          // home: username == '' ? BoardingPage() : HomePage(),
-          home: BoardingPage(),
+          home: username == '' ? BoardingPage() : HomePage(),
         );
       },
     );
