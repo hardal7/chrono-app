@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../l10n/app_localizations.dart';
 import 'profile.dart';
 import 'sessions.dart';
 import 'settings.dart';
@@ -25,27 +26,29 @@ class _HomePageState extends State<HomePage> {
     ProfilePage(username: username),
     SettingsPage(),
   ];
-  List<NavigationDestination> destinations(Color color) {
+  List<NavigationDestination> destinations(BuildContext context, Color color) {
+    final l10n = AppLocalizations.of(context)!;
+
     return [
       NavigationDestination(
         icon: Icon(Icons.timer, color: color),
-        label: 'Tracker',
+        label: l10n.tracker,
       ),
       NavigationDestination(
         icon: Icon(Icons.group, color: color),
-        label: 'Sessions',
+        label: l10n.sessions,
       ),
       NavigationDestination(
         icon: Icon(Icons.leaderboard, color: color),
-        label: 'Users',
+        label: l10n.users,
       ),
       NavigationDestination(
         icon: Icon(Icons.person, color: color),
-        label: 'Profile',
+        label: l10n.profile,
       ),
       NavigationDestination(
         icon: Icon(Icons.settings, color: color),
-        label: 'Settings',
+        label: l10n.settings,
       ),
     ];
   }
@@ -83,7 +86,7 @@ class _HomePageState extends State<HomePage> {
             _currentPageIndex = index;
           });
         },
-        destinations: destinations(colors.primary),
+        destinations: destinations(context, colors.primary),
       ),
       body: navigationPages[_currentPageIndex],
     );

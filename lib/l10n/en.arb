@@ -1,0 +1,233 @@
+{
+  "@@locale": "en",
+
+  "@today": {
+    "description": "Text appended to today's time."
+  },
+  "@welcome": {
+    "description": "Text displayed on the onboarding page."
+  },
+  "@appDescription": {
+    "description": "Text displayed on the onboarding page describing the app."
+  },
+  "@login": {
+    "description": "Text displayed for the login action."
+  },
+  "@signup": {
+    "description": "Text displayed for the account sign-up action."
+  },
+  "@privacyPolicy": {
+    "description": "Text displayed for the privacy policy."
+  },
+  "@userNotice": {
+    "description": "Text displayed in the agreement notice."
+  },
+  "@and": {
+    "description": "Conjunction displayed in the agreement notice."
+  },
+  "@userTerms": {
+    "description": "Text displayed for the user terms."
+  },
+  "@tracker": {
+    "description": "Navigation item displayed for the tracker page."
+  },
+  "@sessions": {
+    "description": "Navigation item displayed for the sessions page."
+  },
+  "@users": {
+    "description": "Navigation item displayed for the users page."
+  },
+  "@profile": {
+    "description": "Navigation item displayed for the profile page."
+  },
+  "@settings": {
+    "description": "Navigation item displayed for the settings page."
+  },
+  "@loginToYourAccount": {
+    "description": "Title displayed on the login page."
+  },
+  "@username": {
+    "description": "Label displayed for the username input field."
+  },
+  "@password": {
+    "description": "Label displayed for the password input field."
+  },
+  "@forgotPassword": {
+    "description": "Text displayed for the forgot password action."
+  },
+  "@userWithCredentialsNotFound": {
+    "description": "Error message displayed when the user cannot be found with the provided credentials."
+  },
+  "@incorrectCredentials": {
+    "description": "Error message displayed when the provided credentials are incorrect."
+  },
+  "@serverCurrentlyDown": {
+    "description": "Error message displayed when the server is unavailable."
+  },
+  "@unexpectedError": {
+    "description": "Error message displayed when an unexpected error occurs."
+  },
+  "@orLoginWith": {
+    "description": "Text displayed above the third-party login options."
+  },
+  "@dontHaveAnAccount": {
+    "description": "Text displayed before the registration action."
+  },
+  "@registerAnAccount": {
+    "description": "Text displayed for the registration action and registration page title."
+  },
+  "@email": {
+    "description": "Label displayed for the email input field."
+  },
+  "@register": {
+    "description": "Text displayed for the register action."
+  },
+  "@userWithCredentialsAlreadyExists": {
+    "description": "Error message displayed when a user with the provided credentials already exists."
+  },
+  "@failedToCreateUser": {
+    "description": "Error message displayed when the user cannot be created."
+  },
+  "@alreadyHaveAnAccount": {
+    "description": "Text displayed before the login action."
+  },
+  "@loginToAccount": {
+    "description": "Text displayed for the login action."
+  },
+  "@resetPassword": {
+    "description": "Text displayed for the reset password action."
+  },
+  "@leaderboardSettings": {
+    "description": "Title displayed in the leaderboard settings popup."
+  },
+  "@searchUsername": {
+    "description": "Hint text displayed in the username search field."
+  },
+  "@friend": {
+    "description": "Text displayed for the friends search scope."
+  },
+  "@local": {
+    "description": "Text displayed for the local search scope."
+  },
+  "@global": {
+    "description": "Text displayed for the global search scope."
+  },
+  "@rank": {
+    "description": "Column header displayed for the user rank."
+  },
+  "@user": {
+    "description": "Column header displayed for the username."
+  },
+  "@time": {
+    "description": "Column header displayed for the tracked time."
+  },
+  "@language": {
+    "description": "Label displayed for the language setting."
+  },
+  "@darkMode": {
+    "description": "Label displayed for the dark mode setting."
+  },
+  "@notifications": {
+    "description": "Label displayed for the notifications setting."
+  },
+  "@hideAccount": {
+    "description": "Label displayed for the hide account setting."
+  },
+  "@hideLocation": {
+    "description": "Label displayed for the hide location setting."
+  },
+  "@reportAProblem": {
+    "description": "Label displayed for the report a problem action."
+  },
+  "@overall": {
+    "description": "Text displayed after the overall tracked time."
+  },
+  "@start": {
+    "description": "Text displayed for the start timer action."
+  },
+  "@pause": {
+    "description": "Text displayed for the pause timer action."
+  },
+  "@createTopic": {
+    "description": "Text displayed for the create topic action and popup title."
+  },
+  "@topicName": {
+    "description": "Label displayed for the topic name input field."
+  },
+  "@create": {
+    "description": "Text displayed for the create action."
+  },
+  "@setTimer": {
+    "description": "Title displayed in the timer settings popup."
+  },
+  "@hours": {
+    "description": "Label displayed for the hours input field."
+  },
+  "@minutes": {
+    "description": "Label displayed for the minutes input field."
+  },
+  "@seconds": {
+    "description": "Label displayed for the seconds input field."
+  },
+  "@save": {
+    "description": "Text displayed for the save action."
+  },
+
+  "today": "today",
+  "welcome": "Welcome to Chrono",
+  "appDescription": "Start tracking your study habits for a more mindful studying experience.",
+  "login": "Login",
+  "signup": "Sign Up",
+  "privacyPolicy": "Privacy Policy",
+  "userNotice": "By continuing you agree to the",
+  "and": "and",
+  "userTerms": "User Terms",
+  "tracker": "Tracker",
+  "sessions": "Sessions",
+  "users": "Users",
+  "profile": "Profile",
+  "settings": "Settings",
+  "loginToYourAccount": "Login to your account",
+  "username": "Username",
+  "password": "Password",
+  "forgotPassword": "Forgot password?",
+  "userWithCredentialsNotFound": "User with credentials not found",
+  "incorrectCredentials": "Incorrect credentials",
+  "serverCurrentlyDown": "Server is currently down, please try again later.",
+  "unexpectedError": "An unexpected error occurred",
+  "orLoginWith": "Or login with",
+  "dontHaveAnAccount": "Don't have an account? ",
+  "registerAnAccount": "Register an account",
+  "email": "Email",
+  "register": "Register",
+  "userWithCredentialsAlreadyExists": "User with credentials already exists",
+  "failedToCreateUser": "Failed to create user",
+  "alreadyHaveAnAccount": "Already have an account? ",
+  "loginToAccount": "Login to account",
+  "resetPassword": "Reset Password",
+  "leaderboardSettings": "Leaderboard Settings",
+  "searchUsername": "Search username",
+  "friend": "Friend",
+  "local": "Local",
+  "global": "Global",
+  "rank": "Rank",
+  "user": "User",
+  "time": "Time",
+  "language": "Language",
+  "darkMode": "Dark Mode",
+  "notifications": "Notifications",
+  "hideAccount": "Hide Account",
+  "hideLocation": "Hide Location",
+  "reportAProblem": "Report a Problem",
+  "overall": "overall",
+  "start": "Start",
+  "pause": "Pause",
+  "createTopic": "Create Topic",
+  "topicName": "Topic Name",
+  "create": "Create",
+  "setTimer": "Set Timer",
+  "hours": "Hours",
+  "minutes": "Minutes",
+  "seconds": "Seconds",
+  "save": "Save"
+}

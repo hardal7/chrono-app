@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../handler/user.dart';
+import '../../l10n/app_localizations.dart';
 import '../../models/user.dart';
 import '../duration.dart';
 import '../style.dart';
@@ -78,11 +79,13 @@ class _UsersPageState extends State<UsersPage> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return LayoutBuilder(
       builder: (context, constraints) {
         final height = constraints.maxHeight;
         final width = constraints.maxWidth;
+
         return Material(
           child: Padding(
             padding: pageInset,
@@ -103,7 +106,7 @@ class _UsersPageState extends State<UsersPage> {
                       style: bodySmall.copyWith(color: colors.secondary),
                       decoration: InputDecoration(
                         prefixIcon: Icon(Icons.search, color: colors.secondary),
-                        hintText: 'Search username',
+                        hintText: l10n.searchUsername,
                         hintStyle: bodySmall.copyWith(color: colors.secondary),
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: colors.secondary),
@@ -121,7 +124,7 @@ class _UsersPageState extends State<UsersPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       GenericButton(
-                        text: 'Friend',
+                        text: l10n.friend,
                         size: Size(width / 3.7, 45),
                         textStyle: bodySmall,
                         isPressed: searchScope == 'friends',
@@ -133,7 +136,7 @@ class _UsersPageState extends State<UsersPage> {
                         },
                       ),
                       GenericButton(
-                        text: 'Local',
+                        text: l10n.local,
                         textStyle: bodySmall,
                         size: Size(width / 3.7, 45),
                         isPressed: searchScope == 'local',
@@ -145,7 +148,7 @@ class _UsersPageState extends State<UsersPage> {
                         },
                       ),
                       GenericButton(
-                        text: 'Global',
+                        text: l10n.global,
                         textStyle: bodySmall,
                         size: Size(width / 3.7, 45),
                         isPressed: searchScope == 'global',
@@ -163,15 +166,15 @@ class _UsersPageState extends State<UsersPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Text(
-                      'Rank',
+                      l10n.rank,
                       style: bodySmall.copyWith(color: colors.secondary),
                     ),
                     Text(
-                      'User',
+                      l10n.user,
                       style: bodySmall.copyWith(color: colors.secondary),
                     ),
                     Text(
-                      'Time',
+                      l10n.time,
                       style: bodySmall.copyWith(color: colors.secondary),
                     ),
                   ],
@@ -290,6 +293,7 @@ class UserCard extends StatelessWidget {
 
 void settingsPopup(BuildContext context) {
   final colors = Theme.of(context).colorScheme;
+  final l10n = AppLocalizations.of(context)!;
 
   showDialog(
     context: context,
@@ -304,7 +308,7 @@ void settingsPopup(BuildContext context) {
               },
             ),
             Text(
-              'Leaderboard Settings',
+              l10n.leaderboardSettings,
               style: bodySmall.copyWith(color: colors.secondary),
             ),
           ],

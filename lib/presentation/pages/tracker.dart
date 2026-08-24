@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../handler/topic.dart';
+import '../../l10n/app_localizations.dart';
 import '../../models/topic.dart';
 import '../duration.dart';
 import '../style.dart';
@@ -33,6 +34,7 @@ class TrackerValues {
     required this.streak,
     required this.countdownTime,
   });
+
   String topicName;
   int topicTime;
   int todayTime;
@@ -94,6 +96,7 @@ class _TrackerPageState extends State<TrackerPage> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -158,7 +161,7 @@ class _TrackerPageState extends State<TrackerPage> {
                           : Column(
                               children: [
                                 Text(
-                                  '${Duration(seconds: tracker.topicTime).toStopwatchString()} overall',
+                                  '${Duration(seconds: tracker.topicTime).toStopwatchString()} ${l10n.overall}',
                                   style: bodyMedium.copyWith(
                                     color: colors.secondary,
                                   ),
@@ -202,7 +205,7 @@ class _TrackerPageState extends State<TrackerPage> {
                     Padding(
                       padding: EdgeInsets.only(top: 20),
                       child: GenericButton(
-                        text: stopwatch.isRunning ? 'Pause' : 'Start',
+                        text: stopwatch.isRunning ? l10n.pause : l10n.start,
                         isPressed: stopwatch.isRunning,
                         size: const Size(175, 45),
                         onPressed: () {
@@ -271,6 +274,7 @@ Future<void> loadTopics() async {
 
 class TopicDropdown extends StatefulWidget {
   const TopicDropdown({super.key, required this.height});
+
   final double height;
 
   @override
@@ -287,6 +291,7 @@ class _TopicDropdownState extends State<TopicDropdown> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return ValueListenableBuilder<List<Topic>>(
       valueListenable: topicsNotifier,
@@ -302,9 +307,8 @@ class _TopicDropdownState extends State<TopicDropdown> {
                     onTap: () {
                       newTopicPopup(context);
                     },
-
                     child: Text(
-                      'Create Topic',
+                      l10n.createTopic,
                       style: bodySmall.copyWith(color: colors.secondary),
                     ),
                   ),
@@ -335,6 +339,7 @@ class _TopicDropdownState extends State<TopicDropdown> {
 
 void newTopicPopup(BuildContext context) {
   final colors = Theme.of(context).colorScheme;
+  final l10n = AppLocalizations.of(context)!;
   final controller = TextEditingController();
 
   showDialog(
@@ -350,7 +355,7 @@ void newTopicPopup(BuildContext context) {
               },
             ),
             Text(
-              'Create Topic',
+              l10n.createTopic,
               style: bodySmall.copyWith(color: colors.secondary),
             ),
           ],
@@ -358,7 +363,7 @@ void newTopicPopup(BuildContext context) {
         content: TextFormField(
           controller: controller,
           decoration: InputDecoration(
-            labelText: 'Topic Name',
+            labelText: l10n.topicName,
             labelStyle: bodySmall.copyWith(color: colors.secondary),
             border: OutlineInputBorder(),
             enabledBorder: OutlineInputBorder(
@@ -370,7 +375,7 @@ void newTopicPopup(BuildContext context) {
         actions: [
           GenericButton(
             size: Size(100, 20),
-            text: 'Create',
+            text: l10n.create,
             textStyle: bodyMin,
             onPressed: () {
               createTopic(controller.text);
@@ -393,6 +398,7 @@ void settingsPopup(BuildContext context) {
     context: context,
     builder: (context) {
       final colors = Theme.of(context).colorScheme;
+      final l10n = AppLocalizations.of(context)!;
 
       return AlertDialog(
         title: Row(
@@ -404,7 +410,7 @@ void settingsPopup(BuildContext context) {
               },
             ),
             Text(
-              'Set Timer',
+              l10n.setTimer,
               style: bodySmall.copyWith(color: colors.secondary),
             ),
           ],
@@ -412,17 +418,20 @@ void settingsPopup(BuildContext context) {
         content: Row(
           children: [
             Expanded(
-              child: SettingsForm(label: 'Hours', controller: hoursController),
+              child: SettingsForm(
+                label: l10n.hours,
+                controller: hoursController,
+              ),
             ),
             Expanded(
               child: SettingsForm(
-                label: 'Minutes',
+                label: l10n.minutes,
                 controller: minutesController,
               ),
             ),
             Expanded(
               child: SettingsForm(
-                label: 'Seconds',
+                label: l10n.seconds,
                 controller: secondsController,
               ),
             ),
@@ -431,7 +440,7 @@ void settingsPopup(BuildContext context) {
         actions: [
           GenericButton(
             size: Size(100, 20),
-            text: 'Save',
+            text: l10n.save,
             textStyle: bodySmall,
             onPressed: () {
               trackerNotifier.value.countdownTime = Duration(

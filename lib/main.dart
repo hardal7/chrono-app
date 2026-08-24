@@ -1,12 +1,14 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'l10n/app_localizations.dart';
 import 'presentation/pages/boarding.dart';
 import 'package:flutter/material.dart';
 
 import 'presentation/pages/home.dart';
 import 'presentation/style.dart';
 import 'services/dio.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 late String username;
 
@@ -39,8 +41,15 @@ class _ChronoState extends State<Chrono> {
           debugShowCheckedModeBanner: false,
           theme: theme,
           home: username == '' ? BoardingPage() : HomePage(),
+          localizationsDelegates: [
+            AppLocalizations.delegate,
+            ...GlobalMaterialLocalizations.delegates,
+          ],
+          supportedLocales: _locales,
         );
       },
     );
   }
 }
+
+List<Locale> _locales = [Locale('en'), Locale('tr')];

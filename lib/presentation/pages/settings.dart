@@ -4,6 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../handler/location.dart';
 import '../../handler/user.dart';
+import '../../l10n/app_localizations.dart';
 import '../style.dart';
 import 'package:flutter/material.dart';
 
@@ -15,57 +16,61 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  List<Setting> settings = [
-    Setting(
-      label: 'Language',
-      icon: Icons.language_outlined,
-      settingType: SettingType.selection,
-      currentSelection: 'English',
-      onPressed: (value) {},
-    ),
-    Setting(
-      label: 'Dark Mode',
-      icon: Icons.dark_mode_outlined,
-      settingType: SettingType.bool,
-      onPressed: (value) {
-        themeNotifier.value = (value) ? darkTheme : lightTheme;
-      },
-    ),
-    Setting(
-      label: 'Notifications',
-      icon: Icons.notifications_outlined,
-      settingType: SettingType.bool,
-      onPressed: (value) async {
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setBool('notifications', value);
-      },
-    ),
-    Setting(
-      label: 'Hide Account',
-      icon: Icons.lock_outlined,
-      settingType: SettingType.bool,
-      onPressed: (value) {
-        setAccountPrivacy(value);
-      },
-    ),
-    Setting(
-      label: 'Hide Location',
-      icon: Icons.location_on_outlined,
-      settingType: SettingType.bool,
-      onPressed: (value) {
-        setLocationPrivacy(value);
-      },
-    ),
-    Setting(
-      label: 'Report a Problem',
-      icon: Icons.bug_report_outlined,
-      settingType: SettingType.button,
-      onPressed: (value) {
-        final url = Uri.parse('${dotenv.get('SITE_URL')}/report');
-        launchUrl(url);
-      },
-    ),
-  ];
+  List<Setting> settings(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    return [
+      Setting(
+        label: l10n.language,
+        icon: Icons.language_outlined,
+        settingType: SettingType.selection,
+        currentSelection: 'English',
+        onPressed: (value) {},
+      ),
+      Setting(
+        label: l10n.darkMode,
+        icon: Icons.dark_mode_outlined,
+        settingType: SettingType.bool,
+        onPressed: (value) {
+          themeNotifier.value = (value) ? darkTheme : lightTheme;
+        },
+      ),
+      Setting(
+        label: l10n.notifications,
+        icon: Icons.notifications_outlined,
+        settingType: SettingType.bool,
+        onPressed: (value) async {
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setBool('notifications', value);
+        },
+      ),
+      Setting(
+        label: l10n.hideAccount,
+        icon: Icons.lock_outlined,
+        settingType: SettingType.bool,
+        onPressed: (value) {
+          setAccountPrivacy(value);
+        },
+      ),
+      Setting(
+        label: l10n.hideLocation,
+        icon: Icons.location_on_outlined,
+        settingType: SettingType.bool,
+        onPressed: (value) {
+          setLocationPrivacy(value);
+        },
+      ),
+      Setting(
+        label: l10n.reportAProblem,
+        icon: Icons.bug_report_outlined,
+        settingType: SettingType.button,
+        onPressed: (value) {
+          final url = Uri.parse('${dotenv.get('SITE_URL')}/report');
+          launchUrl(url);
+        },
+      ),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +82,7 @@ class _SettingsPageState extends State<SettingsPage> {
         return Material(
           child: Padding(
             padding: pageInset,
-            child: Column(children: [...settings]),
+            child: Column(children: [...settings(context)]),
           ),
         );
       },

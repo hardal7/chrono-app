@@ -111,9 +111,11 @@ class InputField extends StatelessWidget {
     super.key,
     required this.fieldName,
     required this.controller,
+    this.obscure = false,
   });
   final String fieldName;
   final TextEditingController controller;
+  final bool obscure;
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +129,7 @@ class InputField extends StatelessWidget {
       child: TextFormField(
         controller: controller,
         style: bodyMin.copyWith(color: colors.secondary),
-        obscureText: fieldName == 'Password',
+        obscureText: obscure,
         decoration: InputDecoration(
           hintText: fieldName,
           hintStyle: bodyMin.copyWith(color: colors.secondary),

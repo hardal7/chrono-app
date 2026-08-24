@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../handler/user.dart';
+import '../../l10n/app_localizations.dart';
 import 'home.dart';
 import 'login.dart';
 import '../style.dart';
@@ -53,11 +54,13 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return LayoutBuilder(
       builder: (context, constraints) {
         final height = constraints.maxHeight;
         final width = constraints.maxWidth;
+
         return Material(
           child: Padding(
             padding: pageInset,
@@ -68,19 +71,20 @@ class _RegisterPageState extends State<RegisterPage> {
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: height / 20),
                   child: Text(
-                    'Register an account',
+                    l10n.registerAnAccount,
                     style: TextStyle(color: colors.secondary, fontSize: 24),
                     textAlign: TextAlign.center,
                   ),
                 ),
-                InputField(fieldName: 'Email', controller: emailController),
+                InputField(fieldName: l10n.email, controller: emailController),
                 InputField(
-                  fieldName: 'Username',
+                  fieldName: l10n.username,
                   controller: usernameController,
                 ),
                 InputField(
-                  fieldName: 'Password',
+                  fieldName: l10n.password,
                   controller: passwordController,
+                  obscure: true,
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 5),
@@ -88,7 +92,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     height: height / 15,
                     width: width,
                     child: AuthButton(
-                      title: 'Register',
+                      title: l10n.register,
                       onPressed: registerOnPressed,
                     ),
                   ),
@@ -98,11 +102,10 @@ class _RegisterPageState extends State<RegisterPage> {
                     padding: EdgeInsets.only(left: 20),
                     child: Text(switch (_status) {
                       HttpStatus.conflict =>
-                        'User with credentials already exists',
-                      HttpStatus.internalServerError => 'Failed to create user',
-                      null =>
-                        'Server is currently down, please try again later.',
-                      _ => 'An unexpected error occurred',
+                        l10n.userWithCredentialsAlreadyExists,
+                      HttpStatus.internalServerError => l10n.failedToCreateUser,
+                      null => l10n.serverCurrentlyDown,
+                      _ => l10n.unexpectedError,
                     }, style: const TextStyle(color: Colors.red)),
                   ),
                 Row(
@@ -135,10 +138,10 @@ class _RegisterPageState extends State<RegisterPage> {
                     text: TextSpan(
                       children: <TextSpan>[
                         TextSpan(
-                          text: 'Already have an account? ',
+                          text: l10n.alreadyHaveAnAccount,
                           style: bodyMin.copyWith(color: colors.secondary),
                         ),
-                        TextSpan(text: 'Login to account', style: bodyMin),
+                        TextSpan(text: l10n.loginToAccount, style: bodyMin),
                       ],
                     ),
                   ),

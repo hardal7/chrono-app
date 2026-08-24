@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../duration.dart';
 import '../style.dart';
 
@@ -10,6 +11,7 @@ class TodayTime extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -26,7 +28,7 @@ class TodayTime extends StatelessWidget {
                 style: bodyMedium.copyWith(color: greenColor),
               ),
               TextSpan(
-                text: ' today',
+                text: ' ${l10n.today}',
                 style: bodySmall.copyWith(color: colors.secondary),
               ),
             ],

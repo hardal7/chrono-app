@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../style.dart';
 import '../widgets/auth.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,7 @@ class BoardingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -44,7 +46,7 @@ class BoardingPage extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(top: height / 5),
                   child: Text(
-                    'Welcome to Chrono',
+                    l10n.welcome,
                     style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.w500,
@@ -54,7 +56,7 @@ class BoardingPage extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'Start tracking your study habits for a more mindful studying experience.',
+                  l10n.appDescription,
                   style: bodyMin.copyWith(color: colors.secondary),
                   textAlign: TextAlign.center,
                 ),
@@ -65,13 +67,13 @@ class BoardingPage extends StatelessWidget {
                       SizedBox(
                         height: height / 15,
                         width: width,
-                        child: AuthButton(title: 'Login', route: 'Login'),
+                        child: AuthButton(title: l10n.login, route: 'Login'),
                       ),
                       SizedBox(
                         height: height / 15,
                         width: width,
                         child: AuthButton(
-                          title: 'Sign Up',
+                          title: l10n.signup,
                           route: 'Register',
                           inverted: true,
                         ),
@@ -89,9 +91,9 @@ class BoardingPage extends StatelessWidget {
                         text: TextSpan(
                           style: bodyMin.copyWith(color: colors.secondary),
                           children: <TextSpan>[
-                            TextSpan(text: 'By continuing you agree to the '),
+                            TextSpan(text: '${l10n.userNotice} '),
                             TextSpan(
-                              text: 'Privacy Policy',
+                              text: l10n.privacyPolicy,
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: colors.primary,
@@ -104,9 +106,9 @@ class BoardingPage extends StatelessWidget {
                                   await launchUrl(url);
                                 },
                             ),
-                            TextSpan(text: ' and '),
+                            TextSpan(text: ' ${l10n.and} '),
                             TextSpan(
-                              text: 'User Terms',
+                              text: l10n.userTerms,
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: colors.primary,

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../handler/user.dart';
+import '../../l10n/app_localizations.dart';
 import 'home.dart';
 import 'register.dart';
 import 'reset_password.dart';
@@ -51,11 +52,13 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return LayoutBuilder(
       builder: (context, constraints) {
         final height = constraints.maxHeight;
         final width = constraints.maxWidth;
+
         return Material(
           child: Padding(
             padding: pageInset,
@@ -66,15 +69,19 @@ class _LoginPageState extends State<LoginPage> {
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: height / 20),
                   child: Text(
-                    'Login to your account',
+                    l10n.loginToYourAccount,
                     style: TextStyle(color: colors.secondary, fontSize: 24),
                     textAlign: TextAlign.center,
                   ),
                 ),
-                InputField(fieldName: 'Username', controller: nameController),
                 InputField(
-                  fieldName: 'Password',
+                  fieldName: l10n.username,
+                  controller: nameController,
+                ),
+                InputField(
+                  fieldName: l10n.password,
                   controller: passwordController,
+                  obscure: true,
                 ),
                 Align(
                   alignment: Alignment.centerRight,
@@ -91,28 +98,30 @@ class _LoginPageState extends State<LoginPage> {
                           (route) => false,
                         );
                       },
-                      child: Text('Forgot password?', style: bodyMin),
+                      child: Text(l10n.forgotPassword, style: bodyMin),
                     ),
                   ),
                 ),
                 SizedBox(
                   height: height / 15,
                   width: width,
-                  child: AuthButton(title: 'Login', onPressed: loginOnPressed),
+                  child: AuthButton(
+                    title: l10n.login,
+                    onPressed: loginOnPressed,
+                  ),
                 ),
                 if (_showError)
                   Padding(
                     padding: EdgeInsets.only(left: 20),
                     child: Text(switch (_status) {
-                      HttpStatus.notFound => 'User with credentials not found',
-                      HttpStatus.unauthorized => 'Incorrect credentials',
-                      null =>
-                        'Server is currently down, please try again later.',
-                      _ => 'An unexpected error occurred',
+                      HttpStatus.notFound => l10n.userWithCredentialsNotFound,
+                      HttpStatus.unauthorized => l10n.incorrectCredentials,
+                      null => l10n.serverCurrentlyDown,
+                      _ => l10n.unexpectedError,
                     }, style: const TextStyle(color: Colors.red)),
                   ),
                 Text(
-                  'Or login with',
+                  l10n.orLoginWith,
                   style: bodyMin.copyWith(color: colors.secondary),
                   textAlign: TextAlign.center,
                 ),
@@ -146,10 +155,10 @@ class _LoginPageState extends State<LoginPage> {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: 'Don\'t have an account? ',
+                          text: l10n.dontHaveAnAccount,
                           style: bodyMin.copyWith(color: colors.secondary),
                         ),
-                        TextSpan(text: 'Register an account', style: bodyMin),
+                        TextSpan(text: l10n.registerAnAccount, style: bodyMin),
                       ],
                     ),
                   ),
