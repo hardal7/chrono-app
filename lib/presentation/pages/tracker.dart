@@ -7,6 +7,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../handler/topic.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/topic.dart';
+import '../../services/chrono.dart';
 import '../duration.dart';
 import '../style.dart';
 import '../widgets/button.dart';
@@ -60,15 +61,18 @@ class TrackerPage extends StatefulWidget {
 }
 
 class _TrackerPageState extends State<TrackerPage> {
+  final chrono = ChronoService.instance;
   final trackerController = PageController();
-  late Stopwatch timer = Stopwatch();
-  late Stopwatch stopwatch = Stopwatch();
+  late Stopwatch currentTracker;
+
   late Timer uiTimer;
   late Timer topicTimer;
 
   @override
   void initState() {
     super.initState();
+
+    currentTracker = chrono.stopwatch;
 
     uiTimer = Timer.periodic(const Duration(milliseconds: 500), (_) {
       if (mounted) {
@@ -88,7 +92,6 @@ class _TrackerPageState extends State<TrackerPage> {
     uiTimer.cancel();
     topicTimer.cancel();
     trackerController.dispose();
-    stopwatch.stop();
 
     super.dispose();
   }
@@ -173,15 +176,25 @@ class _TrackerPageState extends State<TrackerPage> {
                     SizedBox(
                       height: height / 2.5,
                       child: PageView.builder(
+                        onPageChanged: (page) {
+                          setState(() {
+                            currentTracker = (page == 0
+                                ? chrono.stopwatch
+                                : chrono.timer);
+                          });
+                        },
                         itemCount: 2,
                         controller: trackerController,
                         itemBuilder: (_, index) {
                           return switch (index) {
-                            0 => Tracker(height: height, stopwatch: stopwatch),
+                            0 => Tracker(
+                              height: height,
+                              elapsed: chrono.stopwatchElapsed,
+                            ),
                             // TODO: Do something after countdown runs out
                             1 => Tracker(
                               height: height,
-                              stopwatch: timer,
+                              elapsed: chrono.timerElapsed,
                               isStopwatch: false,
                             ),
                             _ => const SizedBox.shrink(),
@@ -205,15 +218,17 @@ class _TrackerPageState extends State<TrackerPage> {
                     Padding(
                       padding: EdgeInsets.only(top: 20),
                       child: GenericButton(
-                        text: stopwatch.isRunning ? l10n.pause : l10n.start,
-                        isPressed: stopwatch.isRunning,
+                        text: currentTracker.isRunning
+                            ? l10n.pause
+                            : l10n.start,
+                        isPressed: currentTracker.isRunning,
                         size: const Size(175, 45),
                         onPressed: () {
-                          if (stopwatch.isRunning) {
-                            stopTracker(stopwatch);
+                          if (currentTracker.isRunning) {
+                            stopTracker(currentTracker);
                             loadTimes(tracker);
                           } else {
-                            startTracker(stopwatch);
+                            startTracker(currentTracker);
                           }
                         },
                       ),
@@ -233,12 +248,12 @@ class Tracker extends StatelessWidget {
   const Tracker({
     super.key,
     required this.height,
-    required this.stopwatch,
+    required this.elapsed,
     this.isStopwatch = true,
   });
 
   final double height;
-  final Stopwatch stopwatch;
+  final Duration elapsed;
   final bool isStopwatch;
 
   @override
@@ -251,9 +266,7 @@ class Tracker extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(top: height / 12),
               child: Text(
-                (isStopwatch
-                        ? (tracker.countdownTime - stopwatch.elapsed)
-                        : stopwatch.elapsed)
+                (isStopwatch ? (tracker.countdownTime - elapsed) : elapsed)
                     .toStopwatchString(),
                 style: bodyMax,
               ),
