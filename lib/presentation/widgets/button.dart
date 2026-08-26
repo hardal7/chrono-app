@@ -35,6 +35,8 @@ class _GenericButtonState extends State<GenericButton> {
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 10),
+      width: widget.size.width,
+      height: widget.size.height,
       decoration: BoxDecoration(
         boxShadow: [
           if (!widget.isPressed)
@@ -56,7 +58,6 @@ class _GenericButtonState extends State<GenericButton> {
           style: ElevatedButton.styleFrom(
             backgroundColor: colors.primary,
             foregroundColor: colors.onSurface,
-            fixedSize: widget.size,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),

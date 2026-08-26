@@ -54,4 +54,4 @@ const TextStyle bodyMedium = TextStyle(fontSize: 24, fontWeight: _w);
 const TextStyle bodyLarge = TextStyle(fontSize: 36, fontWeight: _w);
 const TextStyle bodyMax = TextStyle(fontSize: 84, fontWeight: _w);
 
-const EdgeInsets pageInset = EdgeInsets.only(left: 20, right: 30, top: 20);
+const EdgeInsets pageInset = EdgeInsets.only(left: 20, right: 20, top: 20);
