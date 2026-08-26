@@ -1,4 +1,4 @@
-name: chrono
+name: Chrono
 description: "Sessions based study tracker."
 publish_to: 'none'
 
@@ -30,6 +30,8 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: any
+  # Launcher
+  flutter_launcher_icons: ^0.14.4
   # Auth
   # google_sign_in: ^7.2.0
 

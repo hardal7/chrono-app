@@ -7,6 +7,7 @@ import '../style.dart';
 import '../widgets/auth.dart';
 import 'package:flutter/material.dart';
 
+// TODO: Onboarding should be before register
 class BoardingPage extends StatelessWidget {
   const BoardingPage({super.key});
 

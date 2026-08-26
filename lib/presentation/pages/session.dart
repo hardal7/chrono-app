@@ -7,14 +7,14 @@ import 'package:flutter/material.dart';
 
 import '../widgets/settings.dart';
 
-class SessionsPage extends StatefulWidget {
-  const SessionsPage({super.key});
+class SessionPage extends StatefulWidget {
+  const SessionPage({super.key});
 
   @override
-  State<SessionsPage> createState() => _SessionsPageState();
+  State<SessionPage> createState() => _SessionPageState();
 }
 
-class _SessionsPageState extends State<SessionsPage> {
+class _SessionPageState extends State<SessionPage> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;

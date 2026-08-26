@@ -81,7 +81,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
         return Material(
           child: Padding(
-            padding: pageInset,
+            padding: pageInset.add(EdgeInsetsGeometry.only(top: height / 20)),
             child: Column(children: [...settings(context)]),
           ),
         );

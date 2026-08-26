@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../l10n/app_localizations.dart';
 import 'profile.dart';
-import 'sessions.dart';
+import 'sessions_list.dart';
 import 'settings.dart';
 import 'tracker.dart';
 import 'users.dart';
@@ -21,7 +21,7 @@ class _HomePageState extends State<HomePage> {
 
   List<Widget> get navigationPages => [
     TrackerPage(),
-    SessionsPage(),
+    SessionsListPage(),
     UsersPage(),
     ProfilePage(username: username),
     SettingsPage(),
