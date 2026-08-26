@@ -150,6 +150,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reportAProblem => 'Report a Problem';
 
   @override
+  String get requestAFeature => 'Request a Feature';
+
+  @override
   String get overall => 'overall';
 
   @override

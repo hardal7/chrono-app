@@ -139,6 +139,9 @@
   "@reportAProblem": {
     "description": "Label displayed for the report a problem action."
   },
+  "@requestAFeature": {
+    "description": "Label displayed for the request a feature action."
+  },
   "@overall": {
     "description": "Text displayed after the overall tracked time."
   },
@@ -219,6 +222,7 @@
   "hideAccount": "Hide Account",
   "hideLocation": "Hide Location",
   "reportAProblem": "Report a Problem",
+  "requestAFeature": "Request a Feature",
   "overall": "overall",
   "start": "Start",
   "pause": "Pause",

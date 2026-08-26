@@ -434,18 +434,21 @@ void settingsPopup(BuildContext context) {
               child: SettingsForm(
                 label: l10n.hours,
                 controller: hoursController,
+                isNumber: true,
               ),
             ),
             Expanded(
               child: SettingsForm(
                 label: l10n.minutes,
                 controller: minutesController,
+                isNumber: true,
               ),
             ),
             Expanded(
               child: SettingsForm(
                 label: l10n.seconds,
                 controller: secondsController,
+                isNumber: true,
               ),
             ),
           ],
@@ -468,33 +471,4 @@ void settingsPopup(BuildContext context) {
       );
     },
   );
-}
-
-class SettingsForm extends StatelessWidget {
-  const SettingsForm({
-    super.key,
-    required this.label,
-    required this.controller,
-  });
-
-  final String label;
-  final TextEditingController controller;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
-
-    return TextFormField(
-      keyboardType: TextInputType.number,
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: label,
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: colors.secondary),
-        ),
-        border: OutlineInputBorder(),
-      ),
-      style: bodyMedium.copyWith(color: colors.secondary),
-    );
-  }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../handler/location.dart';
@@ -36,15 +35,6 @@ class _SettingsPageState extends State<SettingsPage> {
         },
       ),
       Setting(
-        label: l10n.notifications,
-        icon: Icons.notifications_outlined,
-        settingType: SettingType.bool,
-        onPressed: (value) async {
-          final prefs = await SharedPreferences.getInstance();
-          await prefs.setBool('notifications', value);
-        },
-      ),
-      Setting(
         label: l10n.hideAccount,
         icon: Icons.lock_outlined,
         settingType: SettingType.bool,
@@ -66,6 +56,24 @@ class _SettingsPageState extends State<SettingsPage> {
         settingType: SettingType.button,
         onPressed: (value) {
           final url = Uri.parse('${dotenv.get('SITE_URL')}/report');
+          launchUrl(url);
+        },
+      ),
+      Setting(
+        label: l10n.requestAFeature,
+        icon: Icons.lightbulb,
+        settingType: SettingType.button,
+        onPressed: (value) {
+          final url = Uri.parse('${dotenv.get('SITE_URL')}/feature');
+          launchUrl(url);
+        },
+      ),
+      Setting(
+        label: l10n.privacyPolicy,
+        icon: Icons.privacy_tip,
+        settingType: SettingType.button,
+        onPressed: (value) {
+          final url = Uri.parse('${dotenv.get('SITE_URL')}/privacy');
           launchUrl(url);
         },
       ),

@@ -374,6 +374,12 @@ abstract class AppLocalizations {
   /// **'Report a Problem'**
   String get reportAProblem;
 
+  /// Label displayed for the request a feature action.
+  ///
+  /// In en, this message translates to:
+  /// **'Request a Feature'**
+  String get requestAFeature;
+
   /// Text displayed after the overall tracked time.
   ///
   /// In en, this message translates to:

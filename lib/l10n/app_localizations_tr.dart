@@ -151,6 +151,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get reportAProblem => 'Sorun Bildir';
 
   @override
+  String get requestAFeature => 'Özellik öner';
+
+  @override
   String get overall => 'toplam';
 
   @override

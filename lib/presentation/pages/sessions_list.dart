@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import '../../handler/session.dart';
+import '../../l10n/app_localizations.dart';
+import '../../models/session.dart';
+import '../duration.dart';
 import '../style.dart';
 import '../widgets/button.dart';
+import '../widgets/settings.dart';
 
 class SessionsListPage extends StatefulWidget {
   const SessionsListPage({super.key});
@@ -12,6 +17,25 @@ class SessionsListPage extends StatefulWidget {
 }
 
 class _SessionsListPageState extends State<SessionsListPage> {
+  List<SessionSelection> sessions = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    loadSessions();
+  }
+
+  Future<void> loadSessions() async {
+    final result = await getSessions();
+
+    if (!mounted) return;
+    setState(() {
+      sessions = result;
+      isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
@@ -30,11 +54,29 @@ class _SessionsListPageState extends State<SessionsListPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Icon(Icons.add, color: colors.onSurface, size: 48),
+                      GestureDetector(
+                        child: Icon(
+                          Icons.add,
+                          color: colors.onSurface,
+                          size: 48,
+                        ),
+                        onTap: () {
+                          settingsPopup(context);
+                        },
+                      ),
                     ],
                   ),
                 ),
-                SessionCard(height: height, width: width),
+                Expanded(
+                  child: isLoading
+                      ? const Center(child: CircularProgressIndicator())
+                      : ListView.builder(
+                          itemCount: sessions.length,
+                          itemBuilder: (context, index) {
+                            return SessionCard(session: sessions[index]);
+                          },
+                        ),
+                ),
               ],
             ),
           ),
@@ -45,18 +87,14 @@ class _SessionsListPageState extends State<SessionsListPage> {
 }
 
 class SessionCard extends StatelessWidget {
-  const SessionCard({super.key, required this.height, required this.width});
-
-  final double height;
-  final double width;
+  const SessionCard({super.key, required this.session});
+  final SessionSelection session;
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
 
     return Container(
-      height: height / 5,
-      width: width,
       decoration: BoxDecoration(
         color: colors.secondary.withAlpha(25),
         borderRadius: BorderRadius.all(Radius.circular(12)),
@@ -69,9 +107,9 @@ class SessionCard extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Biology', style: bodySmall),
+                Text(session.name, style: bodySmall),
                 Text(
-                  'Expires in 5 days',
+                  'Expires in ${session.expiresAt.toString} days',
                   style: bodySmall.copyWith(color: colors.secondary),
                 ),
               ],
@@ -84,16 +122,17 @@ class SessionCard extends StatelessWidget {
               children: [
                 Row(
                   spacing: 10,
-                  children: [
-                    CircleAvatar(
+                  children: List.generate(session.totalParticipants, (index) {
+                    final participant = session.participants[index];
+                    return CircleAvatar(
                       radius: 24,
                       backgroundImage: NetworkImage(
-                        '${dotenv.get('API_URL')}/avatarPath',
+                        '${dotenv.get('API_URL')}/${participant.avatarPath}',
                       ),
-                    ),
-                    Text('username', style: bodySmall),
-                  ],
+                    );
+                  }),
                 ),
+
                 Row(
                   spacing: 5,
                   children: [
@@ -101,7 +140,7 @@ class SessionCard extends StatelessWidget {
                       (path) => CircleAvatar(
                         radius: 20,
                         backgroundImage: NetworkImage(
-                          '${dotenv.get('API_URL')}$path',
+                          '${dotenv.get('API_URL')}/${session.ownerAvatarPath}',
                         ),
                       ),
                     ),
@@ -123,7 +162,7 @@ class SessionCard extends StatelessWidget {
                       style: bodySmall.copyWith(color: colors.secondary),
                     ),
                     Text(
-                      '307:32 h',
+                      '${Duration(seconds: session.totalTime).toHoursString} h',
                       style: bodySmall.copyWith(color: greenColor),
                     ),
                   ],
@@ -131,7 +170,10 @@ class SessionCard extends StatelessWidget {
                 Row(
                   spacing: 7.5,
                   children: [
-                    Text('3/8', style: bodySmall),
+                    Text(
+                      '${session.totalParticipants}/${session.maxParticipants}',
+                      style: bodySmall,
+                    ),
                     GenericButton(
                       text: 'Join',
                       size: Size(100, 30),
@@ -150,3 +192,99 @@ class SessionCard extends StatelessWidget {
 }
 
 final avatars = ['/avatarPath1', '/avatarPath2', '/avatarPath3'];
+
+void settingsPopup(BuildContext context) {
+  final nameController = TextEditingController();
+  final maxParticipantsController = TextEditingController();
+  final passwordController = TextEditingController();
+  final expiresAtController = TextEditingController();
+  final topicController = TextEditingController();
+
+  showDialog(
+    context: context,
+    builder: (context) {
+      final colors = Theme.of(context).colorScheme;
+      final l10n = AppLocalizations.of(context)!;
+
+      return AlertDialog(
+        title: Row(
+          children: [
+            IconButton(
+              icon: Icon(Icons.chevron_left, color: colors.secondary, size: 32),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            Text(
+              'Create Session',
+              style: bodySmall.copyWith(color: colors.secondary),
+            ),
+          ],
+        ),
+        content: Column(
+          children: [
+            Expanded(
+              child: SettingsForm(
+                label: 'Session Name',
+                controller: nameController,
+              ),
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: SettingsForm(
+                    label: 'Password',
+                    controller: passwordController,
+                  ),
+                ),
+                Expanded(
+                  child: SettingsForm(
+                    label: 'Topic',
+                    controller: topicController,
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: SettingsForm(
+                    label: 'Max Participants',
+                    controller: maxParticipantsController,
+                    isNumber: true,
+                  ),
+                ),
+                Expanded(
+                  child: SettingsForm(
+                    label: 'Expires At',
+                    controller: expiresAtController,
+                    isDate: true,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        actions: [
+          GenericButton(
+            size: Size(100, 20),
+            text: l10n.create,
+            textStyle: bodySmall,
+            onPressed: () {
+              createSession(
+                CreateSessionRequest(
+                  name: nameController.text,
+                  topic: topicController.text,
+                  password: passwordController.text,
+                  expiresAt: DateTime.parse(expiresAtController.text),
+                  maxParticipants: int.parse(maxParticipantsController.text),
+                ),
+              );
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
