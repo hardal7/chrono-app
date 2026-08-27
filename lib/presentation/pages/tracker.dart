@@ -34,6 +34,7 @@ class TrackerValues {
     required this.todayTime,
     required this.streak,
     required this.countdownTime,
+    required this.count,
   });
 
   String topicName;
@@ -41,6 +42,7 @@ class TrackerValues {
   int todayTime;
   int streak;
   Duration countdownTime;
+  int count;
 }
 
 ValueNotifier<TrackerValues> trackerNotifier = ValueNotifier(
@@ -50,6 +52,7 @@ ValueNotifier<TrackerValues> trackerNotifier = ValueNotifier(
     todayTime: 0,
     streak: 0,
     countdownTime: Duration(minutes: 25),
+    count: 1,
   ),
 );
 
@@ -68,6 +71,13 @@ class _TrackerPageState extends State<TrackerPage> {
   late Timer uiTimer;
   late Timer topicTimer;
 
+  Future<void> newCount(Stopwatch tracker) async {
+    stopTracker(tracker);
+    loadTimes(trackerNotifier.value);
+    tracker.reset();
+    trackerNotifier.value.count++;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -76,6 +86,9 @@ class _TrackerPageState extends State<TrackerPage> {
 
     uiTimer = Timer.periodic(const Duration(milliseconds: 500), (_) {
       if (mounted) {
+        if (chrono.timer.elapsed >= trackerNotifier.value.countdownTime) {
+          newCount(chrono.timer);
+        }
         setState(() {});
       }
     });
@@ -174,13 +187,13 @@ class _TrackerPageState extends State<TrackerPage> {
                             ),
                     ),
                     SizedBox(
-                      height: height / 2.5,
+                      height: height / 3.5,
                       child: PageView.builder(
                         onPageChanged: (page) {
                           setState(() {
                             currentTracker = (page == 0
-                                ? chrono.stopwatch
-                                : chrono.timer);
+                                ? chrono.timer
+                                : chrono.stopwatch);
                           });
                         },
                         itemCount: 2,
@@ -189,17 +202,24 @@ class _TrackerPageState extends State<TrackerPage> {
                           return switch (index) {
                             0 => Tracker(
                               height: height,
-                              elapsed: chrono.stopwatchElapsed,
+                              elapsed: chrono.timer.elapsed,
+                              isStopwatch: false,
                             ),
                             // TODO: Do something after countdown runs out
                             1 => Tracker(
                               height: height,
-                              elapsed: chrono.timerElapsed,
-                              isStopwatch: false,
+                              elapsed: chrono.stopwatch.elapsed,
                             ),
                             _ => const SizedBox.shrink(),
                           };
                         },
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(bottom: height / 16),
+                      child: Text(
+                        'Count ${tracker.count}',
+                        style: bodyMedium.copyWith(color: colors.secondary),
                       ),
                     ),
                     SmoothPageIndicator(
@@ -216,7 +236,6 @@ class _TrackerPageState extends State<TrackerPage> {
                             : colors.primary,
                       ),
                     ),
-
                     Padding(
                       padding: EdgeInsets.only(top: 20),
                       child: SizedBox(
@@ -244,9 +263,7 @@ class _TrackerPageState extends State<TrackerPage> {
                                 right: width / 2.65,
                                 child: GestureDetector(
                                   onTap: () {
-                                    stopTracker(currentTracker);
-                                    loadTimes(tracker);
-                                    currentTracker.reset();
+                                    newCount(currentTracker);
                                   },
                                   child: Icon(
                                     Icons.skip_next,
@@ -287,17 +304,15 @@ class Tracker extends StatelessWidget {
     return ValueListenableBuilder<TrackerValues>(
       valueListenable: trackerNotifier,
       builder: (context, tracker, child) {
-        return Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(top: height / 12),
-              child: Text(
-                (isStopwatch ? (tracker.countdownTime - elapsed) : elapsed)
-                    .toStopwatchString(),
-                style: bodyMax,
-              ),
+        return Center(
+          child: Padding(
+            padding: EdgeInsets.only(top: height / 15),
+            child: Text(
+              (isStopwatch ? elapsed : (tracker.countdownTime - elapsed))
+                  .toStopwatchString(),
+              style: bodyMax,
             ),
-          ],
+          ),
         );
       },
     );
