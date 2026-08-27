@@ -40,7 +40,8 @@ class _ChronoState extends State<Chrono> {
           title: 'Chrono',
           debugShowCheckedModeBanner: false,
           theme: theme,
-          home: username == '' ? BoardingPage() : HomePage(),
+          // home: username == '' ? BoardingPage() : HomePage(),
+          home: BoardingPage(),
           localizationsDelegates: [
             AppLocalizations.delegate,
             ...GlobalMaterialLocalizations.delegates,

@@ -57,7 +57,7 @@ class _GenericButtonState extends State<GenericButton> {
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: colors.primary,
-            foregroundColor: colors.onSurface,
+            foregroundColor: colors.onPrimary,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),

@@ -39,10 +39,10 @@ const Color _accentShadowColor = Color(0xBF5947AD);
 const Color _secondaryColor = Color(0xFF9D9D9D);
 
 const Color _backgroundColorLight = Color(0xFFFFFFFF);
-const Color _foregroundColorLight = Color(0xFF0E0D0E);
-const Color _accentColorLight = Color(0xFF31B1EC);
-const Color _accentShadowColorLight = Color(0xFF31B1EC);
-const Color _secondaryColorLight = Color(0xFF9D9D9D);
+const Color _foregroundColorLight = Color(0xFF263238);
+const Color _accentColorLight = Color(0xFF4BA0E6);
+const Color _accentShadowColorLight = Color(0xFF3D7DB1);
+const Color _secondaryColorLight = Color(0xFF7C7C7C);
 
 const Color greenColor = Color(0xFF00BF60);
 

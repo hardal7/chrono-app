@@ -210,7 +210,10 @@ class _TrackerPageState extends State<TrackerPage> {
                         dotWidth: 16,
                         type: WormType.thin,
                         dotColor: colors.secondary,
-                        activeDotColor: colors.onSurface,
+                        activeDotColor:
+                            themeNotifier.value.brightness == Brightness.dark
+                            ? colors.onSurface
+                            : colors.primary,
                       ),
                     ),
 

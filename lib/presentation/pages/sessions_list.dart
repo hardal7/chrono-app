@@ -8,6 +8,7 @@ import '../duration.dart';
 import '../style.dart';
 import '../widgets/button.dart';
 import '../widgets/settings.dart';
+import 'profile.dart';
 
 class SessionsListPage extends StatefulWidget {
   const SessionsListPage({super.key});
@@ -109,7 +110,7 @@ class SessionCard extends StatelessWidget {
               children: [
                 Text(session.name, style: bodySmall),
                 Text(
-                  'Expires in ${session.expiresAt.toString} days',
+                  'Expires in ${session.expiresAt} days',
                   style: bodySmall.copyWith(color: colors.secondary),
                 ),
               ],
@@ -122,6 +123,28 @@ class SessionCard extends StatelessWidget {
               children: [
                 Row(
                   spacing: 10,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                ProfilePage(username: session.ownerUsername),
+                          ),
+                        );
+                      },
+                      child: CircleAvatar(
+                        radius: 20,
+                        backgroundImage: NetworkImage(
+                          '${dotenv.get('API_URL')}/${session.ownerAvatarPath}',
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  spacing: 5,
                   children: List.generate(session.totalParticipants, (index) {
                     final participant = session.participants[index];
                     return CircleAvatar(
@@ -131,20 +154,6 @@ class SessionCard extends StatelessWidget {
                       ),
                     );
                   }),
-                ),
-
-                Row(
-                  spacing: 5,
-                  children: [
-                    ...avatars.map(
-                      (path) => CircleAvatar(
-                        radius: 20,
-                        backgroundImage: NetworkImage(
-                          '${dotenv.get('API_URL')}/${session.ownerAvatarPath}',
-                        ),
-                      ),
-                    ),
-                  ],
                 ),
               ],
             ),
@@ -162,7 +171,7 @@ class SessionCard extends StatelessWidget {
                       style: bodySmall.copyWith(color: colors.secondary),
                     ),
                     Text(
-                      '${Duration(seconds: session.totalTime).toHoursString} h',
+                      '${Duration(seconds: session.totalTime)} h',
                       style: bodySmall.copyWith(color: greenColor),
                     ),
                   ],
@@ -190,8 +199,6 @@ class SessionCard extends StatelessWidget {
     );
   }
 }
-
-final avatars = ['/avatarPath1', '/avatarPath2', '/avatarPath3'];
 
 void settingsPopup(BuildContext context) {
   final nameController = TextEditingController();
@@ -228,6 +235,10 @@ void settingsPopup(BuildContext context) {
                 label: 'Session Name',
                 controller: nameController,
               ),
+            ),
+            Text(
+              'Optional Settings',
+              style: bodySmall.copyWith(color: colors.secondary),
             ),
             Row(
               children: [
@@ -276,8 +287,8 @@ void settingsPopup(BuildContext context) {
                   name: nameController.text,
                   topic: topicController.text,
                   password: passwordController.text,
-                  expiresAt: DateTime.parse(expiresAtController.text),
-                  maxParticipants: int.parse(maxParticipantsController.text),
+                  expiresAt: DateTime.tryParse(expiresAtController.text),
+                  maxParticipants: int.tryParse(maxParticipantsController.text),
                 ),
               );
               Navigator.pop(context);

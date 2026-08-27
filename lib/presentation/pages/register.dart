@@ -31,7 +31,7 @@ class _RegisterPageState extends State<RegisterPage> {
       passwordController.text,
     );
 
-    if (_status == HttpStatus.created) {
+    if (_status == HttpStatus.ok) {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('username', usernameController.text);
 

@@ -52,6 +52,7 @@ class SettingsForm extends StatelessWidget {
         ? InputDatePickerFormField(
             firstDate: DateTime.now(),
             lastDate: DateTime.now().copyWith(year: DateTime.now().year + 1),
+            acceptEmptyDate: true,
             onDateSubmitted: (DateTime date) {
               controller.text = date.toIso8601String();
             },
