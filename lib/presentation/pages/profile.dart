@@ -2,7 +2,9 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../../handler/friend.dart';
 import '../../handler/user.dart';
+import '../../main.dart';
 import '../../models/user.dart';
+import '../../services/imagepicker.dart';
 import '../duration.dart';
 import '../style.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +26,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   late UserProfile profile;
   bool isLoading = true;
+  bool isSelf = false;
 
   Future<void> loadProfile() async {
     final result = await getProfile(widget.username);
@@ -33,6 +36,9 @@ class _ProfilePageState extends State<ProfilePage> {
       if (result != null) {
         profile = result;
         isLoading = false;
+        if (profile.username == username) {
+          isSelf = true;
+        }
       }
     });
   }
@@ -71,10 +77,21 @@ class _ProfilePageState extends State<ProfilePage> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            CircleAvatar(
-                              radius: 48,
-                              backgroundImage: NetworkImage(
-                                '${dotenv.get('API_URL')}/${profile.avatarPath}',
+                            // TODO: Try
+                            GestureDetector(
+                              onTap: () async {
+                                if (isSelf) {
+                                  final avatar = await pickImage();
+                                  if (avatar != null) {
+                                    await uploadAvatar(avatar);
+                                  }
+                                }
+                              },
+                              child: CircleAvatar(
+                                radius: 48,
+                                backgroundImage: NetworkImage(
+                                  '${dotenv.get('API_URL')}/${profile.avatarPath}',
+                                ),
                               ),
                             ),
                             Column(

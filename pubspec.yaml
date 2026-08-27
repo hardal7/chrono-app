@@ -14,12 +14,14 @@ dependencies:
   # Widgets
   cupertino_icons: ^1.0.8
   smooth_page_indicator: ^2.0.1
-  # Utilities
+  # Path & Environment
   flutter_dotenv: ^6.0.1
   path: ^1.9.1
   path_provider: ^2.1.6
+  # Utilities
   url_launcher: ^6.3.2
   audioplayers: ^6.8.1
+  image_picker: ^1.2.3
   #Storage
   shared_preferences: ^2.5.5
   # HTTP Handling
@@ -30,7 +32,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: any
-  # Launcher
+  # App Icon
   flutter_launcher_icons: ^0.14.4
   # Auth
   # google_sign_in: ^7.2.0

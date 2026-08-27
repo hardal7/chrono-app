@@ -1,5 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as p;
 
 import '../models/user.dart';
 import '../services/dio.dart';
@@ -95,5 +98,22 @@ Future<void> setAccountPrivacy(bool hide) async {
     debugPrint(response.statusCode.toString());
   } catch (e) {
     debugPrint('Error sending set account privacy request: $e');
+  }
+}
+
+Future<int?> uploadAvatar(XFile avatar) async {
+  try {
+    debugPrint('Sending upload avatar request');
+
+    final response = await dio.post(
+      '${dotenv.get('API_URL')}/user/avatar',
+      data: avatar.openRead(),
+      options: Options(contentType: 'image/jpeg'),
+    );
+
+    debugPrint(response.statusCode.toString());
+    return response.statusCode;
+  } catch (e) {
+    return null;
   }
 }

@@ -217,23 +217,46 @@ class _TrackerPageState extends State<TrackerPage> {
                       ),
                     ),
 
-                    // TODO: Reset timer
                     Padding(
                       padding: EdgeInsets.only(top: 20),
-                      child: GenericButton(
-                        text: currentTracker.isRunning
-                            ? l10n.pause
-                            : l10n.start,
-                        isPressed: currentTracker.isRunning,
-                        size: const Size(175, 45),
-                        onPressed: () {
-                          if (currentTracker.isRunning) {
-                            stopTracker(currentTracker);
-                            loadTimes(tracker);
-                          } else {
-                            startTracker(currentTracker);
-                          }
-                        },
+                      child: SizedBox(
+                        width: width,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            GenericButton(
+                              text: currentTracker.isRunning
+                                  ? l10n.pause
+                                  : l10n.start,
+                              isPressed: currentTracker.isRunning,
+                              size: const Size(175, 45),
+                              onPressed: () {
+                                if (currentTracker.isRunning) {
+                                  stopTracker(currentTracker);
+                                  loadTimes(tracker);
+                                } else {
+                                  startTracker(currentTracker);
+                                }
+                              },
+                            ),
+                            if (currentTracker.isRunning)
+                              Positioned(
+                                right: width / 2.65,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    stopTracker(currentTracker);
+                                    loadTimes(tracker);
+                                    currentTracker.reset();
+                                  },
+                                  child: Icon(
+                                    Icons.skip_next,
+                                    color: colors.onSurface,
+                                    size: 40,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
