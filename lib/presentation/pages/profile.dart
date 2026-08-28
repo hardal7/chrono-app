@@ -158,40 +158,42 @@ class _ProfilePageState extends State<ProfilePage> {
                           Text(profile.bestTopic, style: bodyMedium),
                         ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            GenericButton(
-                              onPressed: () {
-                                if (profile.friendStatus == 'none') {
-                                  () async {
-                                    await sendFriendRequest(profile.username);
-                                  }();
-                                }
-                              },
-                              text: switch (profile.friendStatus) {
-                                'none' => 'Add Friend',
-                                'pending' => 'Sent Request',
-                                'accepted' => 'Friends',
-                                _ => 'Invite',
-                              },
-                              textStyle: bodySmall,
-                              isPressed: profile.friendStatus == 'none'
-                                  ? false
-                                  : true,
-                              size: Size(width / 2.4, 40),
-                            ),
-                            GenericButton(
-                              onPressed: () {},
-                              text: 'Invite',
-                              textStyle: bodySmall,
-                              size: Size(width / 2.4, 40),
-                            ),
-                          ],
+                      if (profile.username != username)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              GenericButton(
+                                onPressed: () {
+                                  if (profile.friendStatus == 'none') {
+                                    () async {
+                                      await sendFriendRequest(profile.username);
+                                      await loadProfile();
+                                    }();
+                                  }
+                                },
+                                text: switch (profile.friendStatus) {
+                                  'none' => 'Add Friend',
+                                  'pending' => 'Sent Request',
+                                  'accepted' => 'Friends',
+                                  _ => 'Invite',
+                                },
+                                textStyle: bodySmall,
+                                isPressed: profile.friendStatus == 'none'
+                                    ? false
+                                    : true,
+                                size: Size(width / 2.4, 40),
+                              ),
+                              GenericButton(
+                                onPressed: () {},
+                                text: 'Invite',
+                                textStyle: bodySmall,
+                                size: Size(width / 2.4, 40),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
                     ],
                   ),
           ),

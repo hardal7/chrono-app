@@ -179,10 +179,14 @@ class SessionCard extends StatelessWidget {
                 Row(
                   spacing: 7.5,
                   children: [
-                    Text(
-                      '${session.totalParticipants}/${session.maxParticipants}',
-                      style: bodySmall,
-                    ),
+                    if (session.maxParticipants == 0)
+                      Text('${session.totalParticipants}', style: bodySmall),
+                    if (session.maxParticipants != 0)
+                      Text(
+                        '${session.totalParticipants}/${session.maxParticipants}',
+                        style: bodySmall,
+                      ),
+                    Icon(Icons.group, color: colors.secondary, size: 24),
                     GenericButton(
                       text: 'Join',
                       size: Size(100, 30),

@@ -107,7 +107,9 @@ class _LoginPageState extends State<LoginPage> {
                   width: width,
                   child: AuthButton(
                     title: l10n.login,
-                    onPressed: loginOnPressed,
+                    onPressed: () async {
+                      await loginOnPressed();
+                    },
                   ),
                 ),
                 if (_showError)

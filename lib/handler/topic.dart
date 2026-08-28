@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../models/topic.dart';
 import '../services/dio.dart';
+import '../services/sqlite.dart';
 
 Future<List<Topic>> getAllTopics() async {
   try {
@@ -81,26 +82,10 @@ void startTracker(Stopwatch stopwatch) {
 }
 
 Duration totalTime = Duration.zero;
-Future<void> stopTracker(Stopwatch stopwatch) async {
+Future<void> stopTracker(Stopwatch stopwatch, String topic) async {
   stopwatch.stop();
   Duration timeTracked = stopwatch.elapsed - totalTime;
   totalTime = stopwatch.elapsed;
 
-  try {
-    final response = await dio.post(
-      '${dotenv.get('API_URL')}/topic-event/track',
-      data: {
-        'topic': 'General',
-        'time_seconds': timeTracked.inSeconds,
-        'date': DateTime.now().toUtc().toIso8601String(),
-      },
-    );
-
-    debugPrint(response.statusCode.toString());
-  } on DioException catch (e) {
-    debugPrint('Trying to track time');
-    if (e.response?.statusCode != 200) {
-      debugPrint(e.error.toString());
-    }
-  }
+  saveTopicEvent(topic, timeTracked.inSeconds);
 }

@@ -17,7 +17,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentPageIndex = 0;
-  late String username;
 
   List<Widget> get navigationPages => [
     TrackerPage(),

@@ -33,6 +33,7 @@ class TrackerValues {
     required this.topicTime,
     required this.todayTime,
     required this.streak,
+    required this.currentTracker,
     required this.countdownTime,
     required this.count,
   });
@@ -41,6 +42,7 @@ class TrackerValues {
   int topicTime;
   int todayTime;
   int streak;
+  Stopwatch currentTracker;
   Duration countdownTime;
   int count;
 }
@@ -51,6 +53,7 @@ ValueNotifier<TrackerValues> trackerNotifier = ValueNotifier(
     topicTime: 0,
     todayTime: 0,
     streak: 0,
+    currentTracker: Stopwatch(),
     countdownTime: Duration(minutes: 25),
     count: 1,
   ),
@@ -66,13 +69,12 @@ class TrackerPage extends StatefulWidget {
 class _TrackerPageState extends State<TrackerPage> {
   final chrono = ChronoService.instance;
   final trackerController = PageController();
-  late Stopwatch currentTracker;
 
   late Timer uiTimer;
   late Timer topicTimer;
 
   Future<void> newCount(Stopwatch tracker) async {
-    stopTracker(tracker);
+    stopTracker(tracker, trackerNotifier.value.topicName);
     loadTimes(trackerNotifier.value);
     tracker.reset();
     trackerNotifier.value.count++;
@@ -82,11 +84,12 @@ class _TrackerPageState extends State<TrackerPage> {
   void initState() {
     super.initState();
 
-    currentTracker = chrono.stopwatch;
+    trackerNotifier.value.currentTracker = chrono.timer;
 
     uiTimer = Timer.periodic(const Duration(milliseconds: 500), (_) {
       if (mounted) {
         if (chrono.timer.elapsed >= trackerNotifier.value.countdownTime) {
+          debugPrint('New count: ${trackerNotifier.value.count}');
           newCount(chrono.timer);
         }
         setState(() {});
@@ -191,7 +194,7 @@ class _TrackerPageState extends State<TrackerPage> {
                       child: PageView.builder(
                         onPageChanged: (page) {
                           setState(() {
-                            currentTracker = (page == 0
+                            tracker.currentTracker = (page == 0
                                 ? chrono.timer
                                 : chrono.stopwatch);
                           });
@@ -244,26 +247,29 @@ class _TrackerPageState extends State<TrackerPage> {
                           alignment: Alignment.center,
                           children: [
                             GenericButton(
-                              text: currentTracker.isRunning
+                              text: tracker.currentTracker.isRunning
                                   ? l10n.pause
                                   : l10n.start,
-                              isPressed: currentTracker.isRunning,
+                              isPressed: tracker.currentTracker.isRunning,
                               size: const Size(175, 45),
                               onPressed: () {
-                                if (currentTracker.isRunning) {
-                                  stopTracker(currentTracker);
+                                if (tracker.currentTracker.isRunning) {
+                                  stopTracker(
+                                    tracker.currentTracker,
+                                    tracker.topicName,
+                                  );
                                   loadTimes(tracker);
                                 } else {
-                                  startTracker(currentTracker);
+                                  startTracker(tracker.currentTracker);
                                 }
                               },
                             ),
-                            if (currentTracker.isRunning)
+                            if (tracker.currentTracker.isRunning)
                               Positioned(
                                 right: width / 2.65,
                                 child: GestureDetector(
                                   onTap: () {
-                                    newCount(currentTracker);
+                                    newCount(tracker.currentTracker);
                                   },
                                   child: Icon(
                                     Icons.skip_next,
@@ -373,6 +379,9 @@ class _TopicDropdownState extends State<TopicDropdown> {
                   onTap: () {
                     trackerNotifier.value.topicName = topic.name;
                     loadTimes(trackerNotifier.value);
+                    Stopwatch tracker = trackerNotifier.value.currentTracker;
+                    stopTracker(tracker, trackerNotifier.value.topicName);
+                    tracker.reset();
                     showDropdown = false;
                   },
                   child: topic.name != trackerNotifier.value.topicName

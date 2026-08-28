@@ -10,6 +10,8 @@ import 'presentation/style.dart';
 import 'services/dio.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'services/sqlite.dart';
+
 late String username;
 
 Future<void> main() async {
@@ -20,6 +22,7 @@ Future<void> main() async {
   username = prefs.getString('username') ?? '';
   debugPrint('Username: $username');
 
+  syncEvents();
   runApp(const Chrono());
 }
 
