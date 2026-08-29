@@ -9,6 +9,7 @@ import '../style.dart';
 import '../widgets/button.dart';
 import '../widgets/settings.dart';
 import 'profile.dart';
+import 'session.dart';
 
 class SessionsListPage extends StatefulWidget {
   const SessionsListPage({super.key});
@@ -109,10 +110,11 @@ class SessionCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(session.name, style: bodySmall),
-                Text(
-                  'Expires in ${session.expiresAt} days',
-                  style: bodySmall.copyWith(color: colors.secondary),
-                ),
+                if (session.expiresAt != null)
+                  Text(
+                    'Expires in ${session.expiresAt} days',
+                    style: bodySmall.copyWith(color: colors.secondary),
+                  ),
               ],
             ),
           ),
@@ -171,7 +173,7 @@ class SessionCard extends StatelessWidget {
                       style: bodySmall.copyWith(color: colors.secondary),
                     ),
                     Text(
-                      '${Duration(seconds: session.totalTime)} h',
+                      Duration(seconds: session.totalTime).toHoursString(),
                       style: bodySmall.copyWith(color: greenColor),
                     ),
                   ],
@@ -191,7 +193,19 @@ class SessionCard extends StatelessWidget {
                       text: 'Join',
                       size: Size(100, 30),
                       textStyle: bodySmall,
-                      onPressed: () {},
+                      onPressed: () async {
+                        await joinSession(session.name, session.ownerUsername);
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => SessionPage(
+                              name: session.name,
+                              ownerUsername: session.ownerUsername,
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),

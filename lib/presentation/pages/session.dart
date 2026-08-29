@@ -1,20 +1,49 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import '../../handler/session.dart';
 import '../../models/session.dart';
 import '../duration.dart';
 import '../style.dart';
 import 'package:flutter/material.dart';
 
+import '../widgets/back.dart';
 import '../widgets/settings.dart';
+import 'users.dart';
 
 class SessionPage extends StatefulWidget {
-  const SessionPage({super.key});
+  const SessionPage({
+    super.key,
+    required this.name,
+    required this.ownerUsername,
+  });
+  final String name, ownerUsername;
 
   @override
   State<SessionPage> createState() => _SessionPageState();
 }
 
 class _SessionPageState extends State<SessionPage> {
+  bool isLoading = true;
+  late SessionData session;
+
+  @override
+  void initState() {
+    super.initState();
+    loadSessions();
+  }
+
+  Future<void> loadSessions() async {
+    final result = await getSession(widget.name, widget.ownerUsername);
+
+    if (!mounted) return;
+    setState(() {
+      if (result != null) {
+        session = result;
+        isLoading = false;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
@@ -23,41 +52,55 @@ class _SessionPageState extends State<SessionPage> {
       builder: (context, constraints) {
         final height = constraints.maxHeight;
         final width = constraints.maxWidth;
+
+        if (isLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
         return Material(
           child: Padding(
             padding: pageInset,
             child: Column(
               children: [
-                SettingsButton(popup: settingsPopup),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    PageBackButton(),
+                    SettingsButton(popup: settingsPopup),
+                  ],
+                ),
                 Padding(
                   padding: EdgeInsets.only(top: height / 24),
                   child: Text(
-                    'Physics Students',
+                    session.name,
                     style: bodyLarge,
                     textAlign: TextAlign.center,
                     maxLines: 1,
                   ),
                 ),
                 Text(
-                  'Members: 5/8',
+                  'Members: ${session.totalParticipants}/${session.maxParticipants}',
                   style: bodySmall.copyWith(color: colors.secondary),
                 ),
                 Text(
-                  Duration(hours: 45, minutes: 39).toHoursString(),
+                  Duration(seconds: (session.totalTime)).toHoursString(),
                   style: bodyMax,
                 ),
-                Text(
-                  'Expires in 5 days',
-                  style: bodySmall.copyWith(color: colors.secondary),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: height / 20),
-                  child: UserCard(
-                    user: SessionUser(
-                      username: 'Guest',
-                      totalTime: Duration(minutes: 1),
-                      todayTime: Duration(hours: 1),
-                      avatarPath: '',
+                if (session.expiresAt != null)
+                  Text(
+                    'Expires in ${session.expiresAt} days',
+                    style: bodySmall.copyWith(color: colors.secondary),
+                  ),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(top: height / 20),
+                    child: ListView.builder(
+                      itemCount: session.participants.length,
+                      itemBuilder: (context, index) {
+                        return ParticipantCard(
+                          participant: session.participants[index],
+                        );
+                      },
                     ),
                   ),
                 ),
@@ -71,58 +114,76 @@ class _SessionPageState extends State<SessionPage> {
 }
 
 // TODO: Grey out the user that is you
-class UserCard extends StatelessWidget {
-  const UserCard({super.key, required this.user});
-  final SessionUser user;
+class ParticipantCard extends StatelessWidget {
+  const ParticipantCard({super.key, required this.participant});
+  final Participant participant;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Row(
-          children: [
-            CircleAvatar(
-              radius: 28,
-              backgroundImage: NetworkImage(
-                '${dotenv.get('API_URL')}/${user.avatarPath}',
+    final colors = Theme.of(context).colorScheme;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: username == participant.name
+            ? colors.secondary.withAlpha(25)
+            : Colors.transparent,
+        borderRadius: BorderRadius.all(Radius.circular(12)),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 28,
+                backgroundImage: NetworkImage(
+                  '${dotenv.get('API_URL')}/${participant.avatarPath}',
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Text(
-                user.username,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Text(
+                  participant.name,
+                  style: bodyMedium,
+                  // TODO: text overflow
+                ),
+              ),
+              Text(
+                Duration(seconds: participant.sessionTime).toHoursString(),
                 style: bodyMedium,
-                // TODO: text overflow
               ),
-            ),
-            Text(user.totalTime.toHoursString(), style: bodyMedium),
-          ],
-        ),
-        Column(
-          children: [
-            Row(
-              spacing: 5,
-              children: [
-                Icon(Icons.circle, color: greenColor, size: 10),
-                Text('Online', style: bodyMedium.copyWith(color: greenColor)),
-              ],
-            ),
-            Row(
-              children: [
-                ImageIcon(
-                  AssetImage('assets/icons/triangle.png'),
-                  color: greenColor,
-                ),
-                Text(
-                  user.todayTime.toHoursString(),
-                  style: bodyMedium.copyWith(color: greenColor),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ],
+            ],
+          ),
+          Column(
+            children: [
+              Row(
+                spacing: 5,
+                children: [
+                  Icon(Icons.circle, color: greenColor, size: 10),
+                  Text(
+                    participant.lastOnline.toString(),
+                    style: bodyMedium.copyWith(color: greenColor),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  ImageIcon(
+                    AssetImage('assets/icons/triangle.png'),
+                    color: greenColor,
+                  ),
+                  Text(
+                    Duration(
+                      seconds: participant.sessionTimeToday,
+                    ).toHoursString(),
+                    style: bodyMedium.copyWith(color: greenColor),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

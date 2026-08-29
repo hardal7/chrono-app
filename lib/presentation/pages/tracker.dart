@@ -251,6 +251,7 @@ class _TrackerPageState extends State<TrackerPage> {
                                   ? l10n.pause
                                   : l10n.start,
                               isPressed: tracker.currentTracker.isRunning,
+                              playSound: true,
                               size: const Size(175, 45),
                               onPressed: () {
                                 if (tracker.currentTracker.isRunning) {

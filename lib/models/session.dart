@@ -1,24 +1,3 @@
-class SessionUser {
-  factory SessionUser.fromJson(Map<String, dynamic> json) {
-    return SessionUser(
-      username: json['username'] as String,
-      totalTime: Duration(seconds: json['total_time'] as int),
-      todayTime: Duration(seconds: json['today_time'] as int),
-      avatarPath: json['avatar_path'] as String,
-    );
-  }
-  const SessionUser({
-    required this.username,
-    required this.totalTime,
-    required this.todayTime,
-    required this.avatarPath,
-  });
-  final String username;
-  final Duration totalTime;
-  final Duration todayTime;
-  final String avatarPath;
-}
-
 class CreateSessionRequest {
   CreateSessionRequest({
     required this.name,
@@ -74,7 +53,9 @@ class SessionSelection {
       name: json['name'] as String,
       ownerUsername: json['owner_username'] as String,
       ownerAvatarPath: json['owner_avatar_path'] as String,
-      expiresAt: DateTime.parse(json['expires_at'] as String),
+      expiresAt: json['expires_at'] != null
+          ? DateTime.parse(json['expires_at'] as String)
+          : null,
       totalTime: json['total_time_seconds'] as int,
       totalParticipants: json['total_participants'] as int,
       maxParticipants: json['max_participants'] as int,
@@ -86,9 +67,71 @@ class SessionSelection {
   final String name;
   final String ownerUsername;
   final String ownerAvatarPath;
-  final DateTime expiresAt;
+  final DateTime? expiresAt;
   final int totalTime;
   final int totalParticipants;
   final int maxParticipants;
   final List<MinParticipant> participants;
+}
+
+class Participant {
+  factory Participant.fromJson(Map<String, dynamic> json) {
+    return Participant(
+      name: json['name'] as String,
+      avatarPath: json['avatar_path'] as String,
+      sessionTime: json['session_time_tracked_seconds'] as int,
+      sessionTimeToday: json['session_time_tracked_today_seconds'] as int,
+      lastOnline: json['last_online_seconds_ago'] as int,
+    );
+  }
+
+  const Participant({
+    required this.name,
+    required this.avatarPath,
+    required this.sessionTime,
+    required this.sessionTimeToday,
+    required this.lastOnline,
+  });
+
+  final String name;
+  final String avatarPath;
+  final int sessionTime;
+  final int sessionTimeToday;
+  final int lastOnline;
+}
+
+class SessionData {
+  factory SessionData.fromJson(Map<String, dynamic> json) {
+    return SessionData(
+      name: json['name'] as String,
+      ownerUsername: json['owner_username'] as String,
+      totalTime: json['total_time_tracked_seconds'] as int,
+      expiresAt: json['expires_at'] != null
+          ? DateTime.parse(json['expires_at'] as String)
+          : null,
+      totalParticipants: json['total_participants'] as int,
+      maxParticipants: json['max_participants'] as int,
+      participants: List<Map<String, dynamic>>.from(
+        json['participants'],
+      ).map(Participant.fromJson).toList(),
+    );
+  }
+
+  const SessionData({
+    required this.name,
+    required this.ownerUsername,
+    required this.totalTime,
+    required this.expiresAt,
+    required this.totalParticipants,
+    required this.maxParticipants,
+    required this.participants,
+  });
+
+  final String name;
+  final String ownerUsername;
+  final int totalTime;
+  final DateTime? expiresAt;
+  final int totalParticipants;
+  final int maxParticipants;
+  final List<Participant> participants;
 }

@@ -10,6 +10,7 @@ class GenericButton extends StatefulWidget {
     required this.text,
     required this.size,
     this.isPressed = false,
+    this.playSound = false,
     this.textStyle = bodyMedium,
   });
 
@@ -17,6 +18,7 @@ class GenericButton extends StatefulWidget {
   final String text;
   final Size size;
   final bool isPressed;
+  final bool playSound;
   final TextStyle textStyle;
 
   @override
@@ -52,7 +54,9 @@ class _GenericButtonState extends State<GenericButton> {
         offset: Offset(0, 2 - shadowOffset),
         child: ElevatedButton(
           onPressed: () {
-            player.play(AssetSource('sounds/button_press.wav'));
+            if (widget.playSound) {
+              player.play(AssetSource('sounds/button_press.wav'));
+            }
             widget.onPressed();
           },
           style: ElevatedButton.styleFrom(

@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../handler/user.dart';
 import '../../l10n/app_localizations.dart';
+import '../../main.dart';
 import 'home.dart';
 import 'register.dart';
 import 'reset_password.dart';
@@ -31,6 +32,7 @@ class _LoginPageState extends State<LoginPage> {
     if (_status == HttpStatus.ok) {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('username', nameController.text);
+      username = nameController.text;
       //TODO: Could technically be email too
 
       if (!mounted) return;

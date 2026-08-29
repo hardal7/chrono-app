@@ -10,7 +10,7 @@ import 'presentation/style.dart';
 import 'services/dio.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'services/sqlite.dart';
+import 'services/outbox.dart';
 
 late String username;
 

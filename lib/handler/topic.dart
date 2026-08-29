@@ -1,10 +1,9 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../models/topic.dart';
 import '../services/dio.dart';
-import '../services/sqlite.dart';
+import '../services/outbox.dart';
 
 Future<List<Topic>> getAllTopics() async {
   try {

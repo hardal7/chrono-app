@@ -33,3 +33,36 @@ Future<List<SessionSelection>> getSessions() async {
     return [];
   }
 }
+
+Future<void> joinSession(String name, ownerUsername) async {
+  try {
+    debugPrint('Sending join session request');
+
+    final response = await dio.post(
+      '${dotenv.get('API_URL')}/session/join',
+      data: {'name': name, 'owner_username': ownerUsername},
+    );
+
+    debugPrint(response.statusCode.toString());
+  } catch (e) {
+    debugPrint('Error joining session: $e');
+  }
+}
+
+Future<SessionData?> getSession(String name, ownerUsername) async {
+  try {
+    debugPrint('Sending get session request');
+
+    final response = await dio.get(
+      '${dotenv.get('API_URL')}/session/named',
+      data: {'name': name, 'owner_username': ownerUsername},
+    );
+
+    debugPrint(response.statusCode.toString());
+
+    return SessionData.fromJson(Map<String, dynamic>.from(response.data));
+  } catch (e) {
+    debugPrint('Error getting session: $e');
+    return null;
+  }
+}

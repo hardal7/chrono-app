@@ -1,6 +1,6 @@
 import 'dart:async';
+import 'dart:io';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:sqlite3/sqlite3.dart';
@@ -9,28 +9,23 @@ import '../presentation/pages/tracker.dart';
 import 'dio.dart';
 
 void saveTopicEvent(String topic, int timeTrackedSeconds) async {
-  try {
-    final response = await dio.post(
-      '${dotenv.get('API_URL')}/topic-event/track',
-      data: {
-        'topic': topic,
-        'time_seconds': timeTrackedSeconds,
-        'date': DateTime.now().toUtc().toIso8601String(),
-      },
-    );
+  debugPrint('Trying to track time');
 
-    debugPrint(response.statusCode.toString());
-  } on DioException catch (e) {
-    debugPrint('Trying to track time');
-    debugPrint(e.error.toString());
+  final String createdAt = DateTime.now().toUtc().toIso8601String();
+  final status = await _postTopicEvent(topic, timeTrackedSeconds, createdAt);
 
-    await _saveLocally(topic, timeTrackedSeconds);
+  if (status != HttpStatus.ok) {
+    await _saveLocally(topic, timeTrackedSeconds, createdAt);
     trackerNotifier.value.topicTime += timeTrackedSeconds;
     trackerNotifier.value.todayTime += timeTrackedSeconds;
   }
 }
 
-Future<void> _saveLocally(String topic, int timeTrackedSeconds) async {
+Future<void> _saveLocally(
+  String topic,
+  int timeTrackedSeconds,
+  String createdAt,
+) async {
   final db = sqlite3.open('local.db');
 
   db.execute('''
@@ -38,17 +33,29 @@ Future<void> _saveLocally(String topic, int timeTrackedSeconds) async {
     id INTEGER NOT NULL PRIMARY KEY,
     topic_name TEXT NOT NULL,
     time_tracked_seconds INTEGER NOT NULL DEFAULT 0,
-    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    created_at TEXT NOT NULL
   );
   ''');
 
   final stmt = db.prepare(
-    'INSERT INTO topic_events (topic_name, time_tracked_seconds) VALUES (?, ?)',
+    'INSERT INTO topic_events (topic_name, time_tracked_seconds, created_at) VALUES (?, ?, ?)',
   );
-  stmt.execute([topic, timeTrackedSeconds]);
+  stmt.execute([topic, timeTrackedSeconds, createdAt]);
   stmt.close();
 
   db.close();
+}
+
+Future<int> _postTopicEvent(
+  String topic,
+  int timeTrackedSeconds,
+  String date,
+) async {
+  final response = await dio.post(
+    '${dotenv.get('API_URL')}/topic-event/track',
+    data: {'topic': topic, 'time_seconds': timeTrackedSeconds, 'date': date},
+  );
+  return response.statusCode ?? 0;
 }
 
 Future<void> syncEvents() async {
@@ -57,24 +64,18 @@ Future<void> syncEvents() async {
 
     final ResultSet resultSet = db.select('SELECT * FROM topic_events;');
     for (final Row row in resultSet) {
-      try {
-        await dio.post(
-          '${dotenv.get('API_URL')}/topic-event/track',
-          data: {
-            'topic': '${row['topic_name']}',
-            'time_seconds': row['time_tracked_seconds'] ?? 0,
-            'date': '${row['created_at']}',
-          },
-        );
+      final status = await _postTopicEvent(
+        '${row['topic_name']}',
+        row['time_tracked_seconds'] ?? 0,
+        '${row['created_at']}',
+      );
 
+      if (status == HttpStatus.ok) {
         final stmt = db.prepare('DELETE FROM topic_events WHERE id = ?');
         stmt.execute(row['id']);
         stmt.close();
-      } on DioException catch (e) {
+      } else {
         debugPrint('Failed to track time');
-        debugPrint(e.error.toString());
-        db.close();
-        return;
       }
     }
 
