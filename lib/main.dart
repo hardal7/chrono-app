@@ -6,7 +6,6 @@ import 'outbox/outbox.dart';
 import 'presentation/pages/boarding.dart';
 import 'package:flutter/material.dart';
 
-import 'presentation/pages/home.dart';
 import 'presentation/style.dart';
 import 'services/dio.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
