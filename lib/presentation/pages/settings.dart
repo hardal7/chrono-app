@@ -4,6 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../handler/location.dart';
 import '../../handler/user.dart';
 import '../../l10n/app_localizations.dart';
+import '../../main.dart';
 import '../style.dart';
 import 'package:flutter/material.dart';
 
@@ -24,14 +25,22 @@ class _SettingsPageState extends State<SettingsPage> {
         icon: Icons.language_outlined,
         settingType: SettingType.selection,
         currentSelection: 'English',
-        onPressed: (value) {},
+        onPressed: (value) {
+          appNotifier.value = AppValues(
+            locale: value ? Locale('tr') : Locale('English'),
+            theme: appNotifier.value.theme,
+          );
+        },
       ),
       Setting(
         label: l10n.darkMode,
         icon: Icons.dark_mode_outlined,
         settingType: SettingType.bool,
         onPressed: (value) {
-          themeNotifier.value = (value) ? darkTheme : lightTheme;
+          appNotifier.value = AppValues(
+            theme: value ? darkTheme : lightTheme,
+            locale: appNotifier.value.locale,
+          );
         },
       ),
       Setting(

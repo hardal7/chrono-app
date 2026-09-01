@@ -7,7 +7,8 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../handler/topic.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/topic.dart';
-import '../../services/chrono.dart';
+import '../../outbox/tracker.dart';
+import '../../services/tracker.dart';
 import '../duration.dart';
 import '../style.dart';
 import '../widgets/button.dart';
@@ -15,39 +16,7 @@ import '../widgets/settings.dart';
 import '../widgets/streak.dart';
 import '../widgets/time.dart';
 
-Future<void> loadTimes(TrackerValues tracker) async {
-  final (secondsTopic, streak) = await getTimeTopic(tracker.topicName);
-  final secondsToday = await getTimeToday(topic: tracker.topicName);
-
-  if (secondsTopic != null) {
-    tracker.topicTime = secondsTopic;
-  }
-  if (secondsToday != null) {
-    tracker.todayTime = secondsToday;
-  }
-}
-
-class TrackerValues {
-  TrackerValues({
-    required this.topicName,
-    required this.topicTime,
-    required this.todayTime,
-    required this.streak,
-    required this.currentTracker,
-    required this.countdownTime,
-    required this.count,
-  });
-
-  String topicName;
-  int topicTime;
-  int todayTime;
-  int streak;
-  Stopwatch currentTracker;
-  Duration countdownTime;
-  int count;
-}
-
-ValueNotifier<TrackerValues> trackerNotifier = ValueNotifier(
+final ValueNotifier<TrackerValues> trackerNotifier = ValueNotifier(
   TrackerValues(
     topicName: 'General',
     topicTime: 0,
@@ -73,34 +42,27 @@ class _TrackerPageState extends State<TrackerPage> {
   late Timer uiTimer;
   late Timer topicTimer;
 
-  Future<void> newCount(Stopwatch tracker) async {
-    stopTracker(tracker, trackerNotifier.value.topicName);
-    loadTimes(trackerNotifier.value);
-    tracker.reset();
-    trackerNotifier.value.count++;
-  }
-
   @override
   void initState() {
     super.initState();
 
     trackerNotifier.value.currentTracker = chrono.timer;
 
-    uiTimer = Timer.periodic(const Duration(milliseconds: 500), (_) {
+    uiTimer = Timer.periodic(const Duration(milliseconds: 500), (_) async {
       if (mounted) {
         if (chrono.timer.elapsed >= trackerNotifier.value.countdownTime) {
           debugPrint('New count: ${trackerNotifier.value.count}');
-          newCount(chrono.timer);
+          await newCount(trackerNotifier, chrono.timer);
         }
         setState(() {});
       }
     });
 
     topicTimer = Timer.periodic(const Duration(minutes: 1), (_) async {
-      await loadTimes(trackerNotifier.value);
+      await loadTimes(trackerNotifier);
     });
 
-    loadTimes(trackerNotifier.value);
+    loadTimes(trackerNotifier);
   }
 
   @override
@@ -115,6 +77,7 @@ class _TrackerPageState extends State<TrackerPage> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
 
     return LayoutBuilder(
@@ -208,7 +171,6 @@ class _TrackerPageState extends State<TrackerPage> {
                               elapsed: chrono.timer.elapsed,
                               isStopwatch: false,
                             ),
-                            // TODO: Do something after countdown runs out
                             1 => Tracker(
                               height: height,
                               elapsed: chrono.stopwatch.elapsed,
@@ -233,8 +195,7 @@ class _TrackerPageState extends State<TrackerPage> {
                         dotWidth: 16,
                         type: WormType.thin,
                         dotColor: colors.secondary,
-                        activeDotColor:
-                            themeNotifier.value.brightness == Brightness.dark
+                        activeDotColor: theme.brightness == Brightness.dark
                             ? colors.onSurface
                             : colors.primary,
                       ),
@@ -253,13 +214,9 @@ class _TrackerPageState extends State<TrackerPage> {
                               isPressed: tracker.currentTracker.isRunning,
                               playSound: true,
                               size: const Size(175, 45),
-                              onPressed: () {
+                              onPressed: () async {
                                 if (tracker.currentTracker.isRunning) {
-                                  stopTracker(
-                                    tracker.currentTracker,
-                                    tracker.topicName,
-                                  );
-                                  loadTimes(tracker);
+                                  await stopTracker(trackerNotifier);
                                 } else {
                                   startTracker(tracker.currentTracker);
                                 }
@@ -269,8 +226,8 @@ class _TrackerPageState extends State<TrackerPage> {
                               Positioned(
                                 right: width / 2.65,
                                 child: GestureDetector(
-                                  onTap: () {
-                                    newCount(tracker.currentTracker);
+                                  onTap: () async {
+                                    await newCount(trackerNotifier, tracker.currentTracker);
                                   },
                                   child: Icon(
                                     Icons.skip_next,
@@ -377,11 +334,11 @@ class _TopicDropdownState extends State<TopicDropdown> {
               ),
               ...topics.map((topic) {
                 return GestureDetector(
-                  onTap: () {
+                  onTap: () async {
                     trackerNotifier.value.topicName = topic.name;
-                    loadTimes(trackerNotifier.value);
+                    loadTimes(trackerNotifier);
                     Stopwatch tracker = trackerNotifier.value.currentTracker;
-                    stopTracker(tracker, trackerNotifier.value.topicName);
+                    await stopTracker(trackerNotifier);
                     tracker.reset();
                     showDropdown = false;
                   },
@@ -454,15 +411,20 @@ void newTopicPopup(BuildContext context) {
 }
 
 void settingsPopup(BuildContext context) {
-  final secondsController = TextEditingController();
   final minutesController = TextEditingController();
-  final hoursController = TextEditingController();
+  final minutesFocusNode = FocusNode();
 
   showDialog(
     context: context,
     builder: (context) {
       final colors = Theme.of(context).colorScheme;
       final l10n = AppLocalizations.of(context)!;
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (context.mounted) {
+          minutesFocusNode.requestFocus();
+        }
+      });
 
       return AlertDialog(
         title: Row(
@@ -483,22 +445,9 @@ void settingsPopup(BuildContext context) {
           children: [
             Expanded(
               child: SettingsForm(
-                label: l10n.hours,
-                controller: hoursController,
-                isNumber: true,
-              ),
-            ),
-            Expanded(
-              child: SettingsForm(
                 label: l10n.minutes,
                 controller: minutesController,
-                isNumber: true,
-              ),
-            ),
-            Expanded(
-              child: SettingsForm(
-                label: l10n.seconds,
-                controller: secondsController,
+                focusNode: minutesFocusNode,
                 isNumber: true,
               ),
             ),
@@ -506,15 +455,14 @@ void settingsPopup(BuildContext context) {
         ),
         actions: [
           GenericButton(
-            size: Size(100, 20),
+            size: const Size(100, 20),
             text: l10n.save,
             textStyle: bodySmall,
             onPressed: () {
               trackerNotifier.value.countdownTime = Duration(
-                hours: int.tryParse(hoursController.text) ?? 0,
                 minutes: int.tryParse(minutesController.text) ?? 0,
-                seconds: int.tryParse(secondsController.text) ?? 0,
               );
+
               Navigator.pop(context);
             },
           ),

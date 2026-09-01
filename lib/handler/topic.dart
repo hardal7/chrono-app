@@ -3,7 +3,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../models/topic.dart';
 import '../services/dio.dart';
-import '../services/outbox.dart';
 
 Future<List<Topic>> getAllTopics() async {
   try {
@@ -74,17 +73,4 @@ Future<int?> getTimeToday({String? topic}) async {
   } catch (e) {
     return null;
   }
-}
-
-void startTracker(Stopwatch stopwatch) {
-  stopwatch.start();
-}
-
-Duration totalTime = Duration.zero;
-Future<void> stopTracker(Stopwatch stopwatch, String topic) async {
-  stopwatch.stop();
-  Duration timeTracked = stopwatch.elapsed - totalTime;
-  totalTime = stopwatch.elapsed;
-
-  saveTopicEvent(topic, timeTracked.inSeconds);
 }

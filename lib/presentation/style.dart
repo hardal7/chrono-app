@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-final ValueNotifier<ThemeData> themeNotifier = ValueNotifier(darkTheme);
-
 final darkTheme = ThemeData(
   colorScheme: ColorScheme(
     surface: _backgroundColor,

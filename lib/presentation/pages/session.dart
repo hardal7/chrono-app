@@ -113,7 +113,6 @@ class _SessionPageState extends State<SessionPage> {
   }
 }
 
-// TODO: Grey out the user that is you
 class ParticipantCard extends StatelessWidget {
   const ParticipantCard({super.key, required this.participant});
   final Participant participant;

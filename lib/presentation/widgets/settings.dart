@@ -38,12 +38,14 @@ class SettingsForm extends StatelessWidget {
     required this.controller,
     this.isDate = false,
     this.isNumber = false,
+    this.focusNode,
   });
 
   final String label;
   final TextEditingController controller;
   final bool isDate;
   final bool isNumber;
+  final FocusNode? focusNode;
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +71,7 @@ class SettingsForm extends StatelessWidget {
               border: OutlineInputBorder(),
             ),
             style: bodyMedium.copyWith(color: colors.secondary),
+            focusNode: focusNode,
           );
   }
 }
