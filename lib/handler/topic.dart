@@ -20,7 +20,7 @@ Future<List<Topic>> getAllTopics() async {
   }
 }
 
-Future<void> createTopic(String name) async {
+Future<int> createTopic(String name) async {
   try {
     debugPrint('Sending create topic request');
 
@@ -29,9 +29,9 @@ Future<void> createTopic(String name) async {
       data: {'name': name},
     );
 
-    debugPrint(response.statusCode.toString());
+    return response.statusCode ?? 0;
   } catch (e) {
-    debugPrint('Error creating topic: $e');
+    return 0;
   }
 }
 
@@ -53,6 +53,22 @@ Future<(int?, int?)> getTimeTopic(String name) async {
   } catch (e) {
     debugPrint('Error getting topic time: $e');
     return (null, null);
+  }
+}
+
+Future<int?> trackTopic(
+  String name,
+  int timeTrackedSeconds,
+  DateTime date,
+) async {
+  try {
+    final response = await dio.post(
+      '${dotenv.get('API_URL')}/topic-event/track',
+      data: {'topic': name, 'time_seconds': timeTrackedSeconds, 'date': date},
+    );
+    return response.statusCode;
+  } catch (e) {
+    return null;
   }
 }
 

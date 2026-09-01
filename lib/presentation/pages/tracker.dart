@@ -4,9 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import '../../handler/topic.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/topic.dart';
+import '../../outbox/topic.dart';
 import '../../outbox/tracker.dart';
 import '../../services/tracker.dart';
 import '../duration.dart';
@@ -227,7 +227,10 @@ class _TrackerPageState extends State<TrackerPage> {
                                 right: width / 2.65,
                                 child: GestureDetector(
                                   onTap: () async {
-                                    await newCount(trackerNotifier, tracker.currentTracker);
+                                    await newCount(
+                                      trackerNotifier,
+                                      tracker.currentTracker,
+                                    );
                                   },
                                   child: Icon(
                                     Icons.skip_next,
@@ -286,10 +289,6 @@ class Tracker extends StatelessWidget {
 ValueNotifier<List<Topic>> topicsNotifier = ValueNotifier(List.empty());
 bool showDropdown = false;
 
-Future<void> loadTopics() async {
-  topicsNotifier.value = await getAllTopics();
-}
-
 class TopicDropdown extends StatefulWidget {
   const TopicDropdown({super.key, required this.height});
 
@@ -303,7 +302,7 @@ class _TopicDropdownState extends State<TopicDropdown> {
   @override
   void initState() {
     super.initState();
-    loadTopics();
+    loadTopics(topicsNotifier);
   }
 
   @override
@@ -399,8 +398,8 @@ void newTopicPopup(BuildContext context) {
             text: l10n.create,
             textStyle: bodyMin,
             onPressed: () {
-              createTopic(controller.text);
-              loadTopics();
+              newTopic(controller.text);
+              loadTopics(topicsNotifier);
               Navigator.pop(context);
             },
           ),
