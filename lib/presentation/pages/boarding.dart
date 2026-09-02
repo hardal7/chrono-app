@@ -16,123 +16,97 @@ class BoardingPage extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
     final l10n = AppLocalizations.of(context)!;
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final height = constraints.maxHeight;
-        final width = constraints.maxWidth;
-
-        return Material(
-          child: Padding(
-            padding: pageInset,
-            child: Column(
+    return Material(
+      child: Padding(
+        padding: pageInset,
+        child: Column(
+          children: [
+            Spacer(flex: 5),
+            Row(
+              spacing: 15.0,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(top: height / 5),
-                  child: Row(
-                    spacing: 15.0,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Icon(Icons.access_time, size: 48, color: colors.primary),
-                      Text(
-                        'Chrono',
-                        style: TextStyle(
-                          fontSize: 48,
-                          fontWeight: FontWeight.w500,
-                          color: colors.primary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: height / 5),
-                  child: Text(
-                    l10n.welcome,
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.w500,
-                      color: colors.primary,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
+                Icon(Icons.access_time, size: 48, color: colors.primary),
                 Text(
-                  l10n.appDescription,
-                  style: bodyMin.copyWith(color: colors.secondary),
-                  textAlign: TextAlign.center,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: Column(
-                    children: <SizedBox>[
-                      SizedBox(
-                        height: height / 15,
-                        width: width,
-                        child: AuthButton(title: l10n.login, route: 'Login'),
-                      ),
-                      SizedBox(
-                        height: height / 15,
-                        width: width,
-                        child: AuthButton(
-                          title: l10n.signup,
-                          route: 'Register',
-                          inverted: true,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Align(
-                    alignment: FractionalOffset.bottomCenter,
-                    child: Padding(
-                      padding: EdgeInsets.only(bottom: height / 20),
-                      child: RichText(
-                        textAlign: TextAlign.center,
-                        text: TextSpan(
-                          style: bodyMin.copyWith(color: colors.secondary),
-                          children: <TextSpan>[
-                            TextSpan(text: '${l10n.userNotice} '),
-                            TextSpan(
-                              text: l10n.privacyPolicy,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: colors.primary,
-                              ),
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () async {
-                                  final url = Uri.parse(
-                                    '${dotenv.get('SITE_URL')}/privacy',
-                                  );
-                                  await launchUrl(url);
-                                },
-                            ),
-                            TextSpan(text: ' ${l10n.and} '),
-                            TextSpan(
-                              text: l10n.userTerms,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: colors.primary,
-                              ),
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () async {
-                                  final url = Uri.parse(
-                                    '${dotenv.get('SITE_URL')}/terms',
-                                  );
-                                  await launchUrl(url);
-                                },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                  'Chrono',
+                  style: TextStyle(
+                    fontSize: 48,
+                    fontWeight: FontWeight.w500,
+                    color: colors.primary,
                   ),
                 ),
               ],
             ),
-          ),
-        );
-      },
+            Spacer(flex: 8),
+            Text(
+              l10n.welcome,
+              style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.w500,
+                color: colors.primary,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            Text(
+              l10n.appDescription,
+              style: bodyMin.copyWith(color: colors.secondary),
+              textAlign: TextAlign.center,
+            ),
+            Expanded(
+              flex: 2,
+              child: AuthButton(title: l10n.login, route: 'Login'),
+            ),
+            Expanded(
+              flex: 2,
+              child: AuthButton(
+                title: l10n.signup,
+                route: 'Register',
+                inverted: true,
+              ),
+            ),
+            Spacer(flex: 5),
+            RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                style: bodyMin.copyWith(color: colors.secondary),
+                children: <TextSpan>[
+                  TextSpan(text: '${l10n.userNotice} '),
+                  TextSpan(
+                    text: l10n.privacyPolicy,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: colors.primary,
+                    ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () async {
+                        final url = Uri.parse(
+                          '${dotenv.get('SITE_URL')}/privacy',
+                        );
+                        await launchUrl(url);
+                      },
+                  ),
+                  TextSpan(text: ' ${l10n.and} '),
+                  TextSpan(
+                    text: l10n.userTerms,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: colors.primary,
+                    ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () async {
+                        final url = Uri.parse(
+                          '${dotenv.get('SITE_URL')}/terms',
+                        );
+                        await launchUrl(url);
+                      },
+                  ),
+                ],
+              ),
+            ),
+            Spacer(flex: 2),
+          ],
+        ),
+      ),
     );
   }
 }

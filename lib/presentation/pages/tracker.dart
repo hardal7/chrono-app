@@ -79,141 +79,126 @@ class _TrackerPageState extends State<TrackerPage> {
     final colors = Theme.of(context).colorScheme;
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
-
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final height = constraints.maxHeight;
-        final width = constraints.maxWidth;
-
-        return ValueListenableBuilder<TrackerValues>(
-          valueListenable: trackerNotifier,
-          builder: (context, tracker, child) {
-            return Material(
-              child: Padding(
-                padding: pageInset,
-                child: Column(
+    return ValueListenableBuilder<TrackerValues>(
+      valueListenable: trackerNotifier,
+      builder: (context, tracker, child) {
+        return Material(
+          child: Padding(
+            padding: pageInset,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              spacing: 10,
+              children: [
+                SettingsButton(popup: settingsPopup),
+                Spacer(flex: 4),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  spacing: 5.0,
                   children: [
-                    SettingsButton(popup: settingsPopup),
-                    Padding(
-                      padding: EdgeInsets.only(top: height / 16),
+                    if (tracker.streak != 0) Streak(streak: tracker.streak),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          showDropdown = !showDropdown;
+                        });
+                      },
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        spacing: 5.0,
                         children: [
-                          if (tracker.streak != 0)
-                            Streak(streak: tracker.streak),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                showDropdown = !showDropdown;
-                              });
-                            },
-                            child: Row(
-                              children: [
-                                Text(
-                                  tracker.topicName,
-                                  style: bodyLarge,
-                                  maxLines: 1,
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                    left: showDropdown ? 5 : 0,
-                                  ),
-                                  child: Icon(
-                                    showDropdown
-                                        ? CupertinoIcons.chevron_down
-                                        : Icons.chevron_right,
-                                    color: colors.onSurface,
-                                    size: showDropdown ? 32 : 40,
-                                    fontWeight: FontWeight(
-                                      showDropdown ? 900 : 100,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                          Text(
+                            tracker.topicName,
+                            style: bodyLarge,
+                            maxLines: 1,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                              left: showDropdown ? 5 : 0,
+                            ),
+                            child: Icon(
+                              showDropdown
+                                  ? CupertinoIcons.chevron_down
+                                  : Icons.chevron_right,
+                              color: colors.onSurface,
+                              size: showDropdown ? 32 : 40,
+                              fontWeight: FontWeight(showDropdown ? 900 : 100),
                             ),
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: height / 8,
-                      child: showDropdown
-                          ? TopicDropdown(height: height)
-                          : Column(
-                              children: [
-                                Text(
-                                  '${Duration(seconds: tracker.topicTime).toStopwatchString()} ${l10n.overall}',
-                                  style: bodyMedium.copyWith(
-                                    color: colors.secondary,
-                                  ),
-                                ),
-                                TodayTime(todayTime: tracker.todayTime),
-                              ],
-                            ),
-                    ),
-                    SizedBox(
-                      height: height / 3.5,
-                      child: PageView.builder(
-                        onPageChanged: (page) {
-                          setState(() {
-                            tracker.currentTracker = (page == 0
-                                ? chrono.timer
-                                : chrono.stopwatch);
-                          });
-                        },
-                        itemCount: 2,
-                        controller: trackerController,
-                        itemBuilder: (_, index) {
-                          return switch (index) {
-                            0 => Tracker(
-                              height: height,
-                              elapsed: chrono.timer.elapsed,
-                              isStopwatch: false,
-                            ),
-                            1 => Tracker(
-                              height: height,
-                              elapsed: chrono.stopwatch.elapsed,
-                            ),
-                            _ => const SizedBox.shrink(),
-                          };
-                        },
+                  ],
+                ),
+                showDropdown
+                    ? TopicDropdown()
+                    : Column(
+                        children: [
+                          Text(
+                            '${Duration(seconds: tracker.topicTime).toStopwatchString()} ${l10n.overall}',
+                            style: bodyMedium.copyWith(color: colors.secondary),
+                          ),
+                          TodayTime(todayTime: tracker.todayTime),
+                        ],
                       ),
+                Expanded(
+                  flex: 20,
+                  child: PageView.builder(
+                    onPageChanged: (page) {
+                      setState(() {
+                        tracker.currentTracker = (page == 0
+                            ? chrono.timer
+                            : chrono.stopwatch);
+                      });
+                    },
+                    itemCount: 2,
+                    controller: trackerController,
+                    itemBuilder: (_, index) {
+                      return switch (index) {
+                        0 => Tracker(
+                          elapsed: chrono.timer.elapsed,
+                          isStopwatch: false,
+                        ),
+                        1 => Tracker(elapsed: chrono.stopwatch.elapsed),
+                        _ => const SizedBox.shrink(),
+                      };
+                    },
+                  ),
+                ),
+                Center(
+                  child: Text(
+                    'Count ${tracker.count}',
+                    style: bodyMedium.copyWith(color: colors.secondary),
+                  ),
+                ),
+                Spacer(flex: 4),
+                Center(
+                  child: SmoothPageIndicator(
+                    controller: trackerController,
+                    count: 2,
+                    effect: WormEffect(
+                      dotHeight: 16,
+                      dotWidth: 16,
+                      type: WormType.thin,
+                      dotColor: colors.secondary,
+                      activeDotColor: theme.brightness == Brightness.dark
+                          ? colors.onSurface
+                          : colors.primary,
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(bottom: height / 16),
-                      child: Text(
-                        'Count ${tracker.count}',
-                        style: bodyMedium.copyWith(color: colors.secondary),
-                      ),
-                    ),
-                    SmoothPageIndicator(
-                      controller: trackerController,
-                      count: 2,
-                      effect: WormEffect(
-                        dotHeight: 16,
-                        dotWidth: 16,
-                        type: WormType.thin,
-                        dotColor: colors.secondary,
-                        activeDotColor: theme.brightness == Brightness.dark
-                            ? colors.onSurface
-                            : colors.primary,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 20),
-                      child: SizedBox(
-                        width: width,
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            GenericButton(
+                  ),
+                ),
+                Spacer(flex: 1),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          FractionallySizedBox(
+                            widthFactor: 0.45,
+                            child: GenericButton(
                               text: tracker.currentTracker.isRunning
                                   ? l10n.pause
                                   : l10n.start,
                               isPressed: tracker.currentTracker.isRunning,
                               playSound: true,
-                              size: const Size(175, 45),
                               onPressed: () async {
                                 if (tracker.currentTracker.isRunning) {
                                   await stopTracker(trackerNotifier);
@@ -222,32 +207,33 @@ class _TrackerPageState extends State<TrackerPage> {
                                 }
                               },
                             ),
-                            if (tracker.currentTracker.isRunning)
-                              Positioned(
-                                right: width / 2.65,
-                                child: GestureDetector(
-                                  onTap: () async {
-                                    await newCount(
-                                      trackerNotifier,
-                                      tracker.currentTracker,
-                                    );
-                                  },
-                                  child: Icon(
-                                    Icons.skip_next,
-                                    color: colors.onSurface,
-                                    size: 40,
-                                  ),
+                          ),
+                          if (tracker.currentTracker.isRunning)
+                            Positioned(
+                              right: 60,
+                              child: GestureDetector(
+                                onTap: () async {
+                                  await newCount(
+                                    trackerNotifier,
+                                    tracker.currentTracker,
+                                  );
+                                },
+                                child: Icon(
+                                  Icons.skip_next,
+                                  color: colors.onSurface,
+                                  size: 40,
                                 ),
                               ),
-                          ],
-                        ),
+                            ),
+                        ],
                       ),
                     ),
                   ],
                 ),
-              ),
-            );
-          },
+                Spacer(flex: 4),
+              ],
+            ),
+          ),
         );
       },
     );
@@ -255,14 +241,8 @@ class _TrackerPageState extends State<TrackerPage> {
 }
 
 class Tracker extends StatelessWidget {
-  const Tracker({
-    super.key,
-    required this.height,
-    required this.elapsed,
-    this.isStopwatch = true,
-  });
+  const Tracker({super.key, required this.elapsed, this.isStopwatch = true});
 
-  final double height;
   final Duration elapsed;
   final bool isStopwatch;
 
@@ -272,13 +252,10 @@ class Tracker extends StatelessWidget {
       valueListenable: trackerNotifier,
       builder: (context, tracker, child) {
         return Center(
-          child: Padding(
-            padding: EdgeInsets.only(top: height / 15),
-            child: Text(
-              (isStopwatch ? elapsed : (tracker.countdownTime - elapsed))
-                  .toStopwatchString(),
-              style: bodyMax,
-            ),
+          child: Text(
+            (isStopwatch ? elapsed : (tracker.countdownTime - elapsed))
+                .toStopwatchString(),
+            style: bodyMax,
           ),
         );
       },
@@ -290,9 +267,7 @@ ValueNotifier<List<Topic>> topicsNotifier = ValueNotifier(List.empty());
 bool showDropdown = false;
 
 class TopicDropdown extends StatefulWidget {
-  const TopicDropdown({super.key, required this.height});
-
-  final double height;
+  const TopicDropdown({super.key});
 
   @override
   State<TopicDropdown> createState() => _TopicDropdownState();
@@ -394,9 +369,8 @@ void newTopicPopup(BuildContext context) {
         ),
         actions: [
           GenericButton(
-            size: Size(100, 20),
             text: l10n.create,
-            textStyle: bodyMin,
+            textStyle: bodySmall,
             onPressed: () {
               newTopic(controller.text);
               loadTopics(topicsNotifier);
@@ -454,7 +428,6 @@ void settingsPopup(BuildContext context) {
         ),
         actions: [
           GenericButton(
-            size: const Size(100, 20),
             text: l10n.save,
             textStyle: bodySmall,
             onPressed: () {

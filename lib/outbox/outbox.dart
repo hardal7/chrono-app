@@ -1,12 +1,21 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 import 'package:sqlite3/sqlite3.dart';
 
 import '../handler/topic.dart';
 
+Future<Database> openLocalDatabase() async {
+  final directory = await getApplicationDocumentsDirectory();
+  final dbPath = p.join(directory.path, 'local.db');
+
+  return sqlite3.open(dbPath);
+}
+
 Future<void> initializeLocalDB() async {
-  final db = sqlite3.open('local.db');
+  final db = await openLocalDatabase();
 
   db.execute('''
   CREATE TABLE IF NOT EXISTS topic_events (
@@ -36,7 +45,7 @@ Future<void> initializeLocalDB() async {
 
 Future<void> syncEvents() async {
   Timer.periodic(const Duration(minutes: 1), (_) async {
-    final db = sqlite3.open('local.db');
+    final db = await openLocalDatabase();
 
     await _syncTopicEvents(db);
     await _syncTopics(db);

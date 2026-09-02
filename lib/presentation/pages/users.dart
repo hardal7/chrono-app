@@ -81,119 +81,103 @@ class _UsersPageState extends State<UsersPage> {
     final colors = Theme.of(context).colorScheme;
     final l10n = AppLocalizations.of(context)!;
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final height = constraints.maxHeight;
-        final width = constraints.maxWidth;
-
-        return Material(
-          child: Padding(
-            padding: pageInset,
-            child: Column(
+    return Material(
+      child: Padding(
+        padding: pageInset,
+        child: Column(
+          spacing: 10,
+          children: [
+            SettingsButton(popup: settingsPopup),
+            Container(
+              decoration: BoxDecoration(
+                border: BoxBorder.all(color: colors.secondary),
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+              ),
+              child: TextFormField(
+                controller: searchController,
+                onChanged: onSearchChanged,
+                style: bodySmall.copyWith(color: colors.secondary),
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.search, color: colors.secondary),
+                  hintText: l10n.searchUsername,
+                  hintStyle: bodySmall.copyWith(color: colors.secondary),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: colors.secondary),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: colors.secondary),
+                  ),
+                ),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                SettingsButton(popup: settingsPopup),
-                Padding(
-                  padding: EdgeInsets.only(top: 20),
-                  child: Container(
-                    height: height / 15,
-                    decoration: BoxDecoration(
-                      border: BoxBorder.all(color: colors.secondary),
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    ),
-                    child: TextFormField(
-                      controller: searchController,
-                      onChanged: onSearchChanged,
-                      style: bodySmall.copyWith(color: colors.secondary),
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.search, color: colors.secondary),
-                        hintText: l10n.searchUsername,
-                        hintStyle: bodySmall.copyWith(color: colors.secondary),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: colors.secondary),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: colors.secondary),
-                        ),
-                      ),
-                    ),
-                  ),
+                GenericButton(
+                  text: l10n.friend,
+                  textStyle: bodySmall,
+                  isPressed: searchScope == 'friends',
+                  onPressed: () {
+                    setState(() {
+                      searchScope = 'friends';
+                      loadUsers();
+                    });
+                  },
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: height / 40),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GenericButton(
-                        text: l10n.friend,
-                        size: Size(width / 3.7, 45),
-                        textStyle: bodySmall,
-                        isPressed: searchScope == 'friends',
-                        onPressed: () {
-                          setState(() {
-                            searchScope = 'friends';
-                            loadUsers();
-                          });
-                        },
-                      ),
-                      GenericButton(
-                        text: l10n.local,
-                        textStyle: bodySmall,
-                        size: Size(width / 3.7, 45),
-                        isPressed: searchScope == 'local',
-                        onPressed: () {
-                          setState(() {
-                            searchScope = 'local';
-                            loadUsers();
-                          });
-                        },
-                      ),
-                      GenericButton(
-                        text: l10n.global,
-                        textStyle: bodySmall,
-                        size: Size(width / 3.7, 45),
-                        isPressed: searchScope == 'global',
-                        onPressed: () {
-                          setState(() {
-                            searchScope = 'global';
-                            loadUsers();
-                          });
-                        },
-                      ),
-                    ],
-                  ),
+                GenericButton(
+                  text: l10n.local,
+                  textStyle: bodySmall,
+                  isPressed: searchScope == 'local',
+                  onPressed: () {
+                    setState(() {
+                      searchScope = 'local';
+                      loadUsers();
+                    });
+                  },
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text(
-                      l10n.rank,
-                      style: bodySmall.copyWith(color: colors.secondary),
-                    ),
-                    Text(
-                      l10n.user,
-                      style: bodySmall.copyWith(color: colors.secondary),
-                    ),
-                    Text(
-                      l10n.time,
-                      style: bodySmall.copyWith(color: colors.secondary),
-                    ),
-                  ],
-                ),
-                Expanded(
-                  child: isLoading
-                      ? const Center(child: CircularProgressIndicator())
-                      : ListView.builder(
-                          itemCount: users.length,
-                          itemBuilder: (context, index) {
-                            return UserCard(user: users[index]);
-                          },
-                        ),
+                GenericButton(
+                  text: l10n.global,
+                  textStyle: bodySmall,
+                  isPressed: searchScope == 'global',
+                  onPressed: () {
+                    setState(() {
+                      searchScope = 'global';
+                      loadUsers();
+                    });
+                  },
                 ),
               ],
             ),
-          ),
-        );
-      },
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text(
+                  l10n.rank,
+                  style: bodySmall.copyWith(color: colors.secondary),
+                ),
+                Text(
+                  l10n.user,
+                  style: bodySmall.copyWith(color: colors.secondary),
+                ),
+                Text(
+                  l10n.time,
+                  style: bodySmall.copyWith(color: colors.secondary),
+                ),
+              ],
+            ),
+            Expanded(
+              child: isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : ListView.builder(
+                      itemCount: users.length,
+                      itemBuilder: (context, index) {
+                        return UserCard(user: users[index]);
+                      },
+                    ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -220,7 +204,7 @@ class UserCard extends StatelessWidget {
             child: Row(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Text('${user.rank}', style: bodyMedium),
                 ),
                 // TODO: rank changes
@@ -257,7 +241,7 @@ class UserCard extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 5),
                   child: Text(
                     user.username,
-                    style: bodyMedium,
+                    style: bodySmall,
                     // TODO: text overflow
                   ),
                 ),
@@ -268,7 +252,7 @@ class UserCard extends StatelessWidget {
             flex: 3,
             child: Column(
               children: [
-                Text(user.totalTime.toHoursString(), style: bodyMedium),
+                Text(user.totalTime.toHoursString(), style: bodySmall),
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -278,7 +262,7 @@ class UserCard extends StatelessWidget {
                     ),
                     Text(
                       user.todayTime.toStopwatchString(),
-                      style: bodyMedium.copyWith(color: greenColor),
+                      style: bodyMin.copyWith(color: greenColor),
                     ),
                   ],
                 ),

@@ -8,7 +8,6 @@ class GenericButton extends StatefulWidget {
     super.key,
     required this.onPressed,
     required this.text,
-    required this.size,
     this.isPressed = false,
     this.playSound = false,
     this.textStyle = bodyMedium,
@@ -16,7 +15,6 @@ class GenericButton extends StatefulWidget {
 
   final VoidCallback onPressed;
   final String text;
-  final Size size;
   final bool isPressed;
   final bool playSound;
   final TextStyle textStyle;
@@ -37,8 +35,6 @@ class _GenericButtonState extends State<GenericButton> {
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 10),
-      width: widget.size.width,
-      height: widget.size.height,
       decoration: BoxDecoration(
         boxShadow: [
           if (!widget.isPressed)

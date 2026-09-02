@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../l10n/app_localizations.dart';
+import '../style.dart';
 import 'profile.dart';
 import 'sessions_list.dart';
 import 'settings.dart';

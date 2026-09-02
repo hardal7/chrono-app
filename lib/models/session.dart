@@ -2,13 +2,11 @@ class CreateSessionRequest {
   CreateSessionRequest({
     required this.name,
     this.maxParticipants,
-    this.password,
     this.expiresAt,
     this.topic,
   });
   final String name;
   final int? maxParticipants;
-  final String? password;
   final DateTime? expiresAt;
   final String? topic;
 
@@ -16,7 +14,6 @@ class CreateSessionRequest {
     return {
       'name': name,
       if (maxParticipants != null) 'max_participants': maxParticipants,
-      if (password != null) 'password': password,
       if (expiresAt != null) 'expires_at': expiresAt!.toIso8601String(),
       if (topic != null) 'topic': topic,
     };

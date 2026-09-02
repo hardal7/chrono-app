@@ -42,48 +42,38 @@ class _SessionsListPageState extends State<SessionsListPage> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final height = constraints.maxHeight;
-        final width = constraints.maxWidth;
-        return Material(
-          child: Padding(
-            padding: pageInset,
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      GestureDetector(
-                        child: Icon(
-                          Icons.add,
-                          color: colors.onSurface,
-                          size: 48,
-                        ),
-                        onTap: () {
-                          settingsPopup(context);
-                        },
-                      ),
-                    ],
+    return Material(
+      child: Padding(
+        padding: pageInset,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  GestureDetector(
+                    child: Icon(Icons.add, color: colors.onSurface, size: 48),
+                    onTap: () {
+                      settingsPopup(context);
+                    },
                   ),
-                ),
-                Expanded(
-                  child: isLoading
-                      ? const Center(child: CircularProgressIndicator())
-                      : ListView.builder(
-                          itemCount: sessions.length,
-                          itemBuilder: (context, index) {
-                            return SessionCard(session: sessions[index]);
-                          },
-                        ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        );
-      },
+            Expanded(
+              child: isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : ListView.builder(
+                      itemCount: sessions.length,
+                      itemBuilder: (context, index) {
+                        return SessionCard(session: sessions[index]);
+                      },
+                    ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -137,7 +127,7 @@ class SessionCard extends StatelessWidget {
                         );
                       },
                       child: CircleAvatar(
-                        radius: 20,
+                        radius: 28,
                         backgroundImage: NetworkImage(
                           '${dotenv.get('API_URL')}/${session.ownerAvatarPath}',
                         ),
@@ -150,7 +140,7 @@ class SessionCard extends StatelessWidget {
                   children: List.generate(session.totalParticipants, (index) {
                     final participant = session.participants[index];
                     return CircleAvatar(
-                      radius: 24,
+                      radius: 22,
                       backgroundImage: NetworkImage(
                         '${dotenv.get('API_URL')}/${participant.avatarPath}',
                       ),
@@ -191,7 +181,6 @@ class SessionCard extends StatelessWidget {
                     Icon(Icons.group, color: colors.secondary, size: 24),
                     GenericButton(
                       text: 'Join',
-                      size: Size(100, 30),
                       textStyle: bodySmall,
                       onPressed: () async {
                         await joinSession(session.name, session.ownerUsername);
@@ -221,7 +210,6 @@ class SessionCard extends StatelessWidget {
 void settingsPopup(BuildContext context) {
   final nameController = TextEditingController();
   final maxParticipantsController = TextEditingController();
-  final passwordController = TextEditingController();
   final expiresAtController = TextEditingController();
   final topicController = TextEditingController();
 
@@ -262,12 +250,6 @@ void settingsPopup(BuildContext context) {
               children: [
                 Expanded(
                   child: SettingsForm(
-                    label: 'Password',
-                    controller: passwordController,
-                  ),
-                ),
-                Expanded(
-                  child: SettingsForm(
                     label: 'Topic',
                     controller: topicController,
                   ),
@@ -296,7 +278,6 @@ void settingsPopup(BuildContext context) {
         ),
         actions: [
           GenericButton(
-            size: Size(100, 20),
             text: l10n.create,
             textStyle: bodySmall,
             onPressed: () {
@@ -304,7 +285,6 @@ void settingsPopup(BuildContext context) {
                 CreateSessionRequest(
                   name: nameController.text,
                   topic: topicController.text,
-                  password: passwordController.text,
                   expiresAt: DateTime.tryParse(expiresAtController.text),
                   maxParticipants: int.tryParse(maxParticipantsController.text),
                 ),

@@ -3,6 +3,7 @@ import 'package:sqlite3/sqlite3.dart';
 
 import '../handler/topic.dart';
 import '../services/tracker.dart';
+import 'outbox.dart';
 
 Future<void> loadTimes(ValueNotifier<TrackerValues> tracker) async {
   int? secondsTopic, secondsToday, streak;
@@ -20,7 +21,7 @@ Future<void> loadTimes(ValueNotifier<TrackerValues> tracker) async {
 }
 
 Future<int> _getTimeTopicLocal(String topicName) async {
-  final db = sqlite3.open('local.db');
+  final db = await openLocalDatabase();
   final ResultSet resultSet = db.select(
     'SELECT * FROM topics WHERE topic_name = ?;',
     [topicName],
@@ -36,7 +37,7 @@ Future<int> _getTimeTopicLocal(String topicName) async {
 }
 
 Future<(int, int)> _getUserStatsLocal() async {
-  final db = sqlite3.open('local.db');
+  final db = await openLocalDatabase();
   final ResultSet resultSet = db.select('SELECT * FROM user_stats;');
   db.close();
 
@@ -59,7 +60,11 @@ Future<void> _saveLocally(
   int timeTrackedSeconds,
   DateTime createdAt,
 ) async {
-  final db = sqlite3.open('local.db');
+  final db = await openLocalDatabase();
+
+  if (timeTrackedSeconds < 0) {
+    return;
+  }
 
   db.execute(
     'INSERT INTO topic_events (topic_name, time_tracked_seconds, created_at) VALUES (?, ?, ?)',

@@ -53,152 +53,141 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final height = constraints.maxHeight;
-        final width = constraints.maxWidth;
-        return Material(
-          child: Padding(
-            padding: pageInset,
-            child: isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : Column(
+    return Material(
+      child: Padding(
+        padding: pageInset,
+        child: isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          // TODO: Don't show back button if own profile
-                          PageBackButton(),
-                          SettingsButton(popup: settingsPopup),
-                        ],
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: height / 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            // TODO: Try
-                            GestureDetector(
-                              onTap: () async {
-                                if (isSelf) {
-                                  final avatar = await pickImage();
-                                  if (avatar != null) {
-                                    await uploadAvatar(avatar);
-                                  }
-                                }
-                              },
-                              child: CircleAvatar(
-                                radius: 48,
-                                backgroundImage: NetworkImage(
-                                  '${dotenv.get('API_URL')}/${profile.avatarPath}',
-                                ),
-                              ),
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  'Total Time',
-                                  style: bodyMedium.copyWith(
-                                    color: colors.secondary,
-                                  ),
-                                ),
-                                Text(
-                                  Duration(
-                                    seconds: profile.totalTime,
-                                  ).toStopwatchString(),
-                                  style: bodyMedium,
-                                ),
-                                TodayTime(todayTime: profile.todayTime),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 30),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              spacing: 10,
-                              children: [
-                                Text(profile.username, style: bodyLarge),
-                                Streak(streak: 1),
-                              ],
-                            ),
-                            Text(
-                              'Best Topic',
-                              style: bodyMedium.copyWith(
-                                color: colors.secondary,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.location_on_outlined,
-                                color: colors.secondary,
-                                size: 24,
-                              ),
-                              // TODO: Show country flag ??
-                              Text(
-                                profile.country,
-                                style: bodyMedium.copyWith(
-                                  color: colors.secondary,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Text(profile.bestTopic, style: bodyMedium),
-                        ],
-                      ),
-                      if (profile.username != username)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 20),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              GenericButton(
-                                onPressed: () {
-                                  if (profile.friendStatus == 'none') {
-                                    () async {
-                                      await sendFriendRequest(profile.username);
-                                      await loadProfile();
-                                    }();
-                                  }
-                                },
-                                text: switch (profile.friendStatus) {
-                                  'none' => 'Add Friend',
-                                  'pending' => 'Sent Request',
-                                  'accepted' => 'Friends',
-                                  _ => 'Invite',
-                                },
-                                textStyle: bodySmall,
-                                isPressed: profile.friendStatus == 'none'
-                                    ? false
-                                    : true,
-                                size: Size(width / 2.4, 40),
-                              ),
-                              GenericButton(
-                                onPressed: () {},
-                                text: 'Invite',
-                                textStyle: bodySmall,
-                                size: Size(width / 2.4, 40),
-                              ),
-                            ],
-                          ),
-                        ),
+                      // TODO: Don't show back button if own profile
+                      PageBackButton(),
+                      SettingsButton(popup: settingsPopup),
                     ],
                   ),
-          ),
-        );
-      },
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // TODO: Try
+                      GestureDetector(
+                        onTap: () async {
+                          if (isSelf) {
+                            final avatar = await pickImage();
+                            if (avatar != null) {
+                              await uploadAvatar(avatar);
+                            }
+                          }
+                        },
+                        child: CircleAvatar(
+                          radius: 48,
+                          backgroundImage: NetworkImage(
+                            '${dotenv.get('API_URL')}/${profile.avatarPath}',
+                          ),
+                        ),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            'Total Time',
+                            style: bodyMedium.copyWith(color: colors.secondary),
+                          ),
+                          Text(
+                            Duration(
+                              seconds: profile.totalTime,
+                            ).toStopwatchString(),
+                            style: bodyMedium,
+                          ),
+                          TodayTime(todayTime: profile.todayTime),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        spacing: 10,
+                        children: [
+                          Text(profile.username, style: bodyLarge),
+                          // TODO: Move streaks to user
+                          Streak(streak: 1),
+                        ],
+                      ),
+                      Text(
+                        'Best Topic',
+                        style: bodyMedium.copyWith(color: colors.secondary),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.location_on_outlined,
+                            color: colors.secondary,
+                            size: 24,
+                          ),
+                          // TODO: Show country flag ??
+                          Text(
+                            profile.country,
+                            style: bodyMedium.copyWith(color: colors.secondary),
+                          ),
+                        ],
+                      ),
+                      Text(profile.bestTopic, style: bodyMedium),
+                    ],
+                  ),
+                  if (profile.username != username)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 10,
+                            child: GenericButton(
+                              onPressed: () {
+                                if (profile.friendStatus == 'none') {
+                                  () async {
+                                    await sendFriendRequest(profile.username);
+                                    await loadProfile();
+                                  }();
+                                }
+                              },
+                              text: switch (profile.friendStatus) {
+                                'none' => 'Add Friend',
+                                'pending' => 'Sent Request',
+                                'accepted' => 'Friends',
+                                _ => 'Invite',
+                              },
+                              textStyle: bodySmall,
+                              isPressed: profile.friendStatus == 'none'
+                                  ? false
+                                  : true,
+                            ),
+                          ),
+                          Spacer(flex: 1),
+                          Expanded(
+                            flex: 10,
+                            child: GenericButton(
+                              onPressed: () {
+                                // TODO: Make this work
+                              },
+                              text: 'Invite',
+                              textStyle: bodySmall,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+      ),
     );
   }
 }

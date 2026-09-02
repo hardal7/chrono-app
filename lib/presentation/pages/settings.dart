@@ -154,18 +154,11 @@ class _SettingsPageState extends State<SettingsPage> {
     final l10n = AppLocalizations.of(context)!;
     final settings = AppSettings(prefs: _prefs!, l10n: l10n);
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final height = constraints.maxHeight;
-        final width = constraints.maxWidth;
-
-        return Material(
-          child: Padding(
-            padding: pageInset.add(EdgeInsetsGeometry.only(top: height / 20)),
-            child: Column(children: settings.build()),
-          ),
-        );
-      },
+    return Material(
+      child: Padding(
+        padding: pageInset.add(EdgeInsetsGeometry.only(top: 50)),
+        child: Column(children: settings.build()),
+      ),
     );
   }
 }
