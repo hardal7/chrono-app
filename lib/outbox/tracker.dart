@@ -1,12 +1,11 @@
 import 'package:flutter/foundation.dart';
-import 'package:sqlite3/sqlite3.dart';
 
 import '../handler/topic.dart';
 import '../handler/user.dart';
 import '../main.dart';
 import '../models/user.dart';
 import '../services/tracker.dart';
-import 'outbox.dart';
+import 'sqlite.dart';
 
 Future<void> loadTimes(ValueNotifier<TrackerValues> tracker) async {
   int? secondsTopic, secondsToday, streak;
@@ -28,15 +27,15 @@ Future<void> loadTimes(ValueNotifier<TrackerValues> tracker) async {
 
 Future<int> _getTimeTopicLocal(String topicName) async {
   final db = await openLocalDatabase();
-  final ResultSet resultSet = db.select(
-    'SELECT * FROM topics WHERE topic_name = ?;',
+  final resultSet = await db.rawQuery(
+    'SELECT * FROM topics WHERE topic_name = ?',
     [topicName],
   );
-  db.close();
+  await db.close();
 
   if (resultSet.isNotEmpty) {
-    final Row row = resultSet[0];
-    return row['total_time_tracked_seconds'];
+    final row = resultSet[0];
+    return row['total_time_tracked_seconds'] as int;
   }
 
   return 0;
@@ -45,11 +44,11 @@ Future<int> _getTimeTopicLocal(String topicName) async {
 // TODO: Local streak tracking
 Future<(int, int)> _getUserStatsLocal() async {
   final db = await openLocalDatabase();
-  final ResultSet resultSet = db.select('SELECT * FROM user_stats;');
-  db.close();
+  final resultSet = await db.rawQuery('SELECT * FROM user_stats');
+  await db.close();
 
   if (resultSet.isNotEmpty) {
-    final Row row = resultSet[0];
+    final row = resultSet[0];
     return (row['today_time_tracked_seconds'] as int, row['streak'] as int);
   }
 
@@ -73,20 +72,20 @@ Future<void> _saveLocally(
     return;
   }
 
-  db.execute(
+  await db.execute(
     'INSERT INTO topic_events (topic_name, time_tracked_seconds, created_at) VALUES (?, ?, ?)',
     [topic, timeTrackedSeconds, createdAt.toIso8601String()],
   );
 
-  db.execute(
+  await db.execute(
     'UPDATE topics SET total_time_tracked_seconds = total_time_tracked_seconds + ? WHERE topic_name = ?',
     [timeTrackedSeconds, topic],
   );
 
-  db.execute(
+  await db.execute(
     'UPDATE user_stats SET today_time_tracked_seconds = today_time_tracked_seconds + ?',
     [timeTrackedSeconds],
   );
 
-  db.close();
+  await db.close();
 }

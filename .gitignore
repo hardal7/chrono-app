@@ -50,3 +50,7 @@ app.*.map.json
 
 # SQLite database
 *.db
+
+# Web Assembly
+web/*.js
+*.wasm

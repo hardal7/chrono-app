@@ -11,7 +11,7 @@ Future<void> initializeDio() async {
 
   final cookieJar = PersistCookieJar(
     ignoreExpires: true,
-    storage: FileStorage(path.join(directory.path, '.cookies/')),
+    storage: FileStorage(path.join(directory.path, 'cookies/')),
   );
 
   dio.interceptors.add(CookieManager(cookieJar));

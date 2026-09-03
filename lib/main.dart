@@ -2,7 +2,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'l10n/app_localizations.dart';
-import 'outbox/outbox.dart';
+import 'outbox/sqlite.dart';
+import 'outbox/sync.dart';
 import 'presentation/pages/boarding.dart';
 import 'package:flutter/material.dart';
 
@@ -26,7 +27,7 @@ ValueNotifier<AppValues> appNotifier = ValueNotifier(
 Future<void> main() async {
   await dotenv.load();
   await initializeDio();
-  await initializeLocalDB();
+  await initLocalDB();
 
   final prefs = await SharedPreferences.getInstance();
   username = prefs.getString('username') ?? '';
