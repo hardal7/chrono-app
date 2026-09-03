@@ -24,7 +24,10 @@ final ValueNotifier<TrackerValues> trackerNotifier = ValueNotifier(
     streak: 0,
     currentTracker: Stopwatch(),
     countdownTime: Duration(minutes: 25),
+    breakTime: Duration(minutes: 5),
+    isBreak: false,
     count: 1,
+    breakCount: 1,
   ),
 );
 
@@ -50,9 +53,9 @@ class _TrackerPageState extends State<TrackerPage> {
 
     uiTimer = Timer.periodic(const Duration(milliseconds: 500), (_) async {
       if (mounted) {
-        if (chrono.timer.elapsed >= trackerNotifier.value.countdownTime) {
-          debugPrint('New count: ${trackerNotifier.value.count}');
-          await newCount(trackerNotifier, chrono.timer);
+        if ((chrono.timer.elapsed >= trackerNotifier.value.countdownTime) ||
+            (chrono.breakTimer.elapsed >= trackerNotifier.value.breakTime)) {
+          await toggleTimer(trackerNotifier, chrono);
         }
         setState(() {});
       }
@@ -79,6 +82,7 @@ class _TrackerPageState extends State<TrackerPage> {
     final colors = Theme.of(context).colorScheme;
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
+
     return ValueListenableBuilder<TrackerValues>(
       valueListenable: trackerNotifier,
       builder: (context, tracker, child) {
@@ -153,8 +157,13 @@ class _TrackerPageState extends State<TrackerPage> {
                     itemBuilder: (_, index) {
                       return switch (index) {
                         0 => Tracker(
-                          elapsed: chrono.timer.elapsed,
+                          elapsed: tracker.currentTracker == chrono.timer
+                              ? chrono.timer.elapsed
+                              : chrono.breakTimer.elapsed,
                           isStopwatch: false,
+                          countdown: tracker.currentTracker == chrono.timer
+                              ? tracker.countdownTime
+                              : tracker.breakTime,
                         ),
                         1 => Tracker(elapsed: chrono.stopwatch.elapsed),
                         _ => const SizedBox.shrink(),
@@ -164,7 +173,11 @@ class _TrackerPageState extends State<TrackerPage> {
                 ),
                 Center(
                   child: Text(
-                    'Count ${tracker.count}',
+                    tracker.currentTracker == chrono.stopwatch
+                        ? ''
+                        : tracker.currentTracker == chrono.timer
+                        ? 'Count ${tracker.count}'
+                        : 'Break ${tracker.breakCount}',
                     style: bodyMedium.copyWith(color: colors.secondary),
                   ),
                 ),
@@ -208,15 +221,13 @@ class _TrackerPageState extends State<TrackerPage> {
                               },
                             ),
                           ),
-                          if (tracker.currentTracker.isRunning)
+                          if (tracker.currentTracker.isRunning &&
+                              tracker.currentTracker != chrono.stopwatch)
                             Positioned(
                               right: 60,
                               child: GestureDetector(
                                 onTap: () async {
-                                  await newCount(
-                                    trackerNotifier,
-                                    tracker.currentTracker,
-                                  );
+                                  await toggleTimer(trackerNotifier, chrono);
                                 },
                                 child: Icon(
                                   Icons.skip_next,
@@ -241,8 +252,14 @@ class _TrackerPageState extends State<TrackerPage> {
 }
 
 class Tracker extends StatelessWidget {
-  const Tracker({super.key, required this.elapsed, this.isStopwatch = true});
+  const Tracker({
+    super.key,
+    required this.elapsed,
+    this.isStopwatch = true,
+    this.countdown = const Duration(minutes: 5),
+  });
 
+  final Duration countdown;
   final Duration elapsed;
   final bool isStopwatch;
 
@@ -253,8 +270,7 @@ class Tracker extends StatelessWidget {
       builder: (context, tracker, child) {
         return Center(
           child: Text(
-            (isStopwatch ? elapsed : (tracker.countdownTime - elapsed))
-                .toStopwatchString(),
+            (isStopwatch ? elapsed : (countdown - elapsed)).toStopwatchString(),
             style: bodyMax,
           ),
         );
@@ -384,8 +400,10 @@ void newTopicPopup(BuildContext context) {
 }
 
 void settingsPopup(BuildContext context) {
-  final minutesController = TextEditingController();
-  final minutesFocusNode = FocusNode();
+  final countdownController = TextEditingController();
+  final breakController = TextEditingController();
+
+  final focusNode = FocusNode();
 
   showDialog(
     context: context,
@@ -395,7 +413,7 @@ void settingsPopup(BuildContext context) {
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (context.mounted) {
-          minutesFocusNode.requestFocus();
+          focusNode.requestFocus();
         }
       });
 
@@ -419,8 +437,15 @@ void settingsPopup(BuildContext context) {
             Expanded(
               child: SettingsForm(
                 label: l10n.minutes,
-                controller: minutesController,
-                focusNode: minutesFocusNode,
+                controller: countdownController,
+                focusNode: focusNode,
+                isNumber: true,
+              ),
+            ),
+            Expanded(
+              child: SettingsForm(
+                label: 'Break Time',
+                controller: breakController,
                 isNumber: true,
               ),
             ),
@@ -432,9 +457,11 @@ void settingsPopup(BuildContext context) {
             textStyle: bodySmall,
             onPressed: () {
               trackerNotifier.value.countdownTime = Duration(
-                minutes: int.tryParse(minutesController.text) ?? 0,
+                minutes: int.tryParse(countdownController.text) ?? 0,
               );
-
+              trackerNotifier.value.breakTime = Duration(
+                minutes: int.tryParse(breakController.text) ?? 0,
+              );
               Navigator.pop(context);
             },
           ),

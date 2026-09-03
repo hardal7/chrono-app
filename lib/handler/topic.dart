@@ -35,7 +35,7 @@ Future<int> createTopic(String name) async {
   }
 }
 
-Future<(int?, int?)> getTimeTopic(String name) async {
+Future<int?> getTimeTopic(String name) async {
   try {
     debugPrint('Sending get topic time request');
 
@@ -46,13 +46,10 @@ Future<(int?, int?)> getTimeTopic(String name) async {
 
     debugPrint(response.statusCode.toString());
 
-    return (
-      response.data['total_time_tracked_seconds'] as int?,
-      response.data['streak'] as int?,
-    );
+    return response.data['total_time_tracked_seconds'] as int?;
   } catch (e) {
     debugPrint('Error getting topic time: $e');
-    return (null, null);
+    return null;
   }
 }
 

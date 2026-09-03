@@ -6,6 +6,7 @@ class UserProfile {
       country: json['country'] as String,
       totalTime: json['total_time_seconds'] as int,
       todayTime: json['today_time_seconds'] as int,
+      streak: json['streak'] as int,
       bestTopic: json['best_topic'] as String,
       friendStatus: json['friend_status'] as String,
     );
@@ -17,6 +18,7 @@ class UserProfile {
     required this.country,
     required this.totalTime,
     required this.todayTime,
+    required this.streak,
     required this.bestTopic,
     required this.friendStatus,
   });
@@ -26,6 +28,7 @@ class UserProfile {
   final String country;
   final int totalTime;
   final int todayTime;
+  final int streak;
   final String bestTopic;
   final String friendStatus;
 }

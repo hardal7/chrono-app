@@ -113,8 +113,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         spacing: 10,
                         children: [
                           Text(profile.username, style: bodyLarge),
-                          // TODO: Move streaks to user
-                          Streak(streak: 1),
+                          Streak(streak: profile.streak),
                         ],
                       ),
                       Text(

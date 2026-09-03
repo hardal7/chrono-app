@@ -2,13 +2,19 @@ import 'package:flutter/foundation.dart';
 import 'package:sqlite3/sqlite3.dart';
 
 import '../handler/topic.dart';
+import '../handler/user.dart';
+import '../main.dart';
+import '../models/user.dart';
 import '../services/tracker.dart';
 import 'outbox.dart';
 
 Future<void> loadTimes(ValueNotifier<TrackerValues> tracker) async {
   int? secondsTopic, secondsToday, streak;
-  (secondsTopic, streak) = await getTimeTopic(tracker.value.topicName);
+  secondsTopic = await getTimeTopic(tracker.value.topicName);
   secondsToday = await getTimeToday(topic: tracker.value.topicName);
+
+  final UserProfile? user = await getProfile(username);
+  streak = user?.streak ?? 0;
 
   secondsTopic ??= await _getTimeTopicLocal(tracker.value.topicName);
   if (secondsToday == null) {
@@ -17,7 +23,7 @@ Future<void> loadTimes(ValueNotifier<TrackerValues> tracker) async {
 
   tracker.value.todayTime = secondsToday;
   tracker.value.topicTime = secondsTopic;
-  tracker.value.streak = streak ?? 0;
+  tracker.value.streak = streak;
 }
 
 Future<int> _getTimeTopicLocal(String topicName) async {
@@ -36,6 +42,7 @@ Future<int> _getTimeTopicLocal(String topicName) async {
   return 0;
 }
 
+// TODO: Local streak tracking
 Future<(int, int)> _getUserStatsLocal() async {
   final db = await openLocalDatabase();
   final ResultSet resultSet = db.select('SELECT * FROM user_stats;');

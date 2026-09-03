@@ -17,13 +17,20 @@ Future<void> stopTracker(ValueNotifier<TrackerValues> tracker) async {
   await loadTimes(tracker);
 }
 
-Future<void> newCount(
+Future<void> toggleTimer(
   ValueNotifier<TrackerValues> tracker,
-  Stopwatch chrono,
+  ChronoService chrono,
 ) async {
   await stopTracker(tracker);
-  chrono.reset();
-  tracker.value.count++;
+  if (tracker.value.currentTracker == chrono.timer) {
+    chrono.timer.reset();
+    tracker.value.currentTracker = chrono.breakTimer;
+    tracker.value.count++;
+  } else {
+    chrono.breakTimer.reset();
+    tracker.value.currentTracker = chrono.timer;
+    tracker.value.breakCount++;
+  }
 }
 
 class TrackerValues {
@@ -34,16 +41,24 @@ class TrackerValues {
     required this.streak,
     required this.currentTracker,
     required this.countdownTime,
+    required this.breakTime,
+    required this.isBreak,
     required this.count,
+    required this.breakCount,
   });
 
   String topicName;
   int topicTime;
   int todayTime;
   int streak;
+
   Stopwatch currentTracker;
   Duration countdownTime;
+  Duration breakTime;
+
+  bool isBreak;
   int count;
+  int breakCount;
 }
 
 class ChronoService {
@@ -52,4 +67,5 @@ class ChronoService {
 
   final Stopwatch timer = Stopwatch();
   final Stopwatch stopwatch = Stopwatch();
+  final Stopwatch breakTimer = Stopwatch();
 }
