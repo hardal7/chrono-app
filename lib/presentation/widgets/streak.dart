@@ -12,7 +12,7 @@ class Streak extends StatelessWidget {
       children: [
         Image.asset('assets/icons/fire.png'),
         Positioned(
-          top: 16,
+          top: 12,
           child: Text(
             '$streak',
             style: TextStyle(

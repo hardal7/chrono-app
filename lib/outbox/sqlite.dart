@@ -20,7 +20,6 @@ Future<void> initLocalDB() async {
 
 Future<Database> openLocalDatabase() async {
   if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-    debugPrint(dbPath);
     return await databaseFactory.openDatabase(
       dbPath,
       options: OpenDatabaseOptions(

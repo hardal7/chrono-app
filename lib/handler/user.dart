@@ -104,15 +104,18 @@ Future<int?> uploadAvatar(XFile avatar) async {
   try {
     debugPrint('Sending upload avatar request');
 
+    final bytes = await avatar.readAsBytes();
+
     final response = await dio.post(
       '${dotenv.get('API_URL')}/user/avatar',
-      data: avatar.openRead(),
+      data: bytes,
       options: Options(contentType: 'image/jpeg'),
     );
 
     debugPrint(response.statusCode.toString());
     return response.statusCode;
   } catch (e) {
+    debugPrint(e.toString());
     return null;
   }
 }

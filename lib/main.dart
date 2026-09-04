@@ -8,8 +8,11 @@ import 'presentation/pages/boarding.dart';
 import 'package:flutter/material.dart';
 
 import 'presentation/style.dart';
-import 'services/dio.dart';
+import 'services/app_link.dart';
+import 'services/cookie/cookie_init.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+
+import 'services/dio.dart';
 
 late String username;
 List<Locale> _locales = [Locale('en'), Locale('tr')];
@@ -26,7 +29,8 @@ ValueNotifier<AppValues> appNotifier = ValueNotifier(
 
 Future<void> main() async {
   await dotenv.load();
-  await initializeDio();
+  await initDioIntercept();
+  await initCookieJar();
   await initLocalDB();
 
   final prefs = await SharedPreferences.getInstance();
@@ -47,6 +51,8 @@ class Chrono extends StatefulWidget {
 class _ChronoState extends State<Chrono> {
   @override
   Widget build(BuildContext context) {
+    initLinkHandler(context);
+
     return ValueListenableBuilder<AppValues>(
       valueListenable: appNotifier,
       builder: (context, app, child) {

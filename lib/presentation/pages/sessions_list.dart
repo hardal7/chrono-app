@@ -64,6 +64,13 @@ class _SessionsListPageState extends State<SessionsListPage> {
             Expanded(
               child: isLoading
                   ? const Center(child: CircularProgressIndicator())
+                  : sessions.isEmpty
+                  ? Center(
+                      child: Text(
+                        'No session found',
+                        style: bodySmall.copyWith(color: colors.secondary),
+                      ),
+                    )
                   : ListView.builder(
                       itemCount: sessions.length,
                       itemBuilder: (context, index) {

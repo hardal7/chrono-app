@@ -1,4 +1,4 @@
-name: chrono
+name: com.chrono.app
 description: "Sessions based study tracker."
 publish_to: 'none'
 
@@ -20,6 +20,7 @@ dependencies:
   path_provider: ^2.1.6
   # Utilities
   url_launcher: ^6.3.2
+  app_links: ^7.2.1
   audioplayers: ^6.8.1
   image_picker: ^1.2.3
   #Storage
@@ -29,6 +30,7 @@ dependencies:
   sqflite_common_ffi_web: ^1.1.2
   # HTTP Handling
   dio: ^5.9.2
+  dio_redirect_interceptor: ^2.0.0
   dio_cookie_manager: ^3.5.0
   cookie_jar: ^4.0.9
   # Localizations
@@ -41,6 +43,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+  rename: ^3.1.0
 
 flutter:
   uses-material-design: true
