@@ -46,10 +46,30 @@ const Color greenColor = Color(0xFF00BF60);
 
 const FontWeight _w = FontWeight.w500;
 
-const TextStyle bodyMin = TextStyle(fontSize: 14, fontWeight: _w);
-const TextStyle bodySmall = TextStyle(fontSize: 20, fontWeight: _w);
-const TextStyle bodyMedium = TextStyle(fontSize: 24, fontWeight: _w);
-const TextStyle bodyLarge = TextStyle(fontSize: 36, fontWeight: _w);
-const TextStyle bodyMax = TextStyle(fontSize: 84, fontWeight: _w);
+const TextStyle bodyMin = TextStyle(
+  fontSize: 14,
+  fontWeight: _w,
+  overflow: TextOverflow.ellipsis,
+);
+const TextStyle bodySmall = TextStyle(
+  fontSize: 20,
+  fontWeight: _w,
+  overflow: TextOverflow.ellipsis,
+);
+const TextStyle bodyMedium = TextStyle(
+  fontSize: 24,
+  fontWeight: _w,
+  overflow: TextOverflow.ellipsis,
+);
+const TextStyle bodyLarge = TextStyle(
+  fontSize: 36,
+  fontWeight: _w,
+  overflow: TextOverflow.ellipsis,
+);
+const TextStyle bodyMax = TextStyle(
+  fontSize: 84,
+  fontWeight: _w,
+  overflow: TextOverflow.ellipsis,
+);
 
 const EdgeInsets pageInset = EdgeInsets.only(left: 20, right: 20, top: 20);

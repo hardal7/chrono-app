@@ -37,6 +37,7 @@ class LeaderboardUser {
   factory LeaderboardUser.fromJson(Map<String, dynamic> json) {
     return LeaderboardUser(
       rank: json['rank'] as int,
+      rankChange: json['rank_change'] as int,
       username: json['username'] as String,
       totalTime: Duration(seconds: json['total_time'] as int),
       todayTime: Duration(seconds: json['today_time'] as int),
@@ -45,12 +46,14 @@ class LeaderboardUser {
   }
   const LeaderboardUser({
     required this.rank,
+    required this.rankChange,
     required this.username,
     required this.totalTime,
     required this.todayTime,
     required this.avatarPath,
   });
   final int rank;
+  final int rankChange;
   final String username;
   final Duration totalTime;
   final Duration todayTime;

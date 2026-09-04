@@ -37,6 +37,7 @@ class SessionSelection {
   const SessionSelection({
     required this.name,
     required this.ownerUsername,
+    required this.joined,
     required this.ownerAvatarPath,
     required this.expiresAt,
     required this.totalTime,
@@ -49,6 +50,7 @@ class SessionSelection {
     return SessionSelection(
       name: json['name'] as String,
       ownerUsername: json['owner_username'] as String,
+      joined: json['joined'] as bool,
       ownerAvatarPath: json['owner_avatar_path'] as String,
       expiresAt: json['expires_at'] != null
           ? DateTime.parse(json['expires_at'] as String)
@@ -63,6 +65,7 @@ class SessionSelection {
   }
   final String name;
   final String ownerUsername;
+  final bool joined;
   final String ownerAvatarPath;
   final DateTime? expiresAt;
   final int totalTime;

@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../../handler/session.dart';
 import '../../l10n/app_localizations.dart';
+import '../../main.dart';
 import '../../models/session.dart';
 import '../duration.dart';
 import '../style.dart';
@@ -287,7 +288,7 @@ void settingsPopup(BuildContext context) {
           GenericButton(
             text: l10n.create,
             textStyle: bodySmall,
-            onPressed: () {
+            onPressed: () async {
               createSession(
                 CreateSessionRequest(
                   name: nameController.text,
@@ -297,6 +298,15 @@ void settingsPopup(BuildContext context) {
                 ),
               );
               Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => SessionPage(
+                    name: nameController.text,
+                    ownerUsername: username,
+                  ),
+                ),
+              );
             },
           ),
         ],

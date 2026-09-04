@@ -63,15 +63,13 @@ class _ProfilePageState extends State<ProfilePage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // TODO: Don't show back button if own profile
-                      PageBackButton(),
+                      if (profile.username == username) PageBackButton(),
                       SettingsButton(popup: settingsPopup),
                     ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // TODO: Try
                       GestureDetector(
                         onTap: () async {
                           if (isSelf) {
@@ -112,7 +110,14 @@ class _ProfilePageState extends State<ProfilePage> {
                       Row(
                         spacing: 10,
                         children: [
-                          Text(profile.username, style: bodyLarge),
+                          Text(
+                            profile.username,
+                            style: profile.username.length < 10
+                                ? bodyLarge
+                                : bodyMedium,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                           Streak(streak: profile.streak),
                         ],
                       ),

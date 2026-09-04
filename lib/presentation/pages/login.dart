@@ -33,7 +33,6 @@ class _LoginPageState extends State<LoginPage> {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('username', nameController.text);
       username = nameController.text;
-      //TODO: Could technically be email too
 
       if (!mounted) return;
       setState(() {

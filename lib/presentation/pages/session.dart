@@ -76,7 +76,7 @@ class _SessionPageState extends State<SessionPage> {
             ),
             Text(
               Duration(seconds: (session.totalTime)).toHoursString(),
-              style: bodyMax,
+              style: bodyLarge,
             ),
             if (session.expiresAt != null)
               Text(
@@ -122,18 +122,22 @@ class ParticipantCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                CircleAvatar(
-                  radius: 28,
-                  backgroundImage: NetworkImage(
-                    '${dotenv.get('API_URL')}/${participant.avatarPath}',
+                Padding(
+                  padding: const EdgeInsets.only(left: 15),
+                  child: CircleAvatar(
+                    radius: 28,
+                    backgroundImage: NetworkImage(
+                      '${dotenv.get('API_URL')}/${participant.avatarPath}',
+                    ),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Text(
-                    participant.name,
-                    style: bodyMedium,
-                    // TODO: text overflow
+                    participant.name.length < 8
+                        ? participant.name
+                        : '${participant.name.substring(0, 8)}...',
+                    style: participant.name.length < 8 ? bodyMedium : bodySmall,
                   ),
                 ),
                 Text(
@@ -142,35 +146,37 @@ class ParticipantCard extends StatelessWidget {
                 ),
               ],
             ),
-            Column(
-              children: [
-                Row(
-                  spacing: 5,
-                  children: [
-                    Icon(Icons.circle, color: greenColor, size: 10),
-                    Text(
-                      //TODO: Resolve online status
-                      // participant.lastOnline.toString(),
-                      'Online',
-                      style: bodySmall.copyWith(color: greenColor),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    ImageIcon(
-                      AssetImage('assets/icons/triangle.png'),
-                      color: greenColor,
-                    ),
-                    Text(
-                      Duration(
-                        seconds: participant.sessionTimeToday,
-                      ).toHoursString(),
-                      style: bodyMin.copyWith(color: greenColor),
-                    ),
-                  ],
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.only(right: 15),
+              child: Column(
+                children: [
+                  Row(
+                    spacing: 5,
+                    children: [
+                      Icon(Icons.circle, color: greenColor, size: 10),
+                      Text(
+                        participant.lastOnline.toString(),
+                        // 'Online',
+                        style: bodySmall.copyWith(color: greenColor),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      ImageIcon(
+                        AssetImage('assets/icons/triangle.png'),
+                        color: greenColor,
+                      ),
+                      Text(
+                        Duration(
+                          seconds: participant.sessionTimeToday,
+                        ).toHoursString(),
+                        style: bodyMin.copyWith(color: greenColor),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ],
         ),

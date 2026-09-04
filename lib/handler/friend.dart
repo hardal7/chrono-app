@@ -3,7 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../services/dio.dart';
 
-Future<void> sendFriendRequest(String username) async {
+Future<int?> sendFriendRequest(String username) async {
   try {
     debugPrint('Sending friend request');
 
@@ -13,7 +13,9 @@ Future<void> sendFriendRequest(String username) async {
     );
 
     debugPrint(response.statusCode.toString());
+    return response.statusCode;
   } catch (e) {
     debugPrint('Error sending friend request: $e');
+    return null;
   }
 }

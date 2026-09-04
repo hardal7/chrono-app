@@ -11,7 +11,6 @@ Future<List<Topic>> getAllTopics() async {
     final response = await dio.get('${dotenv.get('API_URL')}/topic/all');
 
     debugPrint(response.statusCode.toString());
-
     final topics = List<Map<String, dynamic>>.from(response.data['topics']);
     return topics.map(Topic.fromJson).toList();
   } catch (e) {
@@ -20,7 +19,7 @@ Future<List<Topic>> getAllTopics() async {
   }
 }
 
-Future<int> createTopic(String name) async {
+Future<int?> createTopic(String name) async {
   try {
     debugPrint('Sending create topic request');
 
@@ -29,9 +28,11 @@ Future<int> createTopic(String name) async {
       data: {'name': name},
     );
 
-    return response.statusCode ?? 0;
+    debugPrint(response.statusCode.toString());
+    return response.statusCode;
   } catch (e) {
-    return 0;
+    debugPrint('Error creating topic: $e');
+    return null;
   }
 }
 
@@ -45,7 +46,6 @@ Future<int?> getTimeTopic(String name) async {
     );
 
     debugPrint(response.statusCode.toString());
-
     return response.data['total_time_tracked_seconds'] as int?;
   } catch (e) {
     debugPrint('Error getting topic time: $e');
@@ -73,7 +73,7 @@ Future<int?> trackTopic(
     debugPrint(response.statusCode.toString());
     return response.statusCode;
   } catch (e) {
-    debugPrint(e.toString());
+    debugPrint('Error tracking topic time: $e');
     return null;
   }
 }
@@ -90,9 +90,9 @@ Future<int?> getTimeToday({String? topic}) async {
     );
 
     debugPrint(response.statusCode.toString());
-
     return response.data['total_time'];
   } catch (e) {
+    debugPrint('Error getting topic time today: $e');
     return null;
   }
 }

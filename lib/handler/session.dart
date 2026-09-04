@@ -30,6 +30,7 @@ Future<List<SessionSelection>> getSessions() async {
     final sessions = List<Map<String, dynamic>>.from(response.data['sessions']);
     return sessions.map(SessionSelection.fromJson).toList();
   } catch (e) {
+    debugPrint('Error getting sessions: $e');
     return [];
   }
 }
@@ -59,7 +60,6 @@ Future<SessionData?> getSession(String name, ownerUsername) async {
     );
 
     debugPrint(response.statusCode.toString());
-
     return SessionData.fromJson(Map<String, dynamic>.from(response.data));
   } catch (e) {
     debugPrint('Error getting session: $e');

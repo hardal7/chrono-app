@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -207,12 +208,19 @@ class UserCard extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Text('${user.rank}', style: bodyMedium),
                 ),
-                // TODO: rank changes
-                ImageIcon(
-                  AssetImage('assets/icons/triangle.png'),
-                  color: greenColor,
+                Transform.rotate(
+                  angle: user.rankChange > 0 ? 0 : math.pi,
+                  child: ImageIcon(
+                    AssetImage('assets/icons/triangle.png'),
+                    color: user.rankChange > 0 ? greenColor : colors.error,
+                  ),
                 ),
-                Text('7', style: bodyMedium.copyWith(color: greenColor)),
+                Text(
+                  '${user.rankChange}',
+                  style: bodyMedium.copyWith(
+                    color: user.rankChange > 0 ? greenColor : colors.error,
+                  ),
+                ),
               ],
             ),
           ),
@@ -240,8 +248,11 @@ class UserCard extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 5),
                   child: Text(
-                    user.username,
-                    style: bodySmall,
+                    maxLines: 1,
+                    user.username.length < 10
+                        ? user.username
+                        : '${user.username.substring(0, 8)}...',
+                    style: user.username.length < 10 ? bodySmall : bodyMin,
                     // TODO: text overflow
                   ),
                 ),
