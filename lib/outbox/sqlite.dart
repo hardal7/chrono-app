@@ -16,6 +16,7 @@ Future<void> initLocalDB() async {
 
   var databasesPath = await getDatabasesPath();
   dbPath = p.join(databasesPath, 'local.db');
+  debugPrint('Init local DB on path: $dbPath');
 }
 
 Future<Database> openLocalDatabase() async {
@@ -56,11 +57,11 @@ Future<void> _createDB(Database db) async {
     total_time_tracked_seconds INTEGER NOT NULL DEFAULT 0,
     synced INTEGER NOT NULL DEFAULT FALSE
   );
-  INSERT OR IGNORE INTO topics (topic_name) VALUES ('General');
+  INSERT OR IGNORE INTO topics (topic_name, synced) VALUES ('General', 1);
 
   CREATE TABLE IF NOT EXISTS user_stats (
     id INTEGER NOT NULL PRIMARY KEY,
-    today_time_tracked_seconds INT NOT NULL DEFAULT 0,
+    today_time_tracked_seconds INTEGER NOT NULL DEFAULT 0,
     streak INTEGER NOT NULL DEFAULT 0
   );
   INSERT OR IGNORE INTO user_stats (id) VALUES (1);

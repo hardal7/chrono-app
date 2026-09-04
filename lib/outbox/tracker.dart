@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 
 import '../handler/topic.dart';
@@ -57,15 +59,20 @@ Future<(int, int)> _getUserStatsLocal() async {
 
 Future<void> saveTimes(String topic, int timeTrackedSeconds) async {
   final DateTime createdAt = DateTime.now().toUtc();
-  await _saveLocally(topic, timeTrackedSeconds, createdAt);
-  await trackTopic(topic, timeTrackedSeconds, createdAt);
+  var status = await trackTopic(topic, timeTrackedSeconds, createdAt);
+  if (status == HttpStatus.ok) {
+    await _saveLocally(topic, timeTrackedSeconds, createdAt);
+  } else {
+    await _saveLocally(topic, timeTrackedSeconds, createdAt, synced: false);
+  }
 }
 
 Future<void> _saveLocally(
   String topic,
   int timeTrackedSeconds,
-  DateTime createdAt,
-) async {
+  DateTime createdAt, {
+  bool synced = true,
+}) async {
   final db = await openLocalDatabase();
 
   if (timeTrackedSeconds < 0) {
@@ -73,8 +80,8 @@ Future<void> _saveLocally(
   }
 
   await db.execute(
-    'INSERT INTO topic_events (topic_name, time_tracked_seconds, created_at) VALUES (?, ?, ?)',
-    [topic, timeTrackedSeconds, createdAt.toIso8601String()],
+    'INSERT INTO topic_events (topic_name, time_tracked_seconds, created_at, synced) VALUES (?, ?, ?, ?)',
+    [topic, timeTrackedSeconds, createdAt.toIso8601String(), synced ? 1 : 0],
   );
 
   await db.execute(

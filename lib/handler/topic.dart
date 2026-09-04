@@ -59,12 +59,21 @@ Future<int?> trackTopic(
   DateTime date,
 ) async {
   try {
+    debugPrint('Sending track topic time request');
+
     final response = await dio.post(
       '${dotenv.get('API_URL')}/topic-event/track',
-      data: {'topic': name, 'time_seconds': timeTrackedSeconds, 'date': date},
+      data: {
+        'topic': name,
+        'time_seconds': timeTrackedSeconds,
+        'date': date.toUtc().toIso8601String(),
+      },
     );
+
+    debugPrint(response.statusCode.toString());
     return response.statusCode;
   } catch (e) {
+    debugPrint(e.toString());
     return null;
   }
 }

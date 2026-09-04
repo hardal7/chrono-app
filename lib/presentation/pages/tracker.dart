@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../l10n/app_localizations.dart';
@@ -45,11 +46,20 @@ class _TrackerPageState extends State<TrackerPage> {
   late Timer uiTimer;
   late Timer topicTimer;
 
+  Future<void> fetchLatestTopic() async {
+    final prefs = await SharedPreferences.getInstance();
+    trackerNotifier.value.topicName = prefs.getString('topic') ?? 'General';
+
+    loadTimes(trackerNotifier);
+  }
+
   @override
   void initState() {
     super.initState();
 
     trackerNotifier.value.currentTracker = chrono.timer;
+
+    fetchLatestTopic();
 
     uiTimer = Timer.periodic(const Duration(milliseconds: 500), (_) async {
       if (mounted) {
@@ -64,8 +74,6 @@ class _TrackerPageState extends State<TrackerPage> {
     topicTimer = Timer.periodic(const Duration(minutes: 1), (_) async {
       await loadTimes(trackerNotifier);
     });
-
-    loadTimes(trackerNotifier);
   }
 
   @override
@@ -327,9 +335,14 @@ class _TopicDropdownState extends State<TopicDropdown> {
                   onTap: () async {
                     trackerNotifier.value.topicName = topic.name;
                     loadTimes(trackerNotifier);
+
                     Stopwatch tracker = trackerNotifier.value.currentTracker;
                     await stopTracker(trackerNotifier);
                     tracker.reset();
+
+                    final prefs = await SharedPreferences.getInstance();
+                    prefs.setString('topic', topic.name);
+
                     showDropdown = false;
                   },
                   child: topic.name != trackerNotifier.value.topicName
