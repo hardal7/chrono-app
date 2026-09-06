@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../handler/user.dart';
 import '../../l10n/app_localizations.dart';
-import '../../main.dart';
+import '../../services/app.dart';
 import 'home.dart';
 import 'login.dart';
 import '../style.dart';
@@ -33,9 +33,10 @@ class _RegisterPageState extends State<RegisterPage> {
     );
 
     if (_status == HttpStatus.ok) {
+      var username = usernameController.text;
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('username', usernameController.text);
-      username = usernameController.text;
+      await prefs.setString('username', username);
+      appNotifier.value.username = username;
 
       if (!mounted) return;
       setState(() {

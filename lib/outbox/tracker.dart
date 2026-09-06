@@ -5,9 +5,9 @@ import 'package:sqflite/sqflite.dart';
 
 import '../handler/topic.dart';
 import '../handler/user.dart';
-import '../main.dart';
 import '../models/topic.dart';
 import '../models/user.dart';
+import '../services/app.dart';
 import '../services/tracker.dart';
 import 'sqlite.dart';
 
@@ -18,7 +18,7 @@ Future<void> loadTimes(ValueNotifier<TrackerValues> tracker) async {
   secondsTopic = await getTimeTopic(tracker.value.topicName);
   secondsToday = await getTimeToday(topic: tracker.value.topicName);
 
-  final UserProfile? user = await getProfile(username);
+  final UserProfile? user = await getProfile(appNotifier.value.username);
   streak = user?.streak ?? 0;
 
   secondsTopic ??= await _getTimeTopicLocal(tracker.value.topicName);

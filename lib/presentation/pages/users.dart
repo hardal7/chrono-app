@@ -3,10 +3,10 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../handler/user.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/user.dart';
+import '../../services/app.dart';
 import '../duration.dart';
 import '../style.dart';
 import '../widgets/button.dart';
@@ -19,8 +19,6 @@ class UsersPage extends StatefulWidget {
   @override
   State<UsersPage> createState() => _UsersPageState();
 }
-
-late String username;
 
 class _UsersPageState extends State<UsersPage> {
   final searchController = TextEditingController();
@@ -36,8 +34,6 @@ class _UsersPageState extends State<UsersPage> {
 
   Future<void> loadUsers() async {
     final result = await getTopUsers(searchScope, matchName: searchQuery);
-
-    await loadUsername();
 
     if (!mounted) return;
     setState(() {
@@ -58,16 +54,6 @@ class _UsersPageState extends State<UsersPage> {
 
     searchDebounce = Timer(const Duration(milliseconds: 200), () {
       loadUsers();
-    });
-  }
-
-  Future<void> loadUsername() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    if (!mounted) return;
-
-    setState(() {
-      username = prefs.getString('username') ?? '';
     });
   }
 
@@ -193,7 +179,7 @@ class UserCard extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: username == user.username
+        color: appNotifier.value.username == user.username
             ? colors.secondary.withAlpha(25)
             : Colors.transparent,
         borderRadius: BorderRadius.all(Radius.circular(12)),
@@ -253,7 +239,6 @@ class UserCard extends StatelessWidget {
                         ? user.username
                         : '${user.username.substring(0, 8)}...',
                     style: user.username.length < 8 ? bodySmall : bodyMin,
-                    // TODO: text overflow
                   ),
                 ),
               ],

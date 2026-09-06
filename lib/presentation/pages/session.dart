@@ -1,14 +1,13 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../../handler/session.dart';
 import '../../models/session.dart';
+import '../../services/app.dart';
 import '../duration.dart';
 import '../style.dart';
-import 'package:flutter/material.dart';
-
 import '../widgets/back.dart';
 import '../widgets/settings.dart';
-import 'users.dart';
 
 class SessionPage extends StatefulWidget {
   const SessionPage({
@@ -119,7 +118,7 @@ class ParticipantCard extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: username == participant.name
+        color: appNotifier.value.username == participant.name
             ? colors.secondary.withAlpha(25)
             : Colors.transparent,
         borderRadius: BorderRadius.all(Radius.circular(12)),
@@ -177,9 +176,7 @@ class ParticipantCard extends StatelessWidget {
                           size: 10,
                         ),
                         Text(
-                          // TODO: Check
                           participant.lastOnline == 0 ? 'Online' : 'Offline',
-                          // 'Online',
                           style: participant.lastOnline == 0
                               ? bodySmall.copyWith(color: greenColor)
                               : bodySmall.copyWith(color: colors.secondary),

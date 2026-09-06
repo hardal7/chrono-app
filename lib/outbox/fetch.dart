@@ -4,14 +4,14 @@ import '../handler/topic.dart';
 import '../handler/user.dart';
 import '../models/topic.dart';
 import '../models/user.dart';
-import '../presentation/pages/users.dart';
+import '../services/app.dart';
 import 'sqlite.dart';
 
 Future<void> fetchAllData() async {
   final db = await openLocalDatabase();
   await _deleteLocal(db);
 
-  var profile = await getProfile(username);
+  var profile = await getProfile(appNotifier.value.username);
   if (profile == null) {
     return;
   }
@@ -22,9 +22,9 @@ Future<void> fetchAllData() async {
 }
 
 Future<void> _deleteLocal(Database db) async {
-  await db.execute('DELETE * FROM topic_event');
-  await db.execute('DELETE * FROM topics');
-  await db.execute('DELETE * FROM user_stats');
+  await db.execute('DELETE FROM topic_events');
+  await db.execute('DELETE FROM topics');
+  await db.execute('DELETE FROM user_stats');
 }
 
 Future<void> _saveLocally(
@@ -40,7 +40,7 @@ Future<void> _saveLocally(
 
   for (final topic in topics) {
     await db.execute(
-      'INSERT INTO topics (topic_name, total_time_tracked_seconds synced) VALUES (?, ?, ?)',
+      'INSERT INTO topics (topic_name, total_time_tracked_seconds, synced) VALUES (?, ?, ?)',
       [topic.name, topic.time, 1],
     );
   }

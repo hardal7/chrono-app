@@ -3,8 +3,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../../handler/session.dart';
 import '../../l10n/app_localizations.dart';
-import '../../main.dart';
 import '../../models/session.dart';
+import '../../services/app.dart';
 import '../duration.dart';
 import '../style.dart';
 import '../widgets/button.dart';
@@ -304,7 +304,7 @@ void settingsPopup(BuildContext context) {
                 MaterialPageRoute(
                   builder: (BuildContext context) => SessionPage(
                     name: nameController.text,
-                    ownerUsername: username,
+                    ownerUsername: appNotifier.value.username,
                   ),
                 ),
               );

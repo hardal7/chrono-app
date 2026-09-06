@@ -5,7 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../handler/location.dart';
 import '../../handler/user.dart';
 import '../../l10n/app_localizations.dart';
-import '../../main.dart';
+import '../../services/app.dart';
 import '../style.dart';
 import 'package:flutter/material.dart';
 
@@ -34,10 +34,7 @@ class AppSettings {
 
           await prefs.setString(languageKey, language);
 
-          appNotifier.value = AppValues(
-            theme: appNotifier.value.theme,
-            locale: Locale(language),
-          );
+          appNotifier.value.locale = Locale(language);
         },
       ),
 
@@ -49,10 +46,7 @@ class AppSettings {
         onPressed: (value) async {
           await prefs.setBool(darkModeKey, value);
 
-          appNotifier.value = AppValues(
-            theme: value ? darkTheme : lightTheme,
-            locale: appNotifier.value.locale,
-          );
+          appNotifier.value.theme = value ? darkTheme : lightTheme;
         },
       ),
 

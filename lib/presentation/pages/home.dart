@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../l10n/app_localizations.dart';
+import '../../services/app.dart';
 import 'profile.dart';
 import 'sessions_list.dart';
 import 'settings.dart';
@@ -22,7 +23,7 @@ class _HomePageState extends State<HomePage> {
     TrackerPage(),
     SessionsListPage(),
     UsersPage(),
-    ProfilePage(username: username),
+    ProfilePage(username: appNotifier.value.username),
     SettingsPage(),
   ];
   List<NavigationDestination> destinations(BuildContext context, Color color) {
@@ -58,7 +59,7 @@ class _HomePageState extends State<HomePage> {
     if (!mounted) return;
 
     setState(() {
-      username = prefs.getString('username') ?? '';
+      appNotifier.value.username = prefs.getString('username') ?? '';
     });
   }
 

@@ -2,8 +2,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../../handler/friend.dart';
 import '../../handler/user.dart';
-import '../../main.dart';
 import '../../models/user.dart';
+import '../../services/app.dart';
 import '../../services/imagepicker.dart';
 import '../duration.dart';
 import '../style.dart';
@@ -12,8 +12,19 @@ import 'package:flutter/material.dart';
 import '../widgets/back.dart';
 import '../widgets/button.dart';
 import '../widgets/settings.dart';
+import '../widgets/stats.dart';
 import '../widgets/streak.dart';
 import '../widgets/time.dart';
+
+const weeklySeconds = <int>[
+  18_000,
+  21_600,
+  14_400,
+  25_200,
+  28_800,
+  10_800,
+  21_600,
+];
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key, required this.username});
@@ -36,7 +47,7 @@ class _ProfilePageState extends State<ProfilePage> {
       if (result != null) {
         profile = result;
         isLoading = false;
-        if (profile.username == username) {
+        if (profile.username == appNotifier.value.username) {
           isSelf = true;
         }
       }
@@ -64,7 +75,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      if (profile.username == username) PageBackButton(),
+                      if (profile.username == appNotifier.value.username)
+                        PageBackButton(),
                       Spacer(),
                       SettingsButton(popup: settingsPopup),
                     ],
@@ -149,7 +161,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       Text(profile.bestTopic, style: bodyMedium),
                     ],
                   ),
-                  if (profile.username != username)
+                  if (profile.username != appNotifier.value.username)
                     Padding(
                       padding: const EdgeInsets.only(top: 20),
                       child: Row(
@@ -191,6 +203,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ],
                       ),
                     ),
+                  Expanded(child: Stats(data: weeklySeconds)),
                 ],
               ),
       ),

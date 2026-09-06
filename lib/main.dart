@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'handler/user.dart';
 import 'l10n/app_localizations.dart';
@@ -10,25 +9,14 @@ import 'outbox/sync.dart';
 import 'presentation/pages/boarding.dart';
 import 'package:flutter/material.dart';
 
-import 'presentation/style.dart';
+import 'services/app.dart';
 import 'services/app_link.dart';
 import 'services/cookie/cookie_init.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'services/dio.dart';
 
-late String username;
 List<Locale> _locales = [Locale('en'), Locale('tr')];
-
-class AppValues {
-  AppValues({required this.locale, required this.theme});
-  Locale locale;
-  ThemeData theme;
-}
-
-ValueNotifier<AppValues> appNotifier = ValueNotifier(
-  AppValues(theme: darkTheme, locale: Locale('en')),
-);
 
 Future<void> main() async {
   await dotenv.load();
@@ -36,14 +24,11 @@ Future<void> main() async {
   await initCookieJar();
   await initLocalDB();
 
-  final prefs = await SharedPreferences.getInstance();
-  username = prefs.getString('username') ?? '';
-
   syncEvents();
 
-  Timer.periodic(const Duration(minutes: 1), (_) async {
-    updateActivity();
-  });
+  // Timer.periodic(const Duration(minutes: 1), (_) async {
+  // updateActivity();
+  // });
 
   runApp(const Chrono());
 }
