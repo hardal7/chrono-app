@@ -59,11 +59,13 @@ class _ProfilePageState extends State<ProfilePage> {
         child: isLoading
             ? const Center(child: CircularProgressIndicator())
             : Column(
+                spacing: 5,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       if (profile.username == username) PageBackButton(),
+                      Spacer(),
                       SettingsButton(popup: settingsPopup),
                     ],
                   ),

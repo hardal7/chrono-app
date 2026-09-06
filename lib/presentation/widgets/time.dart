@@ -19,6 +19,7 @@ class TodayTime extends StatelessWidget {
         ImageIcon(
           const AssetImage('assets/icons/triangle.png'),
           color: greenColor,
+          size: 24,
         ),
         RichText(
           text: TextSpan(

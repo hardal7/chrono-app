@@ -289,10 +289,11 @@ void settingsPopup(BuildContext context) {
             text: l10n.create,
             textStyle: bodySmall,
             onPressed: () async {
-              createSession(
+              await createSession(
                 CreateSessionRequest(
                   name: nameController.text,
                   topic: topicController.text,
+                  // TODO: Check controller
                   expiresAt: DateTime.tryParse(expiresAtController.text),
                   maxParticipants: int.tryParse(maxParticipantsController.text),
                 ),

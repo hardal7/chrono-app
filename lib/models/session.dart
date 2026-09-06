@@ -81,7 +81,7 @@ class Participant {
       avatarPath: json['avatar_path'] as String,
       sessionTime: json['session_time_tracked_seconds'] as int,
       sessionTimeToday: json['session_time_tracked_today_seconds'] as int,
-      lastOnline: json['last_online_seconds_ago'] as int,
+      lastOnline: json['last_online_minutes_ago'] as int,
     );
   }
 

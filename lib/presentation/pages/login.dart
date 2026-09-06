@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../handler/user.dart';
 import '../../l10n/app_localizations.dart';
 import '../../main.dart';
+import '../../outbox/fetch.dart';
 import 'home.dart';
 import 'register.dart';
 import 'reset_password.dart';
@@ -30,14 +31,17 @@ class _LoginPageState extends State<LoginPage> {
     _status = await login(nameController.text, passwordController.text);
 
     if (_status == HttpStatus.ok) {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('username', nameController.text);
       username = nameController.text;
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('username', username);
 
       if (!mounted) return;
       setState(() {
         _showError = false;
       });
+
+      await fetchAllData();
 
       Navigator.push(
         context,

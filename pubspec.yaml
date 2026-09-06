@@ -37,13 +37,16 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: any
-  # App Icon
+  # Icons
+  flutter_svg: ^2.3.0
   flutter_launcher_icons: ^0.14.4
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
   rename: ^3.1.0
+  change_app_package_name: ^1.4.0
 
 flutter:
   uses-material-design: true

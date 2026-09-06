@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'handler/user.dart';
 import 'l10n/app_localizations.dart';
 import 'outbox/sqlite.dart';
 import 'outbox/sync.dart';
@@ -37,6 +40,10 @@ Future<void> main() async {
   username = prefs.getString('username') ?? '';
 
   syncEvents();
+
+  Timer.periodic(const Duration(minutes: 1), (_) async {
+    updateActivity();
+  });
 
   runApp(const Chrono());
 }

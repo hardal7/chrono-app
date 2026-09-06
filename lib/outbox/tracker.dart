@@ -1,15 +1,19 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:sqflite/sqflite.dart';
 
 import '../handler/topic.dart';
 import '../handler/user.dart';
 import '../main.dart';
+import '../models/topic.dart';
 import '../models/user.dart';
 import '../services/tracker.dart';
 import 'sqlite.dart';
 
 Future<void> loadTimes(ValueNotifier<TrackerValues> tracker) async {
+  final db = await openLocalDatabase();
+
   int? secondsTopic, secondsToday, streak;
   secondsTopic = await getTimeTopic(tracker.value.topicName);
   secondsToday = await getTimeToday(topic: tracker.value.topicName);
@@ -19,7 +23,7 @@ Future<void> loadTimes(ValueNotifier<TrackerValues> tracker) async {
 
   secondsTopic ??= await _getTimeTopicLocal(tracker.value.topicName);
   if (secondsToday == null) {
-    (secondsToday, streak) = await _getUserStatsLocal();
+    (secondsToday, streak) = await _getUserStatsLocal(db);
   }
 
   tracker.value.todayTime = secondsToday;
@@ -33,7 +37,6 @@ Future<int> _getTimeTopicLocal(String topicName) async {
     'SELECT * FROM topics WHERE topic_name = ?',
     [topicName],
   );
-  await db.close();
 
   if (resultSet.isNotEmpty) {
     final row = resultSet[0];
@@ -44,10 +47,8 @@ Future<int> _getTimeTopicLocal(String topicName) async {
 }
 
 // TODO: Local streak tracking
-Future<(int, int)> _getUserStatsLocal() async {
-  final db = await openLocalDatabase();
+Future<(int, int)> _getUserStatsLocal(Database db) async {
   final resultSet = await db.rawQuery('SELECT * FROM user_stats');
-  await db.close();
 
   if (resultSet.isNotEmpty) {
     final row = resultSet[0];
@@ -58,23 +59,26 @@ Future<(int, int)> _getUserStatsLocal() async {
 }
 
 Future<void> saveTimes(String topic, int timeTrackedSeconds) async {
+  final db = await openLocalDatabase();
+
   final DateTime createdAt = DateTime.now().toUtc();
-  var status = await trackTopic(topic, timeTrackedSeconds, createdAt);
+  var status = await trackTopic(
+    TopicEvent(topic: topic, timeSeconds: timeTrackedSeconds, date: createdAt),
+  );
   if (status == HttpStatus.ok) {
-    await _saveLocally(topic, timeTrackedSeconds, createdAt);
+    await _saveLocally(db, topic, timeTrackedSeconds, createdAt);
   } else {
-    await _saveLocally(topic, timeTrackedSeconds, createdAt, synced: false);
+    await _saveLocally(db, topic, timeTrackedSeconds, createdAt, synced: false);
   }
 }
 
 Future<void> _saveLocally(
+  Database db,
   String topic,
   int timeTrackedSeconds,
   DateTime createdAt, {
   bool synced = true,
 }) async {
-  final db = await openLocalDatabase();
-
   if (timeTrackedSeconds < 0) {
     return;
   }
@@ -93,6 +97,4 @@ Future<void> _saveLocally(
     'UPDATE user_stats SET today_time_tracked_seconds = today_time_tracked_seconds + ?',
     [timeTrackedSeconds],
   );
-
-  await db.close();
 }

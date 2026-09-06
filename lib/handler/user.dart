@@ -119,3 +119,9 @@ Future<int?> uploadAvatar(XFile avatar) async {
     return null;
   }
 }
+
+Future<void> updateActivity() async {
+  debugPrint('Updating activity');
+  final response = await dio.post('${dotenv.get('API_URL')}/user/activity');
+  debugPrint(response.statusCode.toString());
+}

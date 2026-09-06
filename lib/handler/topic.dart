@@ -53,21 +53,13 @@ Future<int?> getTimeTopic(String name) async {
   }
 }
 
-Future<int?> trackTopic(
-  String name,
-  int timeTrackedSeconds,
-  DateTime date,
-) async {
+Future<int?> trackTopic(TopicEvent event) async {
   try {
     debugPrint('Sending track topic time request');
 
     final response = await dio.post(
       '${dotenv.get('API_URL')}/topic-event/track',
-      data: {
-        'topic': name,
-        'time_seconds': timeTrackedSeconds,
-        'date': date.toUtc().toIso8601String(),
-      },
+      data: event.toJson(),
     );
 
     debugPrint(response.statusCode.toString());
@@ -94,5 +86,25 @@ Future<int?> getTimeToday({String? topic}) async {
   } catch (e) {
     debugPrint('Error getting topic time today: $e');
     return null;
+  }
+}
+
+Future<List<TopicEvent>> getTopicEvents({String? topic}) async {
+  try {
+    debugPrint('Sending get topic events request');
+
+    final response = await dio.get(
+      '${dotenv.get('API_URL')}/topic-event/all',
+      data: {
+        if (topic != null) 'topics': [topic],
+      },
+    );
+
+    debugPrint(response.statusCode.toString());
+
+    return TopicEvent.fromJsonList(response.data as Map<String, dynamic>);
+  } catch (e) {
+    debugPrint('Error getting topic events: $e');
+    return List.empty();
   }
 }

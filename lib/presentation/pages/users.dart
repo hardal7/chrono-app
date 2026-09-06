@@ -249,10 +249,10 @@ class UserCard extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 5),
                   child: Text(
                     maxLines: 1,
-                    user.username.length < 10
+                    user.username.length <= 8
                         ? user.username
                         : '${user.username.substring(0, 8)}...',
-                    style: user.username.length < 10 ? bodySmall : bodyMin,
+                    style: user.username.length < 8 ? bodySmall : bodyMin,
                     // TODO: text overflow
                   ),
                 ),

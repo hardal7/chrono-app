@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class Streak extends StatelessWidget {
   const Streak({super.key, required this.streak});
@@ -10,7 +11,7 @@ class Streak extends StatelessWidget {
     return Stack(
       alignment: Alignment.center,
       children: [
-        Image.asset('assets/icons/fire.png'),
+        SvgPicture.asset('assets/icons/fire.svg', semanticsLabel: 'Fire Icon'),
         Positioned(
           top: 12,
           child: Text(

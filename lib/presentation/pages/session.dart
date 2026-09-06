@@ -70,9 +70,18 @@ class _SessionPageState extends State<SessionPage> {
               textAlign: TextAlign.center,
               maxLines: 1,
             ),
-            Text(
-              'Members: ${session.totalParticipants}/${session.maxParticipants}',
-              style: bodySmall.copyWith(color: colors.secondary),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              spacing: 5,
+              children: [
+                Text(
+                  session.maxParticipants == 0
+                      ? 'Members: ${session.totalParticipants}'
+                      : 'Members: ${session.totalParticipants}/${session.maxParticipants}',
+                  style: bodySmall.copyWith(color: colors.secondary),
+                ),
+                Icon(Icons.group, color: colors.secondary, size: 24),
+              ],
             ),
             Text(
               Duration(seconds: (session.totalTime)).toHoursString(),
@@ -80,7 +89,7 @@ class _SessionPageState extends State<SessionPage> {
             ),
             if (session.expiresAt != null)
               Text(
-                'Expires in ${session.expiresAt} days',
+                'Expires in ${session.expiresAt!.day} days',
                 style: bodySmall.copyWith(color: colors.secondary),
               ),
             Expanded(
@@ -120,62 +129,83 @@ class ParticipantCard extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 15),
-                  child: CircleAvatar(
-                    radius: 28,
-                    backgroundImage: NetworkImage(
-                      '${dotenv.get('API_URL')}/${participant.avatarPath}',
-                    ),
+            Expanded(
+              flex: 2,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 15),
+                child: CircleAvatar(
+                  radius: 28,
+                  backgroundImage: NetworkImage(
+                    '${dotenv.get('API_URL')}/${participant.avatarPath}',
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Text(
-                    participant.name.length < 8
-                        ? participant.name
-                        : '${participant.name.substring(0, 8)}...',
-                    style: participant.name.length < 8 ? bodyMedium : bodySmall,
-                  ),
-                ),
-                Text(
-                  Duration(seconds: participant.sessionTime).toHoursString(),
-                  style: bodyMedium,
-                ),
-              ],
+              ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(right: 15),
-              child: Column(
-                children: [
-                  Row(
-                    spacing: 5,
-                    children: [
-                      Icon(Icons.circle, color: greenColor, size: 10),
-                      Text(
-                        participant.lastOnline.toString(),
-                        // 'Online',
-                        style: bodySmall.copyWith(color: greenColor),
+            Expanded(
+              flex: 4,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: Text(
+                  participant.name.length < 8
+                      ? participant.name
+                      : '${participant.name.substring(0, 8)}...',
+                  style: participant.name.length < 8 ? bodyMedium : bodySmall,
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 3,
+              child: Text(
+                Duration(seconds: participant.sessionTime).toHoursString(),
+                style: bodyMedium,
+              ),
+            ),
+            Expanded(
+              flex: 3,
+              child: Padding(
+                padding: const EdgeInsets.only(right: 15),
+                child: Column(
+                  children: [
+                    Row(
+                      spacing: 5,
+                      children: [
+                        Icon(
+                          Icons.circle,
+                          color: participant.lastOnline == 0
+                              ? greenColor
+                              : colors.secondary,
+                          size: 10,
+                        ),
+                        Text(
+                          // TODO: Check
+                          participant.lastOnline == 0 ? 'Online' : 'Offline',
+                          // 'Online',
+                          style: participant.lastOnline == 0
+                              ? bodySmall.copyWith(color: greenColor)
+                              : bodySmall.copyWith(color: colors.secondary),
+                        ),
+                      ],
+                    ),
+                    if (participant.lastOnline == 0)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        spacing: 2,
+                        children: [
+                          ImageIcon(
+                            AssetImage('assets/icons/triangle.png'),
+                            size: 12,
+                            color: greenColor,
+                          ),
+                          Text(
+                            Duration(
+                              seconds: participant.sessionTimeToday,
+                            ).toHoursString(),
+                            style: bodyMin.copyWith(color: greenColor),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      ImageIcon(
-                        AssetImage('assets/icons/triangle.png'),
-                        color: greenColor,
-                      ),
-                      Text(
-                        Duration(
-                          seconds: participant.sessionTimeToday,
-                        ).toHoursString(),
-                        style: bodyMin.copyWith(color: greenColor),
-                      ),
-                    ],
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],
