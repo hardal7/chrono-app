@@ -188,10 +188,15 @@ class SessionCard extends StatelessWidget {
                       ),
                     Icon(Icons.group, color: colors.secondary, size: 24),
                     GenericButton(
-                      text: 'Join',
+                      text: session.joined ? 'View' : 'Join',
                       textStyle: bodySmall,
                       onPressed: () async {
-                        await joinSession(session.name, session.ownerUsername);
+                        if (!session.joined) {
+                          await joinSession(
+                            session.name,
+                            session.ownerUsername,
+                          );
+                        }
 
                         Navigator.push(
                           context,

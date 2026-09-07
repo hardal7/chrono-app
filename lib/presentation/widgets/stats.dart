@@ -1,34 +1,48 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
+import '../../services/stats.dart';
 import '../duration.dart';
 import '../style.dart';
-
-const weeklySeconds = <int>[
-  18_000,
-  21_600,
-  14_400,
-  25_200,
-  28_800,
-  10_800,
-  21_600,
-];
 
 const weekDays = <String>['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 class Stats extends StatefulWidget {
-  const Stats({super.key, required this.data});
-  final List<int> data;
+  const Stats({super.key});
 
   @override
   State<Stats> createState() => _StatsState();
 }
 
 class _StatsState extends State<Stats> {
+  List<int> data = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadStats();
+  }
+
+  Future<void> _loadStats() async {
+    final result = await getStats();
+
+    if (!mounted) return;
+
+    setState(() {
+      data = result;
+      isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    final maxSeconds = widget.data.reduce((a, b) => a > b ? a : b);
+    if (isLoading) {
+      return Center(child: CircularProgressIndicator());
+    }
+
+    final maxSeconds = data.reduce((a, b) => a > b ? a : b);
     final maxHours = (maxSeconds / 3600).ceil().toDouble();
 
     return LayoutBuilder(
@@ -47,9 +61,7 @@ class _StatsState extends State<Stats> {
                   getTooltipColor: (group) => colors.surface,
                   getTooltipItem: (group, groupIndex, rod, rodIndex) {
                     return BarTooltipItem(
-                      Duration(
-                        seconds: widget.data[groupIndex],
-                      ).toStopwatchString(),
+                      Duration(seconds: data[groupIndex]).toStopwatchString(),
                       bodySmall,
                     );
                   },
@@ -91,8 +103,8 @@ class _StatsState extends State<Stats> {
 
               gridData: FlGridData(show: false),
 
-              barGroups: List.generate(widget.data.length, (index) {
-                final hours = widget.data[index] / 3600;
+              barGroups: List.generate(data.length, (index) {
+                final hours = data[index] / 3600;
 
                 return BarChartGroupData(
                   x: index,

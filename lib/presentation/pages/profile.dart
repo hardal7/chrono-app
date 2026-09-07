@@ -203,7 +203,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ],
                       ),
                     ),
-                  Expanded(child: Stats(data: weeklySeconds)),
+                  Expanded(child: Stats()),
                 ],
               ),
       ),
