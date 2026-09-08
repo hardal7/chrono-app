@@ -36,42 +36,32 @@ class SettingsForm extends StatelessWidget {
     super.key,
     required this.label,
     required this.controller,
-    this.isDate = false,
     this.isNumber = false,
     this.focusNode,
   });
 
   final String label;
   final TextEditingController controller;
-  final bool isDate;
   final bool isNumber;
   final FocusNode? focusNode;
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    return isDate
-        ? InputDatePickerFormField(
-            firstDate: DateTime.now(),
-            lastDate: DateTime.now().copyWith(year: DateTime.now().year + 1),
-            acceptEmptyDate: true,
-            onDateSubmitted: (DateTime date) {
-              controller.text = date.toIso8601String();
-            },
-            fieldLabelText: label,
-          )
-        : TextFormField(
-            keyboardType: isNumber ? TextInputType.number : TextInputType.text,
-            controller: controller,
-            decoration: InputDecoration(
-              labelText: label,
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: colors.secondary),
-              ),
-              border: OutlineInputBorder(),
-            ),
-            style: bodyMedium.copyWith(color: colors.secondary),
-            focusNode: focusNode,
-          );
+    return Flexible(
+      child: TextFormField(
+        keyboardType: isNumber ? TextInputType.number : TextInputType.text,
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: label,
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: colors.secondary),
+          ),
+          border: OutlineInputBorder(),
+        ),
+        style: bodyMedium.copyWith(color: colors.secondary),
+        focusNode: focusNode,
+      ),
+    );
   }
 }

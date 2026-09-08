@@ -25,9 +25,14 @@ class _LoginPageState extends State<LoginPage> {
   final nameController = TextEditingController();
   final passwordController = TextEditingController();
   bool _showError = false;
+  bool _isLoading = false;
   late int? _status;
 
   Future<void> loginOnPressed() async {
+    setState(() {
+      _isLoading = true;
+    });
+
     _status = await login(nameController.text, passwordController.text);
 
     if (_status == HttpStatus.ok) {
@@ -59,6 +64,10 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final l10n = AppLocalizations.of(context)!;
+
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
 
     return Material(
       child: Padding(

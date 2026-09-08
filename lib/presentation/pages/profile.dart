@@ -16,16 +16,6 @@ import '../widgets/stats.dart';
 import '../widgets/streak.dart';
 import '../widgets/time.dart';
 
-const weeklySeconds = <int>[
-  18_000,
-  21_600,
-  14_400,
-  25_200,
-  28_800,
-  10_800,
-  21_600,
-];
-
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key, required this.username});
   final String username;
@@ -36,8 +26,8 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   late UserProfile profile;
-  bool isLoading = true;
-  bool isSelf = false;
+  bool _isLoading = true;
+  bool _isSelf = false;
 
   Future<void> loadProfile() async {
     final result = await getProfile(widget.username);
@@ -46,10 +36,10 @@ class _ProfilePageState extends State<ProfilePage> {
     setState(() {
       if (result != null) {
         profile = result;
-        isLoading = false;
         if (profile.username == appNotifier.value.username) {
-          isSelf = true;
+          _isSelf = true;
         }
+        _isLoading = false;
       }
     });
   }
@@ -64,148 +54,147 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
 
+    if (_isLoading) {
+      return Center(child: CircularProgressIndicator());
+    }
+
     return Material(
       child: Padding(
         padding: pageInset,
-        child: isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : Column(
-                spacing: 5,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      if (profile.username == appNotifier.value.username)
-                        PageBackButton(),
-                      Spacer(),
-                      SettingsButton(popup: settingsPopup),
-                    ],
+        child: Column(
+          spacing: 5,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                if (_isSelf) PageBackButton(),
+                Spacer(),
+                SettingsButton(popup: settingsPopup),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                GestureDetector(
+                  onTap: () async {
+                    if (_isSelf) {
+                      final avatar = await pickImage();
+                      if (avatar != null) {
+                        await uploadAvatar(avatar);
+                      }
+                    }
+                  },
+                  child: CircleAvatar(
+                    radius: 48,
+                    backgroundImage: NetworkImage(
+                      '${dotenv.get('API_URL')}/${profile.avatarPath}',
+                    ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GestureDetector(
-                        onTap: () async {
-                          if (isSelf) {
-                            final avatar = await pickImage();
-                            if (avatar != null) {
-                              await uploadAvatar(avatar);
-                            }
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      'Total Time',
+                      style: bodyMedium.copyWith(color: colors.secondary),
+                    ),
+                    Text(
+                      Duration(seconds: profile.totalTime).toStopwatchString(),
+                      style: bodyMedium,
+                    ),
+                    TodayTime(todayTime: profile.todayTime),
+                  ],
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  spacing: 10,
+                  children: [
+                    Text(
+                      profile.username,
+                      style: profile.username.length < 10
+                          ? bodyLarge
+                          : bodyMedium,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Streak(streak: profile.streak),
+                  ],
+                ),
+                Text(
+                  'Best Topic',
+                  style: bodyMedium.copyWith(color: colors.secondary),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Icon(
+                      Icons.location_on_outlined,
+                      color: colors.secondary,
+                      size: 24,
+                    ),
+                    // TODO: Show country flag ??
+                    Text(
+                      profile.country,
+                      style: bodyMedium.copyWith(color: colors.secondary),
+                    ),
+                  ],
+                ),
+                Text(profile.bestTopic, style: bodyMedium),
+              ],
+            ),
+            if (profile.username != appNotifier.value.username)
+              Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 10,
+                      child: GenericButton(
+                        onPressed: () {
+                          if (profile.friendStatus == 'none') {
+                            () async {
+                              await sendFriendRequest(profile.username);
+                              await loadProfile();
+                            }();
                           }
                         },
-                        child: CircleAvatar(
-                          radius: 48,
-                          backgroundImage: NetworkImage(
-                            '${dotenv.get('API_URL')}/${profile.avatarPath}',
-                          ),
-                        ),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            'Total Time',
-                            style: bodyMedium.copyWith(color: colors.secondary),
-                          ),
-                          Text(
-                            Duration(
-                              seconds: profile.totalTime,
-                            ).toStopwatchString(),
-                            style: bodyMedium,
-                          ),
-                          TodayTime(todayTime: profile.todayTime),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        spacing: 10,
-                        children: [
-                          Text(
-                            profile.username,
-                            style: profile.username.length < 10
-                                ? bodyLarge
-                                : bodyMedium,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Streak(streak: profile.streak),
-                        ],
-                      ),
-                      Text(
-                        'Best Topic',
-                        style: bodyMedium.copyWith(color: colors.secondary),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.location_on_outlined,
-                            color: colors.secondary,
-                            size: 24,
-                          ),
-                          // TODO: Show country flag ??
-                          Text(
-                            profile.country,
-                            style: bodyMedium.copyWith(color: colors.secondary),
-                          ),
-                        ],
-                      ),
-                      Text(profile.bestTopic, style: bodyMedium),
-                    ],
-                  ),
-                  if (profile.username != appNotifier.value.username)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            flex: 10,
-                            child: GenericButton(
-                              onPressed: () {
-                                if (profile.friendStatus == 'none') {
-                                  () async {
-                                    await sendFriendRequest(profile.username);
-                                    await loadProfile();
-                                  }();
-                                }
-                              },
-                              text: switch (profile.friendStatus) {
-                                'none' => 'Add Friend',
-                                'pending' => 'Sent Request',
-                                'accepted' => 'Friends',
-                                _ => 'Invite',
-                              },
-                              textStyle: bodySmall,
-                              isPressed: profile.friendStatus == 'none'
-                                  ? false
-                                  : true,
-                            ),
-                          ),
-                          Spacer(flex: 1),
-                          Expanded(
-                            flex: 10,
-                            child: GenericButton(
-                              onPressed: () {
-                                // TODO: Make this work
-                              },
-                              text: 'Invite',
-                              textStyle: bodySmall,
-                            ),
-                          ),
-                        ],
+                        text: switch (profile.friendStatus) {
+                          'none' => 'Add Friend',
+                          'pending' => 'Sent Request',
+                          'accepted' => 'Friends',
+                          _ => 'Invite',
+                        },
+                        textStyle: bodySmall,
+                        isPressed: profile.friendStatus == 'none'
+                            ? false
+                            : true,
                       ),
                     ),
-                  Expanded(child: Stats()),
-                ],
+                    Spacer(flex: 1),
+                    Expanded(
+                      flex: 10,
+                      child: GenericButton(
+                        onPressed: () {
+                          // TODO: Make this work
+                        },
+                        text: 'Invite',
+                        textStyle: bodySmall,
+                      ),
+                    ),
+                  ],
+                ),
               ),
+            Expanded(child: Stats(profile: profile)),
+          ],
+        ),
       ),
     );
   }

@@ -223,7 +223,7 @@ class SessionCard extends StatelessWidget {
 void settingsPopup(BuildContext context) {
   final nameController = TextEditingController();
   final maxParticipantsController = TextEditingController();
-  final expiresAtController = TextEditingController();
+  final expiresInController = TextEditingController();
   final topicController = TextEditingController();
 
   showDialog(
@@ -249,41 +249,30 @@ void settingsPopup(BuildContext context) {
         ),
         content: Column(
           children: [
-            Expanded(
-              child: SettingsForm(
-                label: 'Session Name',
-                controller: nameController,
+            SettingsForm(label: 'Session Name', controller: nameController),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: Text(
+                'Optional Settings',
+                style: bodySmall.copyWith(color: colors.secondary),
               ),
-            ),
-            Text(
-              'Optional Settings',
-              style: bodySmall.copyWith(color: colors.secondary),
             ),
             Row(
               children: [
-                Expanded(
-                  child: SettingsForm(
-                    label: 'Topic',
-                    controller: topicController,
-                  ),
-                ),
+                SettingsForm(label: 'Topic', controller: topicController),
               ],
             ),
             Row(
               children: [
-                Expanded(
-                  child: SettingsForm(
-                    label: 'Max Participants',
-                    controller: maxParticipantsController,
-                    isNumber: true,
-                  ),
+                SettingsForm(
+                  label: 'Max Participants',
+                  controller: maxParticipantsController,
+                  isNumber: true,
                 ),
-                Expanded(
-                  child: SettingsForm(
-                    label: 'Expires At',
-                    controller: expiresAtController,
-                    isDate: true,
-                  ),
+                SettingsForm(
+                  label: 'Expires In',
+                  controller: expiresInController,
+                  isNumber: true,
                 ),
               ],
             ),
@@ -294,12 +283,14 @@ void settingsPopup(BuildContext context) {
             text: l10n.create,
             textStyle: bodySmall,
             onPressed: () async {
+              var days = int.tryParse(expiresInController.text);
               await createSession(
                 CreateSessionRequest(
                   name: nameController.text,
                   topic: topicController.text,
-                  // TODO: Check controller
-                  expiresAt: DateTime.tryParse(expiresAtController.text),
+                  expiresAt: days != null
+                      ? DateTime.now().add(Duration(days: days))
+                      : null,
                   maxParticipants: int.tryParse(maxParticipantsController.text),
                 ),
               );

@@ -1,6 +1,8 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
+import '../../models/user.dart';
+import '../../services/app.dart';
 import '../../services/stats.dart';
 import '../duration.dart';
 import '../style.dart';
@@ -8,7 +10,9 @@ import '../style.dart';
 const weekDays = <String>['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 class Stats extends StatefulWidget {
-  const Stats({super.key});
+  const Stats({super.key, required this.profile});
+
+  final UserProfile profile;
 
   @override
   State<Stats> createState() => _StatsState();
@@ -25,7 +29,13 @@ class _StatsState extends State<Stats> {
   }
 
   Future<void> _loadStats() async {
-    final result = await getStats();
+    final List<int> result;
+
+    if (widget.profile.username == appNotifier.value.username) {
+      result = await getStats();
+    } else {
+      result = widget.profile.statistics;
+    }
 
     if (!mounted) return;
 

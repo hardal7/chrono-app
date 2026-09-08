@@ -19,13 +19,18 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  bool _showError = false;
-  late int? _status;
   final emailController = TextEditingController();
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
+  bool _showError = false;
+  late int? _status;
+  bool _isLoading = false;
 
   Future<void> registerOnPressed() async {
+    setState(() {
+      _isLoading = true;
+    });
+
     _status = await register(
       emailController.text,
       usernameController.text,
@@ -58,6 +63,10 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final l10n = AppLocalizations.of(context)!;
+
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
 
     return Material(
       child: Padding(
