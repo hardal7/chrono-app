@@ -1,13 +1,12 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../models/user.dart';
 import '../../services/app.dart';
 import '../../services/stats.dart';
 import '../duration.dart';
 import '../style.dart';
-
-const weekDays = <String>['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 class Stats extends StatefulWidget {
   const Stats({super.key, required this.profile});
@@ -47,6 +46,18 @@ class _StatsState extends State<Stats> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    final weekDays = <String>[
+      l10n.mondayShort,
+      l10n.tuesdayShort,
+      l10n.wednesdayShort,
+      l10n.thursdayShort,
+      l10n.fridayShort,
+      l10n.saturdayShort,
+      l10n.sundayShort,
+    ];
+
     final colors = Theme.of(context).colorScheme;
     if (isLoading) {
       return Center(child: CircularProgressIndicator());

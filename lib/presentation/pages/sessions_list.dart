@@ -41,6 +41,7 @@ class _SessionsListPageState extends State<SessionsListPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colors = Theme.of(context).colorScheme;
 
     return Material(
@@ -68,7 +69,7 @@ class _SessionsListPageState extends State<SessionsListPage> {
                   : sessions.isEmpty
                   ? Center(
                       child: Text(
-                        'No session found',
+                        l10n.noSessionFound,
                         style: bodySmall.copyWith(color: colors.secondary),
                       ),
                     )
@@ -92,6 +93,7 @@ class SessionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colors = Theme.of(context).colorScheme;
 
     return Container(
@@ -110,7 +112,7 @@ class SessionCard extends StatelessWidget {
                 Text(session.name, style: bodySmall),
                 if (session.expiresAt != null)
                   Text(
-                    'Expires in ${session.expiresAt} days',
+                    '${l10n.expiresIn} ${session.expiresAt} ${l10n.days}',
                     style: bodySmall.copyWith(color: colors.secondary),
                   ),
               ],
@@ -167,7 +169,7 @@ class SessionCard extends StatelessWidget {
                   spacing: 7.5,
                   children: [
                     Text(
-                      'Total Time:',
+                      '${l10n.totalTime}:',
                       style: bodySmall.copyWith(color: colors.secondary),
                     ),
                     Text(
@@ -188,7 +190,7 @@ class SessionCard extends StatelessWidget {
                       ),
                     Icon(Icons.group, color: colors.secondary, size: 24),
                     GenericButton(
-                      text: session.joined ? 'View' : 'Join',
+                      text: session.joined ? l10n.view : l10n.join,
                       textStyle: bodySmall,
                       onPressed: () async {
                         if (!session.joined) {
@@ -242,35 +244,35 @@ void settingsPopup(BuildContext context) {
               },
             ),
             Text(
-              'Create Session',
+              l10n.createSession,
               style: bodySmall.copyWith(color: colors.secondary),
             ),
           ],
         ),
         content: Column(
           children: [
-            SettingsForm(label: 'Session Name', controller: nameController),
+            SettingsForm(label: l10n.sessionName, controller: nameController),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: Text(
-                'Optional Settings',
+                l10n.optionalSettings,
                 style: bodySmall.copyWith(color: colors.secondary),
               ),
             ),
             Row(
               children: [
-                SettingsForm(label: 'Topic', controller: topicController),
+                SettingsForm(label: l10n.topic, controller: topicController),
               ],
             ),
             Row(
               children: [
                 SettingsForm(
-                  label: 'Max Participants',
+                  label: l10n.maxParticipants,
                   controller: maxParticipantsController,
                   isNumber: true,
                 ),
                 SettingsForm(
-                  label: 'Expires In',
+                  label: l10n.expiresIn,
                   controller: expiresInController,
                   isNumber: true,
                 ),
@@ -294,6 +296,7 @@ void settingsPopup(BuildContext context) {
                   maxParticipants: int.tryParse(maxParticipantsController.text),
                 ),
               );
+              if (!context.mounted) return;
               Navigator.pop(context);
               Navigator.push(
                 context,

@@ -56,14 +56,15 @@ class _LoginPageState extends State<LoginPage> {
     } else {
       setState(() {
         _showError = true;
+        _isLoading = false;
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
     final l10n = AppLocalizations.of(context)!;
+    final colors = Theme.of(context).colorScheme;
 
     if (_isLoading) {
       return const Center(child: CircularProgressIndicator());

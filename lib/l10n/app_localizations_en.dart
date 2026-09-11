@@ -183,5 +183,98 @@ class AppLocalizationsEn extends AppLocalizations {
   String get seconds => 'Seconds';
 
   @override
+  String get breakTime => 'Break Time';
+
+  @override
   String get save => 'Save';
+
+  @override
+  String get mondayShort => 'Mon';
+
+  @override
+  String get tuesdayShort => 'Tue';
+
+  @override
+  String get wednesdayShort => 'Wed';
+
+  @override
+  String get thursdayShort => 'Thu';
+
+  @override
+  String get fridayShort => 'Fri';
+
+  @override
+  String get saturdayShort => 'Sat';
+
+  @override
+  String get sundayShort => 'Sun';
+
+  @override
+  String get totalTime => 'Total Time';
+
+  @override
+  String get bestTopic => 'Best Topic';
+
+  @override
+  String get addFriend => 'Add Friend';
+
+  @override
+  String get sentRequest => 'Sent Request';
+
+  @override
+  String get friends => 'Friends';
+
+  @override
+  String get invite => 'Invite';
+
+  @override
+  String get profileSettings => 'Profile Settings';
+
+  @override
+  String get deleteAvatar => 'Delete Avatar';
+
+  @override
+  String get members => 'Members';
+
+  @override
+  String get expiresIn => 'Expires In';
+
+  @override
+  String get days => 'days';
+
+  @override
+  String get online => 'online';
+
+  @override
+  String get offline => 'offline';
+
+  @override
+  String get sessionSettings => 'Session Settings';
+
+  @override
+  String get leave => 'Leave';
+
+  @override
+  String get noSessionFound => 'No session found';
+
+  @override
+  String get view => 'View';
+
+  @override
+  String get join => 'Join';
+
+  @override
+  String get createSession => 'Create Session';
+
+  @override
+  String get sessionName => 'Session Name';
+
+  @override
+  String get optionalSettings => 'Optional Settings';
+
+  @override
+  String get topic => 'Topic';
+
+  @override
+  String get maxParticipants => 'Max Participants';
 }

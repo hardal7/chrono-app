@@ -2,6 +2,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../../handler/friend.dart';
 import '../../handler/user.dart';
+import '../../l10n/app_localizations.dart';
 import '../../models/user.dart';
 import '../../services/app.dart';
 import '../../services/imagepicker.dart';
@@ -52,6 +53,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colors = Theme.of(context).colorScheme;
 
     if (_isLoading) {
@@ -81,6 +83,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       final avatar = await pickImage();
                       if (avatar != null) {
                         await uploadAvatar(avatar);
+                        await NetworkImage(
+                          '${dotenv.get('API_URL')}/${profile.avatarPath}',
+                        ).evict();
                       }
                     }
                   },
@@ -95,7 +100,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      'Total Time',
+                      l10n.totalTime,
                       style: bodyMedium.copyWith(color: colors.secondary),
                     ),
                     Text(
@@ -125,7 +130,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ],
                 ),
                 Text(
-                  'Best Topic',
+                  l10n.bestTopic,
                   style: bodyMedium.copyWith(color: colors.secondary),
                 ),
               ],
@@ -167,9 +172,9 @@ class _ProfilePageState extends State<ProfilePage> {
                           }
                         },
                         text: switch (profile.friendStatus) {
-                          'none' => 'Add Friend',
-                          'pending' => 'Sent Request',
-                          'accepted' => 'Friends',
+                          'none' => l10n.addFriend,
+                          'pending' => l10n.sentRequest,
+                          'accepted' => l10n.friends,
                           _ => 'Invite',
                         },
                         textStyle: bodySmall,
@@ -185,7 +190,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         onPressed: () {
                           // TODO: Make this work
                         },
-                        text: 'Invite',
+                        text: l10n.invite,
                         textStyle: bodySmall,
                       ),
                     ),
@@ -201,6 +206,7 @@ class _ProfilePageState extends State<ProfilePage> {
 }
 
 void settingsPopup(BuildContext context) {
+  final l10n = AppLocalizations.of(context)!;
   final colors = Theme.of(context).colorScheme;
 
   showDialog(
@@ -216,7 +222,7 @@ void settingsPopup(BuildContext context) {
               },
             ),
             Text(
-              'Profile Settings',
+              l10n.profileSettings,
               style: bodySmall.copyWith(color: colors.secondary),
             ),
           ],
@@ -226,7 +232,7 @@ void settingsPopup(BuildContext context) {
           children: [
             GenericButton(
               onPressed: deleteAvatar,
-              text: 'Delete Avatar',
+              text: l10n.deleteAvatar,
               textStyle: bodySmall,
               color: colors.error,
             ),

@@ -5,8 +5,15 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
+import 'app_localizations_ar.dart';
 import 'app_localizations_en.dart';
+import 'app_localizations_es.dart';
+import 'app_localizations_fr.dart';
+import 'app_localizations_hi.dart';
+import 'app_localizations_pt.dart';
+import 'app_localizations_ru.dart';
 import 'app_localizations_tr.dart';
+import 'app_localizations_zh.dart';
 
 // ignore_for_file: type=lint
 
@@ -94,8 +101,15 @@ abstract class AppLocalizations {
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
+    Locale('ar'),
     Locale('en'),
+    Locale('es'),
+    Locale('fr'),
+    Locale('hi'),
+    Locale('pt'),
+    Locale('ru'),
     Locale('tr'),
+    Locale('zh'),
   ];
 
   /// Text appended to today's time.
@@ -440,11 +454,197 @@ abstract class AppLocalizations {
   /// **'Seconds'**
   String get seconds;
 
+  /// Label displayed for showing it is break time.
+  ///
+  /// In en, this message translates to:
+  /// **'Break Time'**
+  String get breakTime;
+
   /// Text displayed for the save action.
   ///
   /// In en, this message translates to:
   /// **'Save'**
   String get save;
+
+  /// Short name displayed for Monday.
+  ///
+  /// In en, this message translates to:
+  /// **'Mon'**
+  String get mondayShort;
+
+  /// Short name displayed for Tuesday.
+  ///
+  /// In en, this message translates to:
+  /// **'Tue'**
+  String get tuesdayShort;
+
+  /// Short name displayed for Wednesday.
+  ///
+  /// In en, this message translates to:
+  /// **'Wed'**
+  String get wednesdayShort;
+
+  /// Short name displayed for Thursday.
+  ///
+  /// In en, this message translates to:
+  /// **'Thu'**
+  String get thursdayShort;
+
+  /// Short name displayed for Friday.
+  ///
+  /// In en, this message translates to:
+  /// **'Fri'**
+  String get fridayShort;
+
+  /// Short name displayed for Saturday.
+  ///
+  /// In en, this message translates to:
+  /// **'Sat'**
+  String get saturdayShort;
+
+  /// Short name displayed for Sunday.
+  ///
+  /// In en, this message translates to:
+  /// **'Sun'**
+  String get sundayShort;
+
+  /// Label displaying the user's total tracked time.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Time'**
+  String get totalTime;
+
+  /// Label identifying the topic the user has spent the most time studying.
+  ///
+  /// In en, this message translates to:
+  /// **'Best Topic'**
+  String get bestTopic;
+
+  /// Button label for sending a friend request to the user.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Friend'**
+  String get addFriend;
+
+  /// Button label indicating that a friend request has already been sent to the user.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent Request'**
+  String get sentRequest;
+
+  /// Button label indicating that the current user and the profile user are already friends.
+  ///
+  /// In en, this message translates to:
+  /// **'Friends'**
+  String get friends;
+
+  /// Button label for inviting the user to a session.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite'**
+  String get invite;
+
+  /// Title displayed at the top of the profile settings dialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile Settings'**
+  String get profileSettings;
+
+  /// Button label for deleting the user avatar.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Avatar'**
+  String get deleteAvatar;
+
+  /// Label displaying the number of participants in the session.
+  ///
+  /// In en, this message translates to:
+  /// **'Members'**
+  String get members;
+
+  /// Label indicating how much time remains before the session expires.
+  ///
+  /// In en, this message translates to:
+  /// **'Expires In'**
+  String get expiresIn;
+
+  /// Unit label for a duration measured in days.
+  ///
+  /// In en, this message translates to:
+  /// **'days'**
+  String get days;
+
+  /// Status label indicating that a session participant is currently online.
+  ///
+  /// In en, this message translates to:
+  /// **'online'**
+  String get online;
+
+  /// Status label indicating that a session participant is currently offline.
+  ///
+  /// In en, this message translates to:
+  /// **'offline'**
+  String get offline;
+
+  /// Title displayed at the top of the session settings dialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Session Settings'**
+  String get sessionSettings;
+
+  /// Button label for leaving the current session.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave'**
+  String get leave;
+
+  /// Message displayed when no sessions are available.
+  ///
+  /// In en, this message translates to:
+  /// **'No session found'**
+  String get noSessionFound;
+
+  /// Button label for opening a session the user has already joined.
+  ///
+  /// In en, this message translates to:
+  /// **'View'**
+  String get view;
+
+  /// Button label for joining a session.
+  ///
+  /// In en, this message translates to:
+  /// **'Join'**
+  String get join;
+
+  /// Title displayed at the top of the create session dialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Session'**
+  String get createSession;
+
+  /// Label for the input field used to enter the session name.
+  ///
+  /// In en, this message translates to:
+  /// **'Session Name'**
+  String get sessionName;
+
+  /// Label introducing optional settings when creating a session.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional Settings'**
+  String get optionalSettings;
+
+  /// Label for the input field used to specify the session topic.
+  ///
+  /// In en, this message translates to:
+  /// **'Topic'**
+  String get topic;
+
+  /// Label for the input field used to set the maximum number of session participants.
+  ///
+  /// In en, this message translates to:
+  /// **'Max Participants'**
+  String get maxParticipants;
 }
 
 class _AppLocalizationsDelegate
@@ -457,8 +657,17 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['en', 'tr'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>[
+    'ar',
+    'en',
+    'es',
+    'fr',
+    'hi',
+    'pt',
+    'ru',
+    'tr',
+    'zh',
+  ].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -467,10 +676,24 @@ class _AppLocalizationsDelegate
 AppLocalizations lookupAppLocalizations(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
+    case 'ar':
+      return AppLocalizationsAr();
     case 'en':
       return AppLocalizationsEn();
+    case 'es':
+      return AppLocalizationsEs();
+    case 'fr':
+      return AppLocalizationsFr();
+    case 'hi':
+      return AppLocalizationsHi();
+    case 'pt':
+      return AppLocalizationsPt();
+    case 'ru':
+      return AppLocalizationsRu();
     case 'tr':
       return AppLocalizationsTr();
+    case 'zh':
+      return AppLocalizationsZh();
   }
 
   throw FlutterError(

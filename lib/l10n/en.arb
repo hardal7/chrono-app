@@ -172,10 +172,103 @@
   "@seconds": {
     "description": "Label displayed for the seconds input field."
   },
+  "@breakTime": {
+    "description": "Label displayed for showing it is break time."
+  },
   "@save": {
     "description": "Text displayed for the save action."
   },
-
+  "@mondayShort": {
+    "description": "Short name displayed for Monday."
+  },
+  "@tuesdayShort": {
+    "description": "Short name displayed for Tuesday."
+  },
+  "@wednesdayShort": {
+    "description": "Short name displayed for Wednesday."
+  },
+  "@thursdayShort": {
+    "description": "Short name displayed for Thursday."
+  },
+  "@fridayShort": {
+    "description": "Short name displayed for Friday."
+  },
+  "@saturdayShort": {
+    "description": "Short name displayed for Saturday."
+  },
+  "@sundayShort": {
+    "description": "Short name displayed for Sunday."
+  },
+  "@totalTime": {
+    "description": "Label displaying the user's total tracked time."
+  },
+  "@bestTopic": {
+    "description": "Label identifying the topic the user has spent the most time studying."
+  },
+  "@addFriend": {
+    "description": "Button label for sending a friend request to the user."
+  },
+  "@sentRequest": {
+    "description": "Button label indicating that a friend request has already been sent to the user."
+  },
+  "@friends": {
+    "description": "Button label indicating that the current user and the profile user are already friends."
+  },
+  "@invite": {
+    "description": "Button label for inviting the user to a session."
+  },
+  "@profileSettings": {
+    "description": "Title displayed at the top of the profile settings dialog."
+  },
+  "@deleteAvatar": {
+    "description": "Button label for deleting the user avatar."
+  },
+  "@members": {
+    "description": "Label displaying the number of participants in the session."
+  },
+  "@expiresIn": {
+    "description": "Label indicating how much time remains before the session expires."
+  },
+  "@days": {
+    "description": "Unit label for a duration measured in days."
+  },
+  "@online": {
+    "description": "Status label indicating that a session participant is currently online."
+  },
+  "@offline": {
+    "description": "Status label indicating that a session participant is currently offline."
+  },
+  "@sessionSettings": {
+    "description": "Title displayed at the top of the session settings dialog."
+  },
+  "@leave": {
+    "description": "Button label for leaving the current session."
+  },
+  "@noSessionFound": {
+    "description": "Message displayed when no sessions are available."
+  },
+  "@view": {
+    "description": "Button label for opening a session the user has already joined."
+  },
+  "@join": {
+    "description": "Button label for joining a session."
+  },
+  "@createSession": {
+    "description": "Title displayed at the top of the create session dialog."
+  },
+  "@sessionName": {
+    "description": "Label for the input field used to enter the session name."
+  },
+  "@optionalSettings": {
+    "description": "Label introducing optional settings when creating a session."
+  },
+  "@topic": {
+    "description": "Label for the input field used to specify the session topic."
+  },
+  "@maxParticipants": {
+    "description": "Label for the input field used to set the maximum number of session participants."
+  },
+  
   "today": "today",
   "welcome": "Welcome to Chrono",
   "appDescription": "Start tracking your study habits for a more mindful studying experience.",
@@ -233,5 +326,36 @@
   "hours": "Hours",
   "minutes": "Minutes",
   "seconds": "Seconds",
-  "save": "Save"
+  "breakTime": "Break Time",
+  "save": "Save",
+  "mondayShort": "Mon",
+  "tuesdayShort": "Tue",
+  "wednesdayShort": "Wed",
+  "thursdayShort": "Thu",
+  "fridayShort": "Fri",
+  "saturdayShort": "Sat",
+  "sundayShort": "Sun",
+  "totalTime": "Total Time",
+  "bestTopic": "Best Topic",
+  "addFriend": "Add Friend",
+  "sentRequest": "Sent Request",
+  "friends": "Friends",
+  "invite": "Invite",
+  "profileSettings": "Profile Settings",
+  "deleteAvatar": "Delete Avatar",
+  "members": "Members",
+  "expiresIn": "Expires In",
+  "days": "days",
+  "online": "online",
+  "offline": "offline",
+  "sessionSettings": "Session Settings",
+  "leave": "Leave",
+  "noSessionFound": "No session found",
+  "view": "View",
+  "join": "Join",
+  "createSession": "Create Session",
+  "sessionName": "Session Name",
+  "optionalSettings": "Optional Settings",
+  "topic": "Topic",
+  "maxParticipants": "Max Participants"
 }

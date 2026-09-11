@@ -425,9 +425,8 @@ void settingsPopup(BuildContext context) {
       final l10n = AppLocalizations.of(context)!;
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (context.mounted) {
-          focusNode.requestFocus();
-        }
+        if (!context.mounted) return;
+        focusNode.requestFocus();
       });
 
       return AlertDialog(
@@ -457,7 +456,7 @@ void settingsPopup(BuildContext context) {
             ),
             Expanded(
               child: SettingsForm(
-                label: 'Break Time',
+                label: l10n.breakTime,
                 controller: breakController,
                 isNumber: true,
               ),

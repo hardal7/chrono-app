@@ -15,7 +15,17 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'services/dio.dart';
 
-List<Locale> _locales = [Locale('en'), Locale('tr')];
+List<Locale> _locales = [
+  Locale('en'),
+  Locale('tr'),
+  Locale('es'),
+  Locale('zh'),
+  Locale('hi'),
+  Locale('fr'),
+  Locale('ar'),
+  Locale('pt'),
+  Locale('ru'),
+];
 
 Future<void> main() async {
   await dotenv.load();
@@ -25,6 +35,7 @@ Future<void> main() async {
 
   syncEvents();
 
+  // TODO: When publishing, uncomment (Disabled for dev env)
   // Timer.periodic(const Duration(minutes: 1), (_) async {
   // updateActivity();
   // });

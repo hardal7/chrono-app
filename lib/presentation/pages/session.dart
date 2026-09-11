@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../../handler/session.dart';
+import '../../l10n/app_localizations.dart';
 import '../../models/session.dart';
 import '../../services/app.dart';
 import '../duration.dart';
@@ -10,7 +11,6 @@ import '../widgets/back.dart';
 import '../widgets/button.dart';
 import '../widgets/settings.dart';
 import 'home.dart';
-import 'sessions_list.dart';
 
 class SessionPage extends StatefulWidget {
   const SessionPage({
@@ -48,6 +48,7 @@ class _SessionPageState extends State<SessionPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colors = Theme.of(context).colorScheme;
 
     if (isLoading) {
@@ -81,8 +82,8 @@ class _SessionPageState extends State<SessionPage> {
               children: [
                 Text(
                   session.maxParticipants == 0
-                      ? 'Members: ${session.totalParticipants}'
-                      : 'Members: ${session.totalParticipants}/${session.maxParticipants}',
+                      ? '${l10n.members}: ${session.totalParticipants}'
+                      : '${l10n.members}: ${session.totalParticipants}/${session.maxParticipants}',
                   style: bodySmall.copyWith(color: colors.secondary),
                 ),
                 Icon(Icons.group, color: colors.secondary, size: 24),
@@ -94,7 +95,7 @@ class _SessionPageState extends State<SessionPage> {
             ),
             if (session.expiresAt != null)
               Text(
-                'Expires in ${session.expiresAt!.day} days',
+                '${l10n.expiresIn} ${session.expiresAt!.day} ${l10n.days}',
                 style: bodySmall.copyWith(color: colors.secondary),
               ),
             Expanded(
@@ -120,6 +121,7 @@ class ParticipantCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colors = Theme.of(context).colorScheme;
 
     return Container(
@@ -182,7 +184,9 @@ class ParticipantCard extends StatelessWidget {
                           size: 10,
                         ),
                         Text(
-                          participant.lastOnline == 0 ? 'Online' : 'Offline',
+                          participant.lastOnline == 0
+                              ? l10n.online
+                              : l10n.offline,
                           style: participant.lastOnline == 0
                               ? bodySmall.copyWith(color: greenColor)
                               : bodySmall.copyWith(color: colors.secondary),
@@ -219,6 +223,7 @@ class ParticipantCard extends StatelessWidget {
 }
 
 void settingsPopup(BuildContext context, String name, String ownerUsername) {
+  final l10n = AppLocalizations.of(context)!;
   final colors = Theme.of(context).colorScheme;
 
   showDialog(
@@ -234,7 +239,7 @@ void settingsPopup(BuildContext context, String name, String ownerUsername) {
               },
             ),
             Text(
-              'Session Settings',
+              l10n.sessionSettings,
               style: bodySmall.copyWith(color: colors.secondary),
             ),
           ],
@@ -245,13 +250,14 @@ void settingsPopup(BuildContext context, String name, String ownerUsername) {
             GenericButton(
               onPressed: () async {
                 await leaveSession(name, ownerUsername);
-
-                Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => const HomePage()),
-                  (route) => false,
-                );
+                if (context.mounted) {
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) => const HomePage()),
+                    (route) => false,
+                  );
+                }
               },
-              text: 'Leave',
+              text: l10n.leave,
               color: colors.error,
             ),
           ],

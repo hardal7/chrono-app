@@ -184,5 +184,98 @@ class AppLocalizationsTr extends AppLocalizations {
   String get seconds => 'Saniye';
 
   @override
+  String get breakTime => 'Mola Zamanı';
+
+  @override
   String get save => 'Kaydet';
+
+  @override
+  String get mondayShort => 'Pzt';
+
+  @override
+  String get tuesdayShort => 'Sal';
+
+  @override
+  String get wednesdayShort => 'Çar';
+
+  @override
+  String get thursdayShort => 'Per';
+
+  @override
+  String get fridayShort => 'Cum';
+
+  @override
+  String get saturdayShort => 'Cmt';
+
+  @override
+  String get sundayShort => 'Paz';
+
+  @override
+  String get totalTime => 'Toplam Süre';
+
+  @override
+  String get bestTopic => 'En İyi Konu';
+
+  @override
+  String get addFriend => 'Arkadaş Ekle';
+
+  @override
+  String get sentRequest => 'İstek Gönderildi';
+
+  @override
+  String get friends => 'Arkadaşlar';
+
+  @override
+  String get invite => 'Davet Et';
+
+  @override
+  String get profileSettings => 'Profil Ayarları';
+
+  @override
+  String get deleteAvatar => 'Avatarı Sil';
+
+  @override
+  String get members => 'Üyeler';
+
+  @override
+  String get expiresIn => 'Kalan Süre';
+
+  @override
+  String get days => 'gün';
+
+  @override
+  String get online => 'çevrimiçi';
+
+  @override
+  String get offline => 'çevrimdışı';
+
+  @override
+  String get sessionSettings => 'Oturum Ayarları';
+
+  @override
+  String get leave => 'Ayrıl';
+
+  @override
+  String get noSessionFound => 'Oturum bulunamadı';
+
+  @override
+  String get view => 'Görüntüle';
+
+  @override
+  String get join => 'Katıl';
+
+  @override
+  String get createSession => 'Oturum Oluştur';
+
+  @override
+  String get sessionName => 'Oturum Adı';
+
+  @override
+  String get optionalSettings => 'İsteğe Bağlı Ayarlar';
+
+  @override
+  String get topic => 'Konu';
+
+  @override
+  String get maxParticipants => 'Maksimum Katılımcı';
 }
