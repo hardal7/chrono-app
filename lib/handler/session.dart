@@ -66,3 +66,18 @@ Future<SessionData?> getSession(String name, ownerUsername) async {
     return null;
   }
 }
+
+Future<void> leaveSession(String name, ownerUsername) async {
+  try {
+    debugPrint('Sending leave session request');
+
+    final response = await dio.post(
+      '${dotenv.get('API_URL')}/session/leave',
+      data: {'name': name, 'owner_username': ownerUsername},
+    );
+
+    debugPrint(response.statusCode.toString());
+  } catch (e) {
+    debugPrint('Error leaving session: $e');
+  }
+}

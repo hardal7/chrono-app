@@ -7,7 +7,10 @@ import '../../services/app.dart';
 import '../duration.dart';
 import '../style.dart';
 import '../widgets/back.dart';
+import '../widgets/button.dart';
 import '../widgets/settings.dart';
+import 'home.dart';
+import 'sessions_list.dart';
 
 class SessionPage extends StatefulWidget {
   const SessionPage({
@@ -60,7 +63,10 @@ class _SessionPageState extends State<SessionPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 PageBackButton(),
-                SettingsButton(popup: settingsPopup),
+                SettingsButton(
+                  popup: (context) =>
+                      settingsPopup(context, widget.name, widget.ownerUsername),
+                ),
               ],
             ),
             Text(
@@ -212,7 +218,7 @@ class ParticipantCard extends StatelessWidget {
   }
 }
 
-void settingsPopup(BuildContext context) {
+void settingsPopup(BuildContext context, String name, String ownerUsername) {
   final colors = Theme.of(context).colorScheme;
 
   showDialog(
@@ -233,7 +239,23 @@ void settingsPopup(BuildContext context) {
             ),
           ],
         ),
-        content: Row(children: []),
+        content: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            GenericButton(
+              onPressed: () async {
+                await leaveSession(name, ownerUsername);
+
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => const HomePage()),
+                  (route) => false,
+                );
+              },
+              text: 'Leave',
+              color: colors.error,
+            ),
+          ],
+        ),
         actions: [],
       );
     },

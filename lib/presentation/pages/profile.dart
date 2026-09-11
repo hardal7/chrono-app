@@ -221,7 +221,17 @@ void settingsPopup(BuildContext context) {
             ),
           ],
         ),
-        content: Row(children: []),
+        content: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            GenericButton(
+              onPressed: deleteAvatar,
+              text: 'Delete Avatar',
+              textStyle: bodySmall,
+              color: colors.error,
+            ),
+          ],
+        ),
         actions: [],
       );
     },

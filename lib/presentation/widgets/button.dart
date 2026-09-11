@@ -11,6 +11,7 @@ class GenericButton extends StatefulWidget {
     this.isPressed = false,
     this.playSound = false,
     this.textStyle = bodyMedium,
+    this.color,
   });
 
   final VoidCallback onPressed;
@@ -18,6 +19,7 @@ class GenericButton extends StatefulWidget {
   final bool isPressed;
   final bool playSound;
   final TextStyle textStyle;
+  final Color? color;
 
   @override
   State<GenericButton> createState() => _GenericButtonState();
@@ -39,7 +41,7 @@ class _GenericButtonState extends State<GenericButton> {
         boxShadow: [
           if (!widget.isPressed)
             BoxShadow(
-              color: colors.shadow,
+              color: widget.color ?? colors.shadow,
               blurRadius: 0,
               offset: Offset(0, shadowOffset),
             ),
@@ -56,7 +58,7 @@ class _GenericButtonState extends State<GenericButton> {
             widget.onPressed();
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: colors.primary,
+            backgroundColor: widget.color ?? colors.primary,
             foregroundColor: colors.onPrimary,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),

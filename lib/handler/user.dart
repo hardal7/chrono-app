@@ -120,6 +120,18 @@ Future<int?> uploadAvatar(XFile avatar) async {
   }
 }
 
+Future<void> deleteAvatar() async {
+  try {
+    debugPrint('Sending delete avatar request');
+
+    final response = await dio.delete('${dotenv.get('API_URL')}/user/avatar');
+
+    debugPrint(response.statusCode.toString());
+  } catch (e) {
+    debugPrint('Error sending delete avatar request: $e');
+  }
+}
+
 Future<void> updateActivity() async {
   debugPrint('Updating activity');
   final response = await dio.post('${dotenv.get('API_URL')}/user/activity');
