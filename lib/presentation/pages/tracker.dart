@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -46,6 +48,9 @@ class _TrackerPageState extends State<TrackerPage> {
   late Timer uiTimer;
   late Timer topicTimer;
 
+  final FocusNode _focusNode = FocusNode();
+  final _player = AudioPlayer();
+
   Future<void> fetchLatestTopic() async {
     final prefs = await SharedPreferences.getInstance();
     trackerNotifier.value.topicName = prefs.getString('topic') ?? 'General';
@@ -74,6 +79,10 @@ class _TrackerPageState extends State<TrackerPage> {
     topicTimer = Timer.periodic(const Duration(minutes: 1), (_) async {
       await loadTimes(trackerNotifier);
     });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _focusNode.requestFocus();
+    });
   }
 
   @override
@@ -81,6 +90,8 @@ class _TrackerPageState extends State<TrackerPage> {
     uiTimer.cancel();
     topicTimer.cancel();
     trackerController.dispose();
+
+    _focusNode.dispose();
 
     super.dispose();
   }
@@ -94,163 +105,181 @@ class _TrackerPageState extends State<TrackerPage> {
     return ValueListenableBuilder<TrackerValues>(
       valueListenable: trackerNotifier,
       builder: (context, tracker, child) {
-        return Material(
-          child: Padding(
-            padding: pageInset,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              spacing: 10,
-              children: [
-                SettingsButton(popup: settingsPopup),
-                Spacer(flex: 4),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  spacing: 5.0,
-                  children: [
-                    if (tracker.streak != 0) Streak(streak: tracker.streak),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          showDropdown = !showDropdown;
-                        });
-                      },
-                      child: Row(
-                        children: [
-                          Text(
-                            tracker.topicName,
-                            style: bodyLarge,
-                            maxLines: 1,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                              left: showDropdown ? 5 : 0,
+        return KeyboardListener(
+          focusNode: _focusNode,
+          onKeyEvent: (event) async {
+            if (event is KeyDownEvent &&
+                event.logicalKey == LogicalKeyboardKey.space) {
+              if (tracker.currentTracker.isRunning) {
+                await stopTracker(trackerNotifier);
+              } else {
+                startTracker(tracker.currentTracker);
+              }
+              _player.play(AssetSource('sounds/button_press.wav'));
+            }
+          },
+          child: Material(
+            child: Padding(
+              padding: pageInset,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                spacing: 10,
+                children: [
+                  SettingsButton(popup: settingsPopup),
+                  Spacer(flex: 4),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    spacing: 5.0,
+                    children: [
+                      if (tracker.streak != 0) Streak(streak: tracker.streak),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            showDropdown = !showDropdown;
+                          });
+                        },
+                        child: Row(
+                          children: [
+                            Text(
+                              tracker.topicName,
+                              style: bodyLarge,
+                              maxLines: 1,
                             ),
-                            child: Icon(
-                              showDropdown
-                                  ? CupertinoIcons.chevron_down
-                                  : Icons.chevron_right,
-                              color: colors.onSurface,
-                              size: showDropdown ? 32 : 40,
-                              fontWeight: FontWeight(showDropdown ? 900 : 100),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                showDropdown
-                    ? TopicDropdown()
-                    : Column(
-                        children: [
-                          Text(
-                            '${Duration(seconds: tracker.topicTime).toStopwatchString()} ${l10n.overall}',
-                            style: bodyMedium.copyWith(color: colors.secondary),
-                          ),
-                          TodayTime(todayTime: tracker.todayTime),
-                        ],
-                      ),
-                Expanded(
-                  flex: 20,
-                  child: PageView.builder(
-                    onPageChanged: (page) {
-                      setState(() {
-                        tracker.currentTracker = (page == 0
-                            ? chrono.timer
-                            : chrono.stopwatch);
-                      });
-                    },
-                    itemCount: 2,
-                    controller: trackerController,
-                    itemBuilder: (_, index) {
-                      return switch (index) {
-                        0 => Tracker(
-                          elapsed: tracker.currentTracker == chrono.timer
-                              ? chrono.timer.elapsed
-                              : chrono.breakTimer.elapsed,
-                          isStopwatch: false,
-                          countdown: tracker.currentTracker == chrono.timer
-                              ? tracker.countdownTime
-                              : tracker.breakTime,
-                        ),
-                        1 => Tracker(elapsed: chrono.stopwatch.elapsed),
-                        _ => const SizedBox.shrink(),
-                      };
-                    },
-                  ),
-                ),
-                Center(
-                  child: Text(
-                    tracker.currentTracker == chrono.stopwatch
-                        ? ''
-                        : tracker.currentTracker == chrono.timer
-                        ? 'Count ${tracker.count}'
-                        : 'Break ${tracker.breakCount}',
-                    style: bodyMedium.copyWith(color: colors.secondary),
-                  ),
-                ),
-                Spacer(flex: 4),
-                Center(
-                  child: SmoothPageIndicator(
-                    controller: trackerController,
-                    count: 2,
-                    effect: WormEffect(
-                      dotHeight: 16,
-                      dotWidth: 16,
-                      type: WormType.thin,
-                      dotColor: colors.secondary,
-                      activeDotColor: theme.brightness == Brightness.dark
-                          ? colors.onSurface
-                          : colors.primary,
-                    ),
-                  ),
-                ),
-                Spacer(flex: 1),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          FractionallySizedBox(
-                            widthFactor: 0.45,
-                            child: GenericButton(
-                              text: tracker.currentTracker.isRunning
-                                  ? l10n.pause
-                                  : l10n.start,
-                              isPressed: tracker.currentTracker.isRunning,
-                              playSound: true,
-                              onPressed: () async {
-                                if (tracker.currentTracker.isRunning) {
-                                  await stopTracker(trackerNotifier);
-                                } else {
-                                  startTracker(tracker.currentTracker);
-                                }
-                              },
-                            ),
-                          ),
-                          if (tracker.currentTracker.isRunning &&
-                              tracker.currentTracker != chrono.stopwatch)
-                            Positioned(
-                              right: 60,
-                              child: GestureDetector(
-                                onTap: () async {
-                                  await toggleTimer(trackerNotifier, chrono);
-                                },
-                                child: Icon(
-                                  Icons.skip_next,
-                                  color: colors.onSurface,
-                                  size: 40,
+                            Padding(
+                              padding: EdgeInsets.only(
+                                left: showDropdown ? 5 : 0,
+                              ),
+                              child: Icon(
+                                showDropdown
+                                    ? CupertinoIcons.chevron_down
+                                    : Icons.chevron_right,
+                                color: colors.onSurface,
+                                size: showDropdown ? 32 : 40,
+                                fontWeight: FontWeight(
+                                  showDropdown ? 900 : 100,
                                 ),
                               ),
                             ),
-                        ],
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  showDropdown
+                      ? TopicDropdown()
+                      : Column(
+                          children: [
+                            Text(
+                              '${Duration(seconds: tracker.topicTime).toStopwatchString()} ${l10n.overall}',
+                              style: bodyMedium.copyWith(
+                                color: colors.secondary,
+                              ),
+                            ),
+                            TodayTime(todayTime: tracker.todayTime),
+                          ],
+                        ),
+                  Expanded(
+                    flex: 20,
+                    child: PageView.builder(
+                      onPageChanged: (page) {
+                        setState(() {
+                          tracker.currentTracker = (page == 0
+                              ? chrono.timer
+                              : chrono.stopwatch);
+                        });
+                      },
+                      itemCount: 2,
+                      controller: trackerController,
+                      itemBuilder: (_, index) {
+                        return switch (index) {
+                          0 => Tracker(
+                            elapsed: tracker.currentTracker == chrono.timer
+                                ? chrono.timer.elapsed
+                                : chrono.breakTimer.elapsed,
+                            isStopwatch: false,
+                            countdown: tracker.currentTracker == chrono.timer
+                                ? tracker.countdownTime
+                                : tracker.breakTime,
+                          ),
+                          1 => Tracker(elapsed: chrono.stopwatch.elapsed),
+                          _ => const SizedBox.shrink(),
+                        };
+                      },
+                    ),
+                  ),
+                  Center(
+                    child: Text(
+                      tracker.currentTracker == chrono.stopwatch
+                          ? ''
+                          : tracker.currentTracker == chrono.timer
+                          ? 'Count ${tracker.count}'
+                          : 'Break ${tracker.breakCount}',
+                      style: bodyMedium.copyWith(color: colors.secondary),
+                    ),
+                  ),
+                  Spacer(flex: 4),
+                  Center(
+                    child: SmoothPageIndicator(
+                      controller: trackerController,
+                      count: 2,
+                      effect: WormEffect(
+                        dotHeight: 16,
+                        dotWidth: 16,
+                        type: WormType.thin,
+                        dotColor: colors.secondary,
+                        activeDotColor: theme.brightness == Brightness.dark
+                            ? colors.onSurface
+                            : colors.primary,
                       ),
                     ),
-                  ],
-                ),
-                Spacer(flex: 4),
-              ],
+                  ),
+                  Spacer(flex: 1),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            FractionallySizedBox(
+                              widthFactor: 0.45,
+                              child: GenericButton(
+                                text: tracker.currentTracker.isRunning
+                                    ? l10n.pause
+                                    : l10n.start,
+                                isPressed: tracker.currentTracker.isRunning,
+                                playSound: true,
+                                onPressed: () async {
+                                  if (tracker.currentTracker.isRunning) {
+                                    await stopTracker(trackerNotifier);
+                                  } else {
+                                    startTracker(tracker.currentTracker);
+                                  }
+                                },
+                              ),
+                            ),
+                            if (tracker.currentTracker.isRunning &&
+                                tracker.currentTracker != chrono.stopwatch)
+                              Positioned(
+                                right: 60,
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    await toggleTimer(trackerNotifier, chrono);
+                                  },
+                                  child: Icon(
+                                    Icons.skip_next,
+                                    color: colors.onSurface,
+                                    size: 40,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  Spacer(flex: 4),
+                ],
+              ),
             ),
           ),
         );

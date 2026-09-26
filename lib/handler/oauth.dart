@@ -1,5 +1,5 @@
 bool googleAuth() {
-  return false;
+  return true;
 }
 
 bool appleAuth() {
